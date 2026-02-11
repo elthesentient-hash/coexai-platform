@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoExAI Dashboard - Creator Command Center</title>
+    <title>CoExAI Dashboard - Demo Mode</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -11,43 +11,30 @@
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
         body { background: #050505; color: #fafafa; }
-
         .gradient-text {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .gradient-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .gradient-pink { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
         .gradient-orange { background: linear-gradient(135deg, #ffd93d 0%, #ff6b6b 100%); }
         .gradient-blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-
-        .agent-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .agent-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
+        .agent-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .agent-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
         .agent-maya { border-left: 3px solid #a855f7; }
         .agent-engage { border-left: 3px solid #ec4899; }
         .agent-pitch { border-left: 3px solid #f59e0b; }
         .agent-analyze { border-left: 3px solid #3b82f6; }
-
-        .stat-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px;
-        }
-
-        .nav-item {
-            transition: all 0.2s ease;
-            border-radius: 12px;
-        }
-        .nav-item:hover, .nav-item.active {
+        .stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; }
+        .nav-item { transition: all 0.2s ease; border-radius: 12px; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.06); }
+        .demo-banner { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); animation: demoPulse 2s infinite; }
+        @keyframes demoPulse { 0%, 100% { opacity: 0.9; } 50% { opacity: 1; } }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
             background: rgba(255,255,255,0.06);
         }
 
@@ -79,19 +66,21 @@
     </style>
 </head>
 <body class="min-h-screen">
-    
-    <!-- Auth Check -->
+
+    <!-- Demo Banner -->
+    <div class="demo-banner text-center py-2 text-sm font-semibold">
+        🎮 DEMO MODE - You're viewing simulated data. 
+        <a href="/demo" class="underline hover:text-white ml-2">Restart Demo →</a>
+    </div>
+
     <script>
-        // Check if user is logged in
-        (function() {
-            const user = localStorage.getItem('coexai_user');
-            const onboardingComplete = localStorage.getItem('coexai_onboarding_complete');
-            
-            // For demo purposes, we'll allow access. In production, you'd check session/JWT
-            // if (!user || !onboardingComplete) {
-            //     window.location.href = '/auth';
-            // }
-        })();
+        // DEMO MODE: Check for demo session
+        const demoSession = JSON.parse(localStorage.getItem('coexai_demo_session'));
+        if (!demoSession) {
+            console.log('No demo session found, redirecting to demo...');
+            // Optional: redirect to demo start
+            // window.location.href = '/demo';
+        }
     </script>
 
     <!-- Sidebar -->
@@ -162,11 +151,11 @@
         <div class="p-4 border-t border-white/5">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-full gradient-purple flex items-center justify-center text-white font-semibold text-sm">
-                    EC
+                    DC
                 </div>
                 <div class="flex-1 min-w-0">
-                    <div class="font-medium text-sm truncate">Elijah Creator</div>
-                    <div class="text-xs text-gray-500">Pro Plan</div>
+                    <div class="font-medium text-sm truncate">Demo Creator</div>
+                    <div class="text-xs text-purple-400">Growth Plan (Demo)</div>
                 </div>
             </div>
         </div>

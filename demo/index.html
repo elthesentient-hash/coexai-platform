@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 CoExAI Demo - Try Everything!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #050505; color: #fafafa; }
+        .gradient-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 50%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .demo-pulse {
+            animation: demoPulse 2s ease-in-out infinite;
+        }
+        @keyframes demoPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .step-complete { border-color: #10b981 !important; color: #10b981 !important; }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body x-data="demoApp()" class="min-h-screen">
+
+    <!-- Demo Banner -->
+    <div class="gradient-purple text-center py-3 text-sm font-semibold demo-pulse">
+        🎮 LIVE DEMO MODE - Experience the full app without real signup!
+    </div>
+
+    <!-- Navigation -->
+    <nav class="border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg gradient-purple flex items-center justify-center">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="font-bold text-xl">CoExAI</span>
+                <span class="ml-2 px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 text-xs">DEMO</span>
+            </a>
+            
+            <div class="text-sm text-gray-400">
+                Step <span x-text="currentStep"></span> of 4
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+
+        <!-- Progress -->
+        <div class="flex items-center justify-center gap-2 mb-8">
+            <template x-for="i in 4" :key="i">
+                <div class="flex items-center"
+                >
+                    <div class="w-10 h-10 rounded-full border-2 flex items-center justify-center font-semibold transition-all"
+                        :class="{
+                            'gradient-purple border-transparent': currentStep >= i,
+                            'border-gray-600 text-gray-500': currentStep < i
+                        }"
+                    >
+                        <template x-if="currentStep > i">
+                            <i data-lucide="check" class="w-5 h-5"></i>
+                        </template>
+                        <template x-if="currentStep <= i">
+                            <span x-text="i"></span>
+                        </template>
+                    </div>
+                    
+                    <template x-if="i < 4">
+                        <div class="w-8 h-1 mx-2 rounded-full transition-all"
+                            :class="currentStep > i ? 'bg-purple-500' : 'bg-gray-700'"
+                        ></div>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <!-- Step 1: Choose Plan -->
+        <div x-show="currentStep === 1" x-cloak>
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold mb-2">Choose Your Plan</h1>
+                <p class="text-gray-400">Demo mode - no credit card required! <span class="text-purple-400">Click any plan to continue</span></p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <template x-for="plan in plans" :key="plan.id">
+                    <div 
+                        @click="selectPlan(plan)"
+                        class="p-6 rounded-2xl bg-white/5 border-2 border-white/10 cursor-pointer transition-all hover:border-purple-500/50 hover:-translate-y-1"
+                        :class="{ 'border-purple-500 shadow-lg shadow-purple-500/20': selectedPlan?.id === plan.id }"
+                    >
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-bold text-lg" x-text="plan.name"></h3>
+                            <template x-if="plan.popular">
+                                <span class="px-2 py-1 rounded-full gradient-purple text-xs font-semibold">Popular</span>
+                            </template>
+                        </div>
+
+                        <div class="mb-4">
+                            <span class="text-3xl font-bold gradient-text" x-text="'$' + plan.price"></span>
+                            <span class="text-gray-500">/mo</span>
+                        </div>
+
+                        <ul class="space-y-2 text-sm">
+                            <template x-for="feature in plan.features">
+                                <li class="flex items-center gap-2">
+                                    <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                                    <span x-text="feature"></span>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Step 2: Create Account (Auto-skipped in demo) -->
+        <div x-show="currentStep === 2" x-cloak class="text-center py-12">
+            <div class="w-20 h-20 rounded-full gradient-purple flex items-center justify-center mx-auto mb-6 animate-spin">
+                <i data-lucide="loader-2" class="w-10 h-10"></i>
+            </div>
+            <h2 class="text-2xl font-bold mb-2">Creating Demo Account...</h2>
+            <p class="text-gray-400">Simulating: Creating user → Setting up trial → Preparing dashboard</p>
+        </div>
+
+        <!-- Step 3: Connect Platforms -->
+        <div x-show="currentStep === 3" x-cloak>
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold mb-2">Connect Your Platforms</h1>
+                <p class="text-gray-400">Click "Connect" to simulate OAuth flow <span class="text-purple-400">(Try connecting all 4!)</span></p>
+            </div>
+
+            <div class="space-y-3 max-w-2xl mx-auto">
+                <template x-for="platform in platforms" :key="platform.id">
+                    <div 
+                        class="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between transition-all"
+                        :class="platform.connected ? 'border-green-500/50 bg-green-500/5' : ''"
+                    >
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-xl flex items-center justify-center"
+                                :class="platform.bgColor"
+                            >
+                                <i :data-lucide="platform.icon" class="w-6 h-6" :class="platform.textColor"></i>
+                            </div>
+                            
+                            <div>
+                                <div class="font-semibold" x-text="platform.name"></div>
+                                <div class="text-sm"
+                                    :class="platform.connected ? 'text-green-400' : 'text-gray-400'"
+                                    x-text="platform.connected ? (platform.channelName + ' • ' + platform.followers.toLocaleString() + ' followers') : 'Not connected'"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <button 
+                            @click="togglePlatform(platform)"
+                            class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2"
+                            :class="platform.connected ? 'bg-green-500/20 text-green-400' : 'bg-white/10 hover:bg-white/20'"
+                            :disabled="platform.loading"
+                        >
+                            <template x-if="platform.loading">
+                                <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                            </template>
+                            
+                            <span x-text="platform.connected ? 'Connected ✓' : 'Connect'"></span>
+                        </button>
+                    </div>
+                </template>
+            </div>
+
+            <div class="mt-8 text-center">
+                <button 
+                    @click="goToDashboard"
+                    class="gradient-purple px-8 py-4 rounded-full font-semibold text-lg hover:opacity-90 transition-opacity flex items-center gap-2 mx-auto"
+                >
+                    Launch Dashboard
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+                
+                <p class="mt-4 text-sm text-gray-500">(You can connect more platforms later)</p>
+            </div>
+        </div>
+
+        <!-- Demo Info -->
+        <div class="mt-12 p-6 rounded-2xl bg-white/5 border border-white/10">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
+                    <i data-lucide="info" class="w-5 h-5 text-purple-400"></i>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-1">About This Demo</h4>
+                    <p class="text-sm text-gray-400 mb-3">
+                        This is a fully functional simulation. Everything you see is generated in real-time 
+                        to demonstrate the user experience. No real accounts, payments, or data are created.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">✓ Simulated Auth</span>
+                        <span class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">✓ Fake OAuth Flow</span>
+                        <span class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">✓ Demo Dashboard</span>
+                        <span class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">✓ Mock AI Responses</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function demoApp() {
+            return {
+                currentStep: 1,
+                selectedPlan: null,
+                
+                plans: [
+                    {
+                        id: 'starter',
+                        name: 'Starter',
+                        price: 500,
+                        popular: false,
+                        features: ['Maya (Content)', 'Email support', '5 videos/month']
+                    },
+                    {
+                        id: 'growth',
+                        name: 'Growth',
+                        price: 700,
+                        popular: true,
+                        features: ['Maya + Engage', 'Priority support', 'Unlimited videos']
+                    },
+                    {
+                        id: 'pro',
+                        name: 'Pro',
+                        price: 1000,
+                        popular: false,
+                        features: ['Maya + Engage + Pitch', '24/7 support', 'Brand deals']
+                    },
+                    {
+                        id: 'empire',
+                        name: 'Empire',
+                        price: 1200,
+                        popular: false,
+                        features: ['All 4 AI Agents', 'Dedicated manager', 'Custom integrations']
+                    }
+                ],
+
+                platforms: [
+                    {
+                        id: 'youtube',
+                        name: 'YouTube',
+                        icon: 'youtube',
+                        bgColor: 'bg-red-500/10',
+                        textColor: 'text-red-400',
+                        connected: false,
+                        loading: false,
+                        channelName: null,
+                        followers: 0
+                    },
+                    {
+                        id: 'tiktok',
+                        name: 'TikTok',
+                        icon: 'video',
+                        bgColor: 'bg-pink-500/10',
+                        textColor: 'text-pink-400',
+                        connected: false,
+                        loading: false,
+                        channelName: null,
+                        followers: 0
+                    },
+                    {
+                        id: 'instagram',
+                        name: 'Instagram',
+                        icon: 'instagram',
+                        bgColor: 'bg-purple-500/10',
+                        textColor: 'text-purple-400',
+                        connected: false,
+                        loading: false,
+                        channelName: null,
+                        followers: 0
+                    },
+                    {
+                        id: 'twitter',
+                        name: 'X / Twitter',
+                        icon: 'twitter',
+                        bgColor: 'bg-blue-500/10',
+                        textColor: 'text-blue-400',
+                        connected: false,
+                        loading: false,
+                        channelName: null,
+                        followers: 0
+                    }
+                ],
+
+                async selectPlan(plan) {
+                    this.selectedPlan = plan;
+                    
+                    // Auto-advance to step 2
+                    this.currentStep = 2;
+                    
+                    // Simulate account creation
+                    await new Promise(r => setTimeout(r, 1500));
+                    
+                    // Store demo session
+                    localStorage.setItem('coexai_demo_session', JSON.stringify({
+                        user: {
+                            id: 'demo-user',
+                            email: 'demo@coexai.com',
+                            full_name: 'Demo Creator',
+                            plan: plan.id
+                        },
+                        plan: plan
+                    }));
+                    
+                    // Advance to step 3
+                    this.currentStep = 3;
+                },
+
+                async togglePlatform(platform) {
+                    if (platform.connected) {
+                        platform.connected = false;
+                        platform.channelName = null;
+                        platform.followers = 0;
+                        return;
+                    }
+                    
+                    platform.loading = true;
+                    
+                    // Simulate OAuth delay
+                    await new Promise(r => setTimeout(r, 1500));
+                    
+                    // Simulate successful connection
+                    const mockData = {
+                        youtube: { name: 'Demo Creator', followers: 450000 },
+                        tiktok: { name: '@democreator', followers: 320000 },
+                        instagram: { name: '@democreator', followers: 280000 },
+                        twitter: { name: '@democreator', followers: 190000 }
+                    };
+                    
+                    platform.connected = true;
+                    platform.channelName = mockData[platform.id].name;
+                    platform.followers = mockData[platform.id].followers;
+                    platform.loading = false;
+                    
+                    // Store connected platforms
+                    const connected = this.platforms
+                        .filter(p => p.connected)
+                        .map(p => ({ id: p.id, name: p.channelName, followers: p.followers }));
+                    
+                    localStorage.setItem('coexai_demo_platforms', JSON.stringify(connected));
+                },
+
+                goToDashboard() {
+                    localStorage.setItem('coexai_onboarding_complete', 'true');
+                    window.location.href = '/dashboard';
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

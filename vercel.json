@@ -6,6 +6,7 @@
   "framework": null,
   "outputDirectory": ".",
   "routes": [
+    { "src": "/demo", "dest": "/demo/index.html" },
     { "src": "/auth", "dest": "/auth/index.html" },
     { "src": "/dashboard", "dest": "/dashboard/index.html" },
     { "src": "/dashboard/(.*)", "dest": "/dashboard/index.html" },
