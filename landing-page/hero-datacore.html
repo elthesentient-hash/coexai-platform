@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoExAI - DataCore Style Hero</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+        
+        body {
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        /* Animated gradient background - DataCore style */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.3), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(236, 72, 153, 0.15), transparent),
+                radial-gradient(ellipse 50% 30% at 20% 60%, rgba(99, 102, 241, 0.2), transparent);
+            animation: gradientMove 8s ease-in-out infinite;
+        }
+        
+        @keyframes gradientMove {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 1; }
+            50% { transform: translateY(-20px) scale(1.05); opacity: 0.9; }
+        }
+        
+        /* Floating orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 10s ease-in-out infinite;
+        }
+        
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            top: -200px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+        
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -5s;
+        }
+        
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, #a855f7, #6366f1);
+            top: 40%;
+            left: 30%;
+            animation-delay: -2s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.1); }
+        }
+        
+        /* Grid overlay */
+        .grid-overlay {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+        }
+        
+        /* Glass card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Floating stats */
+        .floating-stat {
+            animation: floatStat 6s ease-in-out infinite;
+        }
+        
+        .floating-stat:nth-child(2) { animation-delay: -2s; }
+        .floating-stat:nth-child(3) { animation-delay: -4s; }
+        
+        @keyframes floatStat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #a5b4fc 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-text-accent {
+            background: linear-gradient(135deg, #667eea 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Glowing button */
+        .glow-btn {
+            background: linear-gradient(135deg, #667eea 0%, #a855f7 100%);
+            box-shadow: 
+                0 0 40px rgba(102, 126, 234, 0.4),
+                0 0 80px rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .glow-btn:hover {
+            box-shadow: 
+                0 0 60px rgba(102, 126, 234, 0.6),
+                0 0 120px rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        /* Dashboard mockup */
+        .dashboard-mockup {
+            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+            transition: transform 0.5s ease;
+        }
+        
+        .dashboard-mockup:hover {
+            transform: perspective(1000px) rotateY(-2deg) rotateX(2deg) scale(1.02);
+        }
+        
+        /* Animated shine */
+        .shine {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shine::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                transparent 0%,
+                rgba(255,255,255,0.1) 50%,
+                transparent 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Background -->
+    <div class="hero-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <svg viewBox="0 0 32 32" width="32" height="32">
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea" />
+                            <stop offset="100%" style="stop-color:#ec4899" />
+                        </linearGradient>
+                    </defs>
+                    <polygon points="16,2 19,13 30,16 19,19 16,30 13,19 2,16 13,13" fill="url(#logoGrad)"/>
+                    <polygon points="16,8 17.5,14.5 24,16 17.5,17.5 16,24 14.5,17.5 8,16 14.5,14.5" fill="#ffffff" opacity="0.9"/>
+                    <circle cx="16" cy="16" r="2" fill="url(#logoGrad)"/>
+                </svg>
+                <span class="font-bold text-xl">CoExAI</span>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Features</a>
+                <a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Pricing</a>
+                <a href="#" class="text-sm text-gray-400 hover:text-white transition-colors">Docs</a>
+            </div>
+            
+            <a href="/demo" class="glow-btn px-6 py-2.5 rounded-full text-sm font-semibold">
+                Get Started
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section - DataCore Style -->
+    <section class="relative min-h-screen flex items-center pt-20">
+        <div class="max-w-7xl mx-auto px-6 w-full">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                
+                <!-- Left: Content -->
+                <div class="space-y-8">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card">
+                        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        <span class="text-sm text-gray-300">Now serving 100+ creators</span>
+                    </div>
+                    
+                    <!-- Headline -->
+                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight">
+                        Build Your
+                        <br>
+                        <span class="gradient-text-accent">AI Workforce</span>
+                    </h1>
+                    
+                    <!-- Subheadline -->
+                    <p class="text-xl text-gray-400 max-w-lg">
+                        Four AI agents working 24/7 to create content, engage your audience, and close brand deals while you sleep.
+                    </p>
+                    
+                    <!-- CTAs -->
+                    <div class="flex flex-wrap items-center gap-4">
+                        <a href="/demo" class="glow-btn px-8 py-4 rounded-full font-semibold text-lg flex items-center gap-2">
+                            Start Free Trial
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </a>
+                        
+                        <a href="#" class="px-8 py-4 rounded-full font-semibold border border-white/20 hover:bg-white/5 transition-colors flex items-center gap-2">
+                            <i data-lucide="play-circle" class="w-5 h-5"></i>
+                            Watch Demo
+                        </a>
+                    </div>
+                    
+                    <!-- Social Proof -->
+                    <div class="flex items-center gap-4 pt-4">
+                        <div class="flex -space-x-2">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 border-2 border-black"></div>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-cyan-400 border-2 border-black"></div>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-400 border-2 border-black"></div>
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-400 border-2 border-black"></div>
+                            <div class="w-10 h-10 rounded-full bg-gray-700 border-2 border-black flex items-center justify-center text-xs font-bold">+96</div>
+                        </div>
+                        <div class="text-sm text-gray-400">
+                            Trusted by <span class="text-white font-semibold">100+ creators</span>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <!-- Right: Dashboard Mockup + Floating Stats -->
+                <div class="relative hidden lg:block">
+                    
+                    <!-- Main Dashboard Card -->
+                    <div class="dashboard-mockup glass-card rounded-2xl p-6 shine">
+                        <!-- Mockup Header -->
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl gradient-purple flex items-center justify-center">
+                                    <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+                                </div>
+                                <span class="font-semibold">CoExAI Dashboard</span>
+                            </div>
+                            
+                            <button class="gradient-purple px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                New Content
+                            </button>
+                        </div>
+                        
+                        <!-- Stats Row -->
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <div class="p-4 rounded-xl bg-white/5">
+                                <div class="text-sm text-gray-400 mb-1">Time Saved</div>
+                                <div class="text-2xl font-bold gradient-text-accent">28.5h</div>
+                                <div class="text-xs text-green-400 mt-1">+12% this week</div>
+                            </div>
+                            
+                            <div class="p-4 rounded-xl bg-white/5">
+                                <div class="text-sm text-gray-400 mb-1">Content</div>
+                                <div class="text-2xl font-bold">147</div>
+                                <div class="text-xs text-gray-500 mt-1">pieces created</div>
+                            </div>
+                            
+                            <div class="p-4 rounded-xl bg-white/5">
+                                <div class="text-sm text-gray-400 mb-1">Deals</div>
+                                <div class="text-2xl font-bold text-orange-400">$12.5K</div>
+                                <div class="text-xs text-gray-500 mt-1">found this month</div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI Agents -->
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-purple-500/10 border-l-2 border-purple-500">
+                                <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                    <i data-lucide="wand-2" class="w-4 h-4 text-purple-400"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm font-medium">Maya</div>
+                                    <div class="text-xs text-gray-400">Processing video...</div>
+                                </div>
+                                <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                            </div>
+                            
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-pink-500/10 border-l-2 border-pink-500">
+                                <div class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center">
+                                    <i data-lucide="heart-handshake" class="w-4 h-4 text-pink-400"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm font-medium">Engage</div>
+                                    <div class="text-xs text-gray-400">Replying to comments...</div>
+                                </div>
+                                <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <!-- Floating Stats Cards -->
+                    <div class="absolute -top-4 -right-4 floating-stat">
+                        <div class="glass-card rounded-xl px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="trending-up" class="w-4 h-4 text-green-400"></i>
+                                <span class="text-sm font-semibold">+23%</span>
+                            </div>
+                            <div class="text-xs text-gray-400">Engagement</div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute top-1/3 -left-8 floating-stat">
+                        <div class="glass-card rounded-xl px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i>
+                                <span class="text-sm font-semibold">AI Active</span>
+                            </div>
+                            <div class="text-xs text-gray-400">4 agents</div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute -bottom-4 right-8 floating-stat">
+                        <div class="glass-card rounded-xl px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="users" class="w-4 h-4 text-blue-400"></i>
+                                <span class="text-sm font-semibold">+1.2K</span>
+                            </div>
+                            <div class="text-xs text-gray-400">New followers</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
