@@ -1,97 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" x-data="dashboard()">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoExAI Dashboard</title>
+    <title>CoExAI Dashboard - Creator Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { 
-            -webkit-font-smoothing: antialiased; 
-            -moz-osx-font-smoothing: grayscale; 
-            font-family: 'Inter', system-ui, sans-serif; 
+        * { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+        body { background: #050505; color: #fafafa; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        body { 
-            background: #000; 
-            color: #fafafa; 
-        }
-        .sidebar { 
-            background: rgba(10,10,10,0.95); 
-            border-right: 1px solid rgba(255,255,255,0.05); 
-        }
-        .card { 
-            background: rgba(255,255,255,0.03); 
-            border: 1px solid rgba(255,255,255,0.06); 
-            border-radius: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .card:hover { 
-            background: rgba(255,255,255,0.05); 
-            border-color: rgba(255,255,255,0.12);
-            transform: translateY(-2px);
-        }
-        .btn-primary { 
-            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%); 
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1);
-            transition: all 0.2s ease;
-        }
-        .btn-primary:hover { 
-            box-shadow: 0 4px 12px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
-            transform: translateY(-1px);
-        }
-        .status-dot { 
-            width: 8px; 
-            height: 8px; 
-            border-radius: 50%; 
-        }
-        .status-active { 
-            background: #10b981; 
-            box-shadow: 0 0 0 2px rgba(16,185,129,0.2), 0 0 8px #10b981; 
-        }
-        .status-paused { 
-            background: #f59e0b; 
-            box-shadow: 0 0 0 2px rgba(245,158,11,0.2);
-        }
-        .nav-item { 
-            transition: all 0.2s ease;
-            border-radius: 12px;
-        }
-        .nav-item:hover, .nav-item.active { 
-            background: rgba(255,255,255,0.06);
-        }
+        
+        .gradient-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .gradient-pink { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .gradient-orange { background: linear-gradient(135deg, #ffd93d 0%, #ff6b6b 100%); }
+        .gradient-blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        
         .agent-card {
-            border-left: 3px solid transparent;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .agent-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
-        .agent-alex { border-left-color: #ef4444; }
-        .agent-maya { border-left-color: #8b5cf6; }
-        .agent-jordan { border-left-color: #3b82f6; }
-        .agent-sam { border-left-color: #10b981; }
-        .agent-taylor { border-left-color: #f59e0b; }
-        .stat-value {
-            font-variant-numeric: tabular-nums;
+        
+        .agent-maya { border-left: 3px solid #a855f7; }
+        .agent-engage { border-left: 3px solid #ec4899; }
+        .agent-pitch { border-left: 3px solid #f59e0b; }
+        .agent-analyze { border-left: 3px solid #3b82f6; }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
         }
+        
+        .nav-item {
+            transition: all 0.2s ease;
+            border-radius: 12px;
+        }
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.06);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .status-active { background: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.2), 0 0 8px #10b981; }
+        .status-paused { background: #f59e0b; box-shadow: 0 0 0 2px rgba(245,158,11,0.2); }
+        
+        .sidebar {
+            background: rgba(10,10,10,0.95);
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .progress-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.5s ease;
+        }
+        
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="min-h-screen antialiased" x-data="dashboard()">
+<body class="min-h-screen">
+    
     <!-- Sidebar -->
     <aside class="fixed left-0 top-0 bottom-0 w-64 sidebar z-50 flex flex-col">
         <!-- Logo -->
         <div class="p-5 border-b border-white/5">
             <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-                    <i data-lucide="cpu" class="w-5 h-5 text-white"></i>
+                <div class="w-9 h-9 rounded-xl gradient-purple flex items-center justify-center">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
                 </div>
-                <span class="font-bold text-xl tracking-tight">CoExAI</span>
+                <span class="font-bold text-xl">CoExAI</span>
             </a>
         </div>
 
@@ -117,7 +114,7 @@
                         <i :data-lucide="agent.icon" class="w-4 h-4" :class="agent.textColor"></i>
                     </div>
                     <div class="flex-1 min-w-0 text-left">
-                        <div class="font-medium text-gray-200 truncate" x-text="agent.name"></div>
+                        <div class="font-medium text-gray-200" x-text="agent.name"></div>
                         <div class="text-[11px] text-gray-500 capitalize" x-text="agent.status"></div>
                     </div>
                     <div class="status-dot shrink-0" :class="`status-${agent.status}`"></div>
@@ -127,6 +124,12 @@
             <div class="pt-5 pb-2 px-4">
                 <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Settings</span>
             </div>
+
+            <button @click="view = 'connections'" :class="{ 'active': view === 'connections' }"
+                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white">
+                <i data-lucide="link" class="w-[18px] h-[18px]"></i>
+                <span>Connections</span>
+            </button>
 
             <button @click="view = 'billing'" :class="{ 'active': view === 'billing' }"
                     class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white">
@@ -144,12 +147,12 @@
         <!-- User Profile -->
         <div class="p-4 border-t border-white/5">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
-                    EL
+                <div class="w-10 h-10 rounded-full gradient-purple flex items-center justify-center text-white font-semibold text-sm">
+                    EC
                 </div>
                 <div class="flex-1 min-w-0">
-                    <div class="font-medium text-sm truncate">Elijah</div>
-                    <div class="text-xs text-gray-500">5 agents active</div>
+                    <div class="font-medium text-sm truncate">Elijah Creator</div>
+                    <div class="text-xs text-gray-500">Pro Plan</div>
                 </div>
             </div>
         </div>
@@ -161,20 +164,21 @@
         <header class="sticky top-0 z-40 bg-black/90 backdrop-blur-xl border-b border-white/5">
             <div class="flex items-center justify-between px-6 py-4">
                 <div>
-                    <h1 class="text-xl font-semibold tracking-tight" x-text="pageTitle"></h1>
+                    <h1 class="text-xl font-semibold" x-text="pageTitle"></h1>
                     <p class="text-sm text-gray-500 mt-0.5" x-show="view === 'dashboard'">Manage your AI workforce</p>
                 </div>
 
                 <div class="flex items-center gap-3">
+                    <!-- Notifications -->
                     <button class="relative p-2.5 hover:bg-white/5 rounded-xl transition-colors">
                         <i data-lucide="bell" class="w-5 h-5 text-gray-400"></i>
-                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-black"></span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-black animate-pulse"></span>
                     </button>
 
-                    <button class="btn-primary px-4 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2"
-                            @click="showAddAgent = true">
+                    <!-- Quick Actions -->
+                    <button class="gradient-purple px-4 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 hover:opacity-90 transition-opacity">
                         <i data-lucide="plus" class="w-4 h-4"></i>
-                        Add Agent
+                        New Content
                     </button>
                 </div>
             </div>
@@ -182,77 +186,87 @@
 
         <!-- Dashboard Content -->
         <main class="flex-1 p-6">
-            <!-- Overview Stats -->
+            <!-- Stats Overview -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="card p-5">
+                <!-- Time Saved -->
+                <div class="stat-card p-5">
                     <div class="flex items-start justify-between mb-3">
                         <div>
-                            <div class="text-sm text-gray-500 mb-1">Active Agents</div>
-                            <div class="text-2xl font-bold stat-value">5</div>
-                        </div>
-                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
-                            <i data-lucide="bot" class="w-5 h-5 text-blue-400"></i>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-1.5 text-xs">
-                        <span class="text-green-400 font-medium">&#10003; All operational</span>
-                    </div>
-                </div>
-
-                <div class="card p-5">
-                    <div class="flex items-start justify-between mb-3">
-                        <div>
-                            <div class="text-sm text-gray-500 mb-1">Tasks Completed</div>
-                            <div class="text-2xl font-bold stat-value">12,847</div>
-                        </div>
-                        <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
-                            <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-1.5 text-xs">
-                        <i data-lucide="trending-up" class="w-3.5 h-3.5 text-green-400"></i>
-                        <span class="text-green-400 font-medium">+23%</span>
-                        <span class="text-gray-500">this week</span>
-                    </div>
-                </div>
-
-                <div class="card p-5">
-                    <div class="flex items-start justify-between mb-3">
-                        <div>
-                            <div class="text-sm text-gray-500 mb-1">Time Saved</div>
-                            <div class="text-2xl font-bold stat-value">1,240</div>
+                            <div class="text-sm text-gray-500 mb-1">Time Saved This Week</div>
+                            <div class="text-2xl font-bold gradient-text">28.5 hrs</div>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
                             <i data-lucide="clock" class="w-5 h-5 text-purple-400"></i>
                         </div>
                     </div>
-                    <div class="text-xs text-gray-500">hours this month</div>
+                    <div class="flex items-center gap-1.5 text-xs">
+                        <i data-lucide="trending-up" class="w-3.5 h-3.5 text-green-400"></i>
+                        <span class="text-green-400 font-medium">+12%</span>
+                        <span class="text-gray-500">vs last week</span>
+                    </div>
                 </div>
 
-                <div class="card p-5">
+                <!-- Content Created -->
+                <div class="stat-card p-5">
                     <div class="flex items-start justify-between mb-3">
                         <div>
-                            <div class="text-sm text-gray-500 mb-1">Monthly Cost</div>
-                            <div class="text-2xl font-bold stat-value">$5,794</div>
+                            <div class="text-sm text-gray-500 mb-1">Content Pieces Created</div>
+                            <div class="text-2xl font-bold">147</div>
                         </div>
-                        <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
-                            <i data-lucide="credit-card" class="w-5 h-5 text-orange-400"></i>
+                        <div class="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center">
+                            <i data-lucide="file-text" class="w-5 h-5 text-pink-400"></i>
                         </div>
                     </div>
-                    <div class="text-xs text-gray-500">5 active agents</div>
+                    <div class="flex items-center gap-1.5 text-xs">
+                        <span class="text-gray-500">By Maya</span>
+                    </div>
+                </div>
+
+                <!-- Comments Replied -->
+                <div class="stat-card p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">Comments Replied</div>
+                            <div class="text-2xl font-bold">1,284</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                            <i data-lucide="message-circle" class="w-5 h-5 text-green-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs">
+                        <i data-lucide="trending-up" class="w-3.5 h-3.5 text-green-400"></i>
+                        <span class="text-green-400 font-medium">94%</span>
+                        <span class="text-gray-500">response rate</span>
+                    </div>
+                </div>
+
+                <!-- Brand Deals -->
+                <div class="stat-card p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">Brand Deals Found</div>
+                            <div class="text-2xl font-bold text-orange-400">$12.5K</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                            <i data-lucide="handshake" class="w-5 h-5 text-orange-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs">
+                        <span class="text-gray-500">3 deals this month</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Agent Cards -->
-            <div class="mb-6">
+            <!-- AI Agents Status -->
+            <div class="mb-8">
                 <div class="flex items-center justify-between mb-5">
                     <h2 class="text-lg font-semibold">Your AI Agents</h2>
-                    <button class="text-sm text-blue-400 hover:text-blue-300 transition-colors">View All</button>
+                    <button class="text-sm text-gray-400 hover:text-white transition-colors">View All</button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <template x-for="agent in agents" :key="agent.id">
-                        <div class="card agent-card p-5 cursor-pointer agent p-"
+                        <div class="agent-card p-5 rounded-2xl bg-white/5 border border-white/10 cursor-pointer"
                              :class="`agent-${agent.id}`"
                              @click="selectAgent(agent.id)">
                             
@@ -275,32 +289,30 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-3 gap-4 mb-4 py-3 border-y border-white/5">
-                                <div>
-                                    <div class="text-xl font-bold stat-value" x-text="agent.stats.primary"></div>
-                                    <div class="text-[11px] text-gray-500 mt-0.5" x-text="agent.stats.primaryLabel"></div>
-                                </div>
-                                
-                                <div>
-                                    <div class="text-xl font-bold stat-value" x-text="agent.stats.secondary"></div>
-                                    <div class="text-[11px] text-gray-500 mt-0.5" x-text="agent.stats.secondaryLabel"></div>
-                                </div>
-                                
-                                <div>
-                                    <div class="text-xl font-bold stat-value" x-text="agent.stats.tertiary"></div>
-                                    <div class="text-[11px] text-gray-500 mt-0.5" x-text="agent.stats.tertiaryLabel"></div>
-                                </div>
+                            <!-- Progress for each agent -->
+                            <div class="space-y-3 mb-4">
+                                <template x-for="stat in agent.stats" :key="stat.label">
+                                    <div>
+                                        <div class="flex justify-between text-xs mb-1">
+                                            <span class="text-gray-400" x-text="stat.label"></span>
+                                            <span class="text-white" x-text="stat.value"></span>
+                                        </div>
+                                        <div class="progress-bar h-1.5">
+                                            <div class="progress-fill"
+                                                 :class="agent.progressColor"
+                                                 :style="`width: ${stat.percentage}%`"></div>
+                                        </div>
+                                    </div>
+                                </template>
                             </div>
 
                             <div class="flex items-center justify-between">
-                                <div class="text-sm text-gray-400">
-                                    <span class="text-white font-semibold" x-text="agent.price"></span>
-                                    <span class="text-gray-500">/month</span>
+                                <div class="text-xs text-gray-500">
+                                    Last active: <span class="text-gray-300" x-text="agent.lastActive"></span>
                                 </div>
                                 
-                                <button class="text-sm text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1 transition-colors"
-                                        @click.stop="selectAgent(agent.id)">
-                                    Manage
+                                <button class="text-sm text-gray-400 hover:text-white font-medium flex items-center gap-1 transition-colors">
+                                    Configure
                                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                 </button>
                             </div>
@@ -310,28 +322,82 @@
             </div>
 
             <!-- Recent Activity -->
-            <div class="mt-8">
-                <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-lg font-semibold">Recent Activity</h2>
-                    <button class="text-sm text-blue-400 hover:text-blue-300 transition-colors">View All</button>
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Activity Feed -->
+                <div class="lg:col-span-2">
+                    <div class="flex items-center justify-between mb-5">
+                        <h2 class="text-lg font-semibold">Recent Activity</h2>
+                        <button class="text-sm text-gray-400 hover:text-white transition-colors">View All</button>
+                    </div>
+                    
+                    <div class="stat-card divide-y divide-white/5">
+                        <template x-for="activity in recentActivity" :key="activity.id">
+                            <div class="flex items-center gap-4 p-4 hover:bg-white/[0.02] transition-colors">
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
+                                     :class="activity.bgColor">
+                                    <i :data-lucide="activity.icon" class="w-5 h-5" :class="activity.textColor"></i>
+                                </div>
+                                
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-medium text-sm" x-text="activity.title"></div>
+                                    <div class="text-sm text-gray-500 truncate" x-text="activity.description"></div>
+                                </div>
+                                
+                                <div class="text-xs text-gray-500 shrink-0" x-text="activity.time"></div>
+                            </div>
+                        </template>
+                    </div>
                 </div>
-                
-                <div class="card divide-y divide-white/5">
-                    <template x-for="activity in recentActivity" :key="activity.id">
-                        <div class="flex items-center gap-4 p-4 hover:bg-white/[0.02] transition-colors cursor-pointer">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                                 :class="activity.bgColor">
-                                <i :data-lucide="activity.icon" class="w-5 h-5" :class="activity.textColor"></i>
-                            </div>
-                            
-                            <div class="flex-1 min-w-0">
-                                <div class="font-medium text-sm truncate" x-text="activity.title"></div>
-                                <div class="text-sm text-gray-500 truncate" x-text="activity.description"></div>
-                            </div>
-                            
-                            <div class="text-xs text-gray-500 shrink-0" x-text="activity.time"></div>
+
+                <!-- Quick Stats -->
+                <div>
+                    <div class="flex items-center justify-between mb-5">
+                        <h2 class="text-lg font-semibold">This Month</h2>
+                    </div>
+                    
+                    <div class="stat-card p-5 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">Content Posted</span>
+                            <span class="font-semibold">47 pieces</span>
                         </div>
-                    </template>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">Engagement Rate</span>
+                            <span class="font-semibold text-green-400">+23%</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">New Followers</span>
+                            <span class="font-semibold">+12.4K</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-400">Brand Inquiries</span>
+                            <span class="font-semibold text-orange-400">8 deals</span>
+                        </div>
+                        
+                        <div class="pt-4 border-t border-white/10">
+                            <div class="text-sm text-gray-400 mb-2">Plan Usage</div>
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 progress-bar h-2">
+                                    <div class="progress-fill gradient-purple" style="width: 75%"></div>
+                                </div>
+                                <span class="text-xs text-gray-400">75%</span>
+                            </div>
+                            <div class="text-xs text-gray-500 mt-1">Pro Plan - 3 of 4 agents active</div>
+                        </div>
+                    </div>
+
+                    <!-- Upgrade CTA -->
+                    <div class="mt-4 p-4 rounded-2xl gradient-purple/10 border border-purple-500/20">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-lg gradient-purple flex items-center justify-center shrink-0">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-sm mb-1">Unlock Pitch</div>
+                                <div class="text-xs text-gray-400 mb-2">Find brand deals automatically</div>
+                                <button class="text-xs text-purple-400 hover:text-purple-300 font-medium">Upgrade to Pro →</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -346,158 +412,134 @@
             return {
                 view: 'dashboard',
                 selectedAgent: null,
-                showAddAgent: false,
                 
                 get pageTitle() {
-                    return this.selectedAgent 
-                        ? (this.agents.find(a => a.id === this.selectedAgent)?.name || 'Dashboard')
-                        : 'Dashboard';
+                    if (this.selectedAgent) {
+                        const agent = this.agents.find(a => a.id === this.selectedAgent);
+                        return agent ? agent.name : 'Dashboard';
+                    }
+                    return 'Dashboard';
                 },
 
                 agents: [
                     {
-                        id: 'alex',
-                        name: 'Alex',
-                        tagline: 'AI Appointment Setter',
-                        icon: 'phone',
-                        bgColor: 'bg-red-500/10',
-                        textColor: 'text-red-400',
-                        status: 'active',
-                        price: '$2,000',
-                        stats: {
-                            primary: '127',
-                            primaryLabel: 'Calls Today',
-                            secondary: '18',
-                            secondaryLabel: 'Meetings',
-                            tertiary: '94%',
-                            tertiaryLabel: 'Connection'
-                        }
-                    },
-                    {
                         id: 'maya',
                         name: 'Maya',
-                        tagline: 'AI Content Creator',
-                        icon: 'video',
+                        tagline: 'Content Multiplier',
+                        icon: 'wand-2',
                         bgColor: 'bg-purple-500/10',
                         textColor: 'text-purple-400',
+                        progressColor: 'bg-purple-500',
                         status: 'active',
-                        price: '$1,500',
-                        stats: {
-                            primary: '47',
-                            primaryLabel: 'Videos',
-                            secondary: '940',
-                            secondaryLabel: 'Pieces',
-                            tertiary: '2.4M',
-                            tertiaryLabel: 'Views'
-                        }
+                        lastActive: '2 min ago',
+                        stats: [
+                            { label: 'Videos Processed', value: '12', percentage: 80 },
+                            { label: 'Content Pieces', value: '240', percentage: 65 },
+                            { label: 'Platform Reach', value: '4 platforms', percentage: 100 }
+                        ]
                     },
                     {
-                        id: 'jordan',
-                        name: 'Jordan',
-                        tagline: 'LinkedIn Growth',
-                        icon: 'linkedin',
-                        bgColor: 'bg-blue-500/10',
-                        textColor: 'text-blue-400',
+                        id: 'engage',
+                        name: 'Engage',
+                        tagline: 'Community Manager',
+                        icon: 'heart-handshake',
+                        bgColor: 'bg-pink-500/10',
+                        textColor: 'text-pink-400',
+                        progressColor: 'bg-pink-500',
                         status: 'active',
-                        price: '$1,000',
-                        stats: {
-                            primary: '8.2K',
-                            primaryLabel: 'Impressions',
-                            secondary: '156',
-                            secondaryLabel: 'Followers',
-                            tertiary: '23',
-                            tertiaryLabel: 'Leads'
-                        }
+                        lastActive: 'Just now',
+                        stats: [
+                            { label: 'Comments Replied', value: '1,284', percentage: 94 },
+                            { label: 'DMs Answered', value: '156', percentage: 78 },
+                            { label: 'Response Rate', value: '94%', percentage: 94 }
+                        ]
                     },
                     {
-                        id: 'sam',
-                        name: 'Sam',
-                        tagline: 'Local SEO',
-                        icon: 'map-pin',
-                        bgColor: 'bg-green-500/10',
-                        textColor: 'text-green-400',
-                        status: 'active',
-                        price: '$800',
-                        stats: {
-                            primary: '#1',
-                            primaryLabel: 'Ranking',
-                            secondary: '42',
-                            secondaryLabel: 'Reviews',
-                            tertiary: '+67%',
-                            tertiaryLabel: 'Traffic'
-                        }
-                    },
-                    {
-                        id: 'taylor',
-                        name: 'Taylor',
-                        tagline: 'Document Processor',
-                        icon: 'file-text',
+                        id: 'pitch',
+                        name: 'Pitch',
+                        tagline: 'Brand Deal Hunter',
+                        icon: 'handshake',
                         bgColor: 'bg-orange-500/10',
                         textColor: 'text-orange-400',
-                        status: 'active',
-                        price: '$497',
-                        stats: {
-                            primary: '1,247',
-                            primaryLabel: 'Docs',
-                            secondary: '99.7%',
-                            secondaryLabel: 'Accuracy',
-                            tertiary: '420',
-                            tertiaryLabel: 'Hours Saved'
-                        }
+                        progressColor: 'bg-orange-500',
+                        status: 'paused',
+                        lastActive: '3 days ago',
+                        stats: [
+                            { label: 'Deals Found', value: '3', percentage: 30 },
+                            { label: 'Pitches Sent', value: '12', percentage: 45 },
+                            { label: 'Response Rate', value: '25%', percentage: 25 }
+                        ]
+                    },
+                    {
+                        id: 'analyze',
+                        name: 'Analyze',
+                        tagline: 'Performance Coach',
+                        icon: 'line-chart',
+                        bgColor: 'bg-blue-500/10',
+                        textColor: 'text-blue-400',
+                        progressColor: 'bg-blue-500',
+                        status: 'paused',
+                        lastActive: '1 week ago',
+                        stats: [
+                            { label: 'Reports Generated', value: '4', percentage: 20 },
+                            { label: 'Insights', value: '28', percentage: 35 },
+                            { label: 'Competitors Tracked', value: '5', percentage: 50 }
+                        ]
                     }
                 ],
 
                 recentActivity: [
                     {
                         id: 1,
-                        icon: 'phone-call',
-                        bgColor: 'bg-red-500/10',
-                        textColor: 'text-red-400',
-                        title: 'Alex booked a meeting',
-                        description: 'With Sarah Chen at TechFlow',
+                        icon: 'video',
+                        bgColor: 'bg-purple-500/10',
+                        textColor: 'text-purple-400',
+                        title: 'Maya processed new video',
+                        description: 'Generated 20 content pieces from "How to Grow on TikTok"',
                         time: '2 min ago'
                     },
                     {
                         id: 2,
-                        icon: 'video',
-                        bgColor: 'bg-purple-500/10',
-                        textColor: 'text-purple-400',
-                        title: 'Maya processed video',
-                        description: 'Generated 18 content pieces',
+                        icon: 'message-circle',
+                        bgColor: 'bg-pink-500/10',
+                        textColor: 'text-pink-400',
+                        title: 'Engage replied to 47 comments',
+                        description: 'On your latest TikTok video',
                         time: '15 min ago'
                     },
                     {
                         id: 3,
-                        icon: 'linkedin',
-                        bgColor: 'bg-blue-500/10',
-                        textColor: 'text-blue-400',
-                        title: 'Jordan posted on LinkedIn',
-                        description: '12.4K impressions in 1 hour',
+                        icon: 'handshake',
+                        bgColor: 'bg-orange-500/10',
+                        textColor: 'text-orange-400',
+                        title: '🚨 Brand deal opportunity',
+                        description: 'Nike interested in collaboration ($5K budget)',
                         time: '1 hour ago'
                     },
                     {
                         id: 4,
-                        icon: 'star',
+                        icon: 'trending-up',
                         bgColor: 'bg-green-500/10',
                         textColor: 'text-green-400',
-                        title: 'Sam got 5-star review',
-                        description: 'Auto-responded with thank you',
+                        title: 'Engagement rate increased',
+                        description: '+23% this week vs last week',
                         time: '3 hours ago'
                     },
                     {
                         id: 5,
-                        icon: 'file-check',
-                        bgColor: 'bg-orange-500/10',
-                        textColor: 'text-orange-400',
-                        title: 'Taylor processed invoices',
-                        description: '47 invoices extracted',
+                        icon: 'users',
+                        bgColor: 'bg-blue-500/10',
+                        textColor: 'text-blue-400',
+                        title: 'Gained 1,247 new followers',
+                        description: 'Across all platforms today',
                         time: '5 hours ago'
                     }
                 ],
 
                 selectAgent(id) {
                     this.selectedAgent = id;
-                    window.location.href = `/dashboard/${id}`;
+                    // In real app, this would navigate to agent detail page
+                    console.log(`Selected agent: ${id}`);
                 }
             }
         }
