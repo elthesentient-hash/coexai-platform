@@ -3,549 +3,431 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoExAI - Your AI Agent Workforce | Automate & Scale</title>
+    <title>CoExAI — AI Agents That Work For You</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
+                        dark: {
+                            50: '#fafafa',
+                            100: '#f5f5f5',
+                            200: '#e5e5e5',
+                            300: '#d4d4d4',
+                            400: '#a3a3a3',
+                            500: '#737373',
+                            600: '#525252',
+                            700: '#404040',
+                            800: '#262626',
+                            900: '#171717',
+                            950: '#0a0a0a',
                         },
-                        accent: {
-                            purple: '#a855f7',
-                            pink: '#ec4899',
+                        brand: {
+                            purple: '#8b5cf6',
+                            blue: '#3b82f6',
                             cyan: '#06b6d4',
-                            indigo: '#6366f1',
+                            pink: '#ec4899',
                         }
                     },
                     animation: {
+                        'fade-in': 'fadeIn 1s ease-out',
+                        'slide-up': 'slideUp 0.8s ease-out',
                         'float': 'float 6s ease-in-out infinite',
-                        'float-delayed': 'float 6s ease-in-out 3s infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'gradient': 'gradient 8s ease infinite',
-                        'slide-up': 'slideUp 0.6s ease-out forwards',
-                        'fade-in': 'fadeIn 0.8s ease-out forwards',
                     },
                     keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-20px)' },
-                        },
-                        gradient: {
-                            '0%, 100%': { backgroundPosition: '0% 50%' },
-                            '50%': { backgroundPosition: '100% 50%' },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
                         },
                         slideUp: {
                             '0%': { opacity: '0', transform: 'translateY(30px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' },
                         },
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        }
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
                     }
                 }
             }
         }
     </script>
     <style>
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
         body {
-            background-color: #0a0a0f;
+            background: #000;
+            color: #fafafa;
         }
-        .galaxy-bg {
+        
+        /* Subtle gradient background */
+        .bg-gradient-radial {
             background: 
-                radial-gradient(ellipse at 20% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 60%),
-                linear-gradient(180deg, #0a0a0f 0%, #0f0f1a 50%, #0a0a0f 100%);
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.15), transparent),
+                radial-gradient(ellipse 60% 40% at 80% 50%, rgba(59, 130, 246, 0.08), transparent),
+                radial-gradient(ellipse 50% 30% at 20% 80%, rgba(139, 92, 246, 0.08), transparent),
+                #000;
         }
-        .glass-card {
+        
+        /* Apple-style cards */
+        .apple-card {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .glass-card:hover {
+        
+        .apple-card:hover {
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-4px);
         }
-        .gradient-text {
-            background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #06b6d4 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .gradient-border {
-            position: relative;
-        }
-        .gradient-border::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.5), rgba(236, 72, 153, 0.5), rgba(6, 182, 212, 0.5));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-        .glow-purple {
-            box-shadow: 0 0 60px rgba(168, 85, 247, 0.3);
-        }
-        .glow-cyan {
-            box-shadow: 0 0 60px rgba(6, 182, 212, 0.3);
-        }
-        .glow-pink {
-            box-shadow: 0 0 60px rgba(236, 72, 153, 0.3);
-        }
-        .mesh-gradient {
-            background: 
-                radial-gradient(at 40% 20%, hsla(270, 50%, 50%, 0.3) 0px, transparent 50%),
-                radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.3) 0px, transparent 50%),
-                radial-gradient(at 0% 50%, hsla(340, 100%, 76%, 0.3) 0px, transparent 50%),
-                radial-gradient(at 80% 50%, hsla(270, 50%, 50%, 0.3) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, hsla(189, 100%, 56%, 0.3) 0px, transparent 50%),
-                radial-gradient(at 80% 100%, hsla(340, 100%, 76%, 0.3) 0px, transparent 50%);
-        }
-        .reveal {
-            opacity: 0;
-            transform: translateY(24px);
-            transition: all 0.6s cubic-bezier(0.5, 0, 0, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .nav-blur {
-            background: rgba(10, 10, 15, 0.8);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
+        
+        /* Premium buttons */
         .btn-primary {
-            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-            transition: all 0.3s ease;
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 1px 2px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(59, 130, 246, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
         }
+        
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.4);
+            background: linear-gradient(180deg, #4b92f6 0%, #3573eb 100%);
+            box-shadow: 
+                0 4px 12px rgba(59, 130, 246, 0.4),
+                0 0 0 1px rgba(59, 130, 246, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
         }
+        
         .btn-secondary {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
+        
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.2);
         }
-        .feature-icon {
-            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(6, 182, 212, 0.2));
+        
+        /* Navigation blur */
+        .nav-blur {
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
         }
-        .orb {
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.5;
+        
+        /* Gradient text */
+        .text-gradient {
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .star {
+        
+        /* Section divider */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        }
+        
+        /* Agent card specific */
+        .agent-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .agent-card::before {
+            content: '';
             position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 3s ease-in-out infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
         }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+        
+        /* Feature list */
+        .feature-list li {
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .feature-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6rem;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #3b82f6;
+        }
+        
+        /* Pricing card highlight */
+        .pricing-highlight {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        /* FAQ accordion */
+        .faq-item {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Focus states */
+        button:focus-visible,
+        a:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
         }
     </style>
 </head>
-<body class="text-white antialiased overflow-x-hidden">
+<body class="bg-gradient-radial min-h-screen">
     <!-- Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                        <i data-lucide="bot" class="w-5 h-5 text-white"></i>
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <a href="#" class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                        <i data-lucide="cpu" class="w-4 h-4 text-white"></i>
                     </div>
-                    <span class="text-xl font-bold">CoEx<span class="gradient-text">AI</span></span>
-                </div>
+                    <span class="text-lg font-semibold tracking-tight">CoExAI</span>
+                </a>
+                
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="#agents" class="text-sm text-gray-400 hover:text-white transition-colors">Agents</a>
-                    <a href="#how-it-works" class="text-sm text-gray-400 hover:text-white transition-colors">How It Works</a>
-                    <a href="#pricing" class="text-sm text-gray-400 hover:text-white transition-colors">Pricing</a>
-                    <a href="#faq" class="text-sm text-gray-400 hover:text-white transition-colors">FAQ</a>
+                    <a href="#agents" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Agents</a>
+                    <a href="#how-it-works" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">How it Works</a>
+                    <a href="#pricing" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Pricing</a>
                 </div>
-                <div class="flex items-center gap-4">
-                    <button class="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors">Sign In</button>
-                    <button class="btn-primary px-4 py-2 rounded-full text-sm font-medium">Get Started</button>
+                
+                <div class="flex items-center gap-3">
+                    <a href="#" class="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors duration-200">Sign In</a>
+                    <a href="#pricing" class="btn-primary px-4 py-1.5 rounded-full text-sm font-medium text-white">Get Started</a>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center galaxy-bg pt-16 overflow-hidden">
-        <!-- Animated orbs -->
-        <div class="orb w-96 h-96 bg-purple-600 absolute top-20 -left-48 animate-pulse-slow"></div>
-        <div class="orb w-80 h-80 bg-cyan-500 absolute bottom-20 -right-40 animate-float"></div>
-        <div class="orb w-64 h-64 bg-pink-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-float-delayed opacity-30"></div>
-        
-        <!-- Stars -->
-        <div id="stars-container" class="absolute inset-0 pointer-events-none"></div>
-        
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-            <div class="reveal">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8">
+    <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-32">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-4xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-8">
                     <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                    <span class="text-sm text-gray-300">4 AI Agents Now Available</span>
+                    <span class="text-xs text-gray-400">Now with Maya, Jordan, Sam & Taylor</span>
                 </div>
-            </div>
-            
-            <h1 class="reveal text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight mb-6" style="transition-delay: 100ms;">
-                Your <span class="gradient-text">AI Workforce</span><br />
-                <span class="text-white">Is Ready</span>
-            </h1>
-            
-            <p class="reveal text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed" style="transition-delay: 200ms;">
-                Meet Maya, Jordan, Sam, and Taylor — four specialized AI agents that work 24/7 to grow your business, create content, optimize SEO, and process documents. No hiring. No training. Just results.
-            </p>
-            
-            <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4" style="transition-delay: 300ms;">
-                <button class="btn-primary px-8 py-4 rounded-full text-base font-semibold flex items-center gap-2">
-                    Deploy Your Agents
-                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                </button>
-                <button class="btn-secondary px-8 py-4 rounded-full text-base font-semibold flex items-center gap-2">
-                    <i data-lucide="play" class="w-5 h-5"></i>
-                    Watch Demo
-                </button>
-            </div>
-            
-            <div class="reveal mt-16 flex flex-wrap items-center justify-center gap-8 opacity-50" style="transition-delay: 400ms;">
-                <span class="text-sm text-gray-500">Trusted by teams at</span>
-                <div class="flex items-center gap-8">
-                    <span class="text-gray-400 font-semibold">Stripe</span>
-                    <span class="text-gray-400 font-semibold">Notion</span>
-                    <span class="text-gray-400 font-semibold">Figma</span>
-                    <span class="text-gray-400 font-semibold">Linear</span>
+                
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight mb-6 leading-[1.1]">
+                    Meet Your
+                    <span class="text-gradient">AI Workforce</span>
+                </h1>
+                
+                <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    Four autonomous AI agents working 24/7 to grow your business. 
+                    From content creation to lead generation, they handle it all.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#pricing" class="btn-primary px-8 py-3.5 rounded-full text-base font-medium text-white w-full sm:w-auto">
+                        Start Free Trial
+                    </a>
+                    <a href="#agents" class="btn-secondary px-8 py-3.5 rounded-full text-base font-medium text-white w-full sm:w-auto flex items-center justify-center gap-2">
+                        <i data-lucide="play-circle" class="w-5 h-5"></i>
+                        See How It Works
+                    </a>
                 </div>
+                
+                <p class="mt-6 text-sm text-gray-500">No credit card required. 7-day free trial.</p>
             </div>
-        </div>
-        
-        <!-- Scroll indicator -->
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-            <i data-lucide="chevron-down" class="w-6 h-6 text-gray-500"></i>
         </div>
     </section>
 
-    <!-- Problem/Agitation Section -->
-    <section class="relative py-24 bg-[#0a0a0f]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 reveal">
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-                    Running a Business Shouldn't<br />
-                    <span class="text-gray-500">Feel Like This</span>
-                </h2>
-            </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="reveal glass-card rounded-2xl p-8 gradient-border" style="transition-delay: 100ms;">
-                    <div class="w-12 h-12 rounded-xl bg-red-500/10 flex items-center justify-center mb-6">
-                        <i data-lucide="clock" class="w-6 h-6 text-red-400"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-3">Endless Content Creation</h3>
-                    <p class="text-gray-400 leading-relaxed">Spending 20+ hours weekly creating content that barely gets engagement. The content treadmill never stops.</p>
+    <!-- Stats Section -->
+    <section class="py-12 border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1">4</div>
+                    <div class="text-sm text-gray-500">AI Agents</div>
                 </div>
-                
-                <div class="reveal glass-card rounded-2xl p-8 gradient-border" style="transition-delay: 200ms;">
-                    <div class="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mb-6">
-                        <i data-lucide="search" class="w-6 h-6 text-orange-400"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-3">Invisible on Google</h3>
-                    <p class="text-gray-400 leading-relaxed">Competitors rank #1 while you're buried on page 3. Local customers can't find you when they need you most.</p>
+                <div class="text-center">
+                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1">10,000+</div>
+                    <div class="text-sm text-gray-500">Hours Saved</div>
                 </div>
-                
-                <div class="reveal glass-card rounded-2xl p-8 gradient-border" style="transition-delay: 300ms;">
-                    <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center mb-6">
-                        <i data-lucide="file-stack" class="w-6 h-6 text-yellow-400"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-3">Document Chaos</h3>
-                    <p class="text-gray-400 leading-relaxed">Drowning in contracts, invoices, and forms that take hours to process manually. Errors cost money.</p>
+                <div class="text-center">
+                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1">99.7%</div>
+                    <div class="text-sm text-gray-500">Accuracy Rate</div>
                 </div>
-                
-                <div class="reveal glass-card rounded-2xl p-8 gradient-border lg:col-span-2" style="transition-delay: 400ms;">
-                    <div class="flex flex-col md:flex-row gap-8 items-start">
-                        <div class="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center flex-shrink-0">
-                            <i data-lucide="linkedin" class="w-6 h-6 text-pink-400"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-semibold mb-3">LinkedIn Ghost Town</h3>
-                            <p class="text-gray-400 leading-relaxed">Posting consistently but hearing crickets. Your network isn't growing. Your personal brand is stagnant while others land speaking gigs and partnerships through LinkedIn. You know the potential is there — you're just not tapping into it.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="reveal glass-card rounded-2xl p-8 gradient-border" style="transition-delay: 500ms;">
-                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-6">
-                        <i data-lucide="users" class="w-6 h-6 text-purple-400"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-3">Hiring Nightmare</h3>
-                    <p class="text-gray-400 leading-relaxed">Can't afford a full team. Freelancers are unreliable. Training takes months you don't have.</p>
+                <div class="text-center">
+                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1">24/7</div>
+                    <div class="text-sm text-gray-500">Always On</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Solution Section -->
-    <section class="relative py-24 overflow-hidden">
-        <div class="absolute inset-0 mesh-gradient opacity-30"></div>
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 reveal">
-                <span class="inline-block text-sm font-medium text-purple-400 uppercase tracking-wider mb-4">The Solution</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-                    Meet Your <span class="gradient-text">AI Dream Team</span>
+    <!-- Agents Section -->
+    <section id="agents" class="py-24 lg:py-32">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
+                    Specialized agents for every need
                 </h2>
-                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
-                    Four specialized agents, each trained for a specific business function. They work together, learn from your data, and deliver results while you sleep.
+                <p class="text-lg text-gray-400">
+                    Each agent is expertly trained in their domain. Deploy one or all four.
                 </p>
             </div>
             
-            <div class="grid lg:grid-cols-2 gap-8 items-center">
-                <div class="reveal glass-card rounded-3xl p-10 gradient-border glow-purple" style="transition-delay: 100ms;">
-                    <div class="flex items-start gap-6">
-                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
-                            <i data-lucide="sparkles" class="w-8 h-8 text-white"></i>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Maya Card -->
+                <div class="apple-card agent-card p-8">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+                            <i data-lucide="video" class="w-7 h-7 text-purple-400"></i>
                         </div>
+                        <span class="text-sm font-medium text-purple-400">Content</span>
+                    </div>
+                    
+                    <h3 class="text-2xl font-semibold mb-2">Maya</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Transforms one video or podcast into 20+ pieces of content. 
+                        Automatically creates shorts, carousels, threads, and blog posts.
+                    </p>
+                    
+                    <ul class="feature-list space-y-3 text-sm text-gray-300 mb-8">
+                        <li>Auto-generates TikToks, Reels & Shorts</li>
+                        <li>Creates LinkedIn carousels</li>
+                        <li>Writes Twitter/X threads</li>
+                        <li>Produces SEO-optimized blog posts</li>
+                    </ul>
+                    
+                    <div class="flex items-center justify-between pt-6 border-t border-white/5">
                         <div>
-                            <h3 class="text-2xl font-bold mb-2">Meet the Squad</h3>
-                            <p class="text-gray-400 mb-6">Each agent has a unique personality, skill set, and mission. They're not just tools — they're team members that understand your business.</p>
-                            <div class="flex flex-wrap gap-3">
-                                <span class="px-3 py-1 rounded-full bg-purple-500/10 text-purple-300 text-sm border border-purple-500/20">Maya</span>
-                                <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-300 text-sm border border-blue-500/20">Jordan</span>
-                                <span class="px-3 py-1 rounded-full bg-green-500/10 text-green-300 text-sm border border-green-500/20">Sam</span>
-                                <span class="px-3 py-1 rounded-full bg-orange-500/10 text-orange-300 text-sm border border-orange-500/20">Taylor</span>
-                            </div>
+                            <span class="text-2xl font-semibold">$297</span>
+                            <span class="text-gray-500">/mo</span>
                         </div>
+                        <button class="btn-secondary px-5 py-2 rounded-full text-sm font-medium">
+                            Learn More
+                        </button>
                     </div>
                 </div>
-                
-                <div class="reveal grid grid-cols-2 gap-4" style="transition-delay: 200ms;">
-                    <div class="glass-card rounded-2xl p-6 text-center">
-                        <div class="text-3xl font-bold gradient-text mb-1">24/7</div>
-                        <div class="text-sm text-gray-400">Always On</div>
-                    </div>
-                    <div class="glass-card rounded-2xl p-6 text-center">
-                        <div class="text-3xl font-bold gradient-text mb-1">10x</div>
-                        <div class="text-sm text-gray-400">Faster Output</div>
-                    </div>
-                    <div class="glass-card rounded-2xl p-6 text-center">
-                        <div class="text-3xl font-bold gradient-text mb-1">4</div>
-                        <div class="text-sm text-gray-400">Specialized Agents</div>
-                    </div>
-                    <div class="glass-card rounded-2xl p-6 text-center">
-                        <div class="text-3xl font-bold gradient-text mb-1">0</div>
-                        <div class="text-sm text-gray-400">Training Needed</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <!-- Agent Showcase Section -->
-    <section id="agents" class="relative py-24 bg-[#0a0a0f]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 reveal">
-                <span class="inline-block text-sm font-medium text-cyan-400 uppercase tracking-wider mb-4">Agent Roster</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-                    Choose Your <span class="gradient-text">Champions</span>
-                </h2>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Maya - Content Repurposing -->
-                <div class="reveal glass-card rounded-3xl overflow-hidden gradient-border group hover:scale-[1.02] transition-transform duration-300" style="transition-delay: 100ms;">
-                    <div class="h-48 bg-gradient-to-br from-purple-600/20 to-pink-600/20 relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <i data-lucide="palette" class="w-12 h-12 text-white"></i>
-                            </div>
+                <!-- Jordan Card -->
+                <div class="apple-card agent-card p-8">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
+                            <i data-lucide="linkedin" class="w-7 h-7 text-blue-400"></i>
                         </div>
-                        <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-medium border border-purple-500/30">Content</span>
-                        </div>
+                        <span class="text-sm font-medium text-blue-400">Growth</span>
                     </div>
-                    <div class="p-8">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-2xl font-bold">Maya</h3>
-                            <span class="text-lg font-semibold text-purple-400">Custom</span>
+                    
+                    <h3 class="text-2xl font-semibold mb-2">Jordan</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Your personal LinkedIn ghostwriter. Creates authentic content in your voice, 
+                        engages with your network, and builds authority that drives inbound leads.
+                    </p>
+                    
+                    <ul class="feature-list space-y-3 text-sm text-gray-300 mb-8">
+                        <li>Ghostwrites posts in your voice</li>
+                        <li>Auto-engages with target audience</li>
+                        <li>5-10K impressions per post</li>
+                        <li>Generates qualified inbound leads</li>
+                    </ul>
+                    
+                    <div class="flex items-center justify-between pt-6 border-t border-white/5">
+                        <div>
+                            <span class="text-2xl font-semibold">$1,000</span>
+                            <span class="text-gray-500">/mo</span>
                         </div>
-                        <p class="text-gray-400 mb-6">Content Repurposing Specialist. Transforms one piece of content into 20+ formats across all platforms. Blogs, social posts, newsletters, and more.</p>
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-purple-400 flex-shrink-0"></i>
-                                Auto-generate 20+ content pieces from one source
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-purple-400 flex-shrink-0"></i>
-                                Platform-optimized formatting (X, LinkedIn, IG)
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-purple-400 flex-shrink-0"></i>
-                                Brand voice matching and tone consistency
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-purple-400 flex-shrink-0"></i>
-                                Content calendar automation
-                            </li>
-                        </ul>
-                        <button class="w-full btn-secondary py-3 rounded-xl font-medium group-hover:bg-purple-500/20 group-hover:border-purple-500/30 transition-all">
-                            Learn More About Maya
+                        <button class="btn-primary px-5 py-2 rounded-full text-sm font-medium">
+                            Get Started
                         </button>
                     </div>
                 </div>
-                
-                <!-- Jordan - LinkedIn Growth -->
-                <div class="reveal glass-card rounded-3xl overflow-hidden gradient-border group hover:scale-[1.02] transition-transform duration-300" style="transition-delay: 200ms;">
-                    <div class="h-48 bg-gradient-to-br from-blue-600/20 to-cyan-600/20 relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <i data-lucide="linkedin" class="w-12 h-12 text-white"></i>
-                            </div>
+
+                <!-- Sam Card -->
+                <div class="apple-card agent-card p-8">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center">
+                            <i data-lucide="map-pin" class="w-7 h-7 text-green-400"></i>
                         </div>
-                        <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-xs font-medium border border-blue-500/30">Social</span>
-                        </div>
+                        <span class="text-sm font-medium text-green-400">Local SEO</span>
                     </div>
-                    <div class="p-8">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-2xl font-bold">Jordan</h3>
-                            <span class="text-lg font-semibold text-blue-400">$1,000/mo</span>
+                    
+                    <h3 class="text-2xl font-semibold mb-2">Sam</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Dominates Google Maps rankings for local businesses. Manages reviews, 
+                        optimizes listings, and drives foot traffic to your door.
+                    </p>
+                    
+                    <ul class="feature-list space-y-3 text-sm text-gray-300 mb-8">
+                        <li>Achieves #1 Google Maps ranking</li>
+                        <li>Automated review management</li>
+                        <li>Competitor tracking & analysis</li>
+                        <li>Local citation building</li>
+                    </ul>
+                    
+                    <div class="flex items-center justify-between pt-6 border-t border-white/5">
+                        <div>
+                            <span class="text-2xl font-semibold">$800</span>
+                            <span class="text-gray-500">/mo</span>
                         </div>
-                        <p class="text-gray-400 mb-6">LinkedIn Growth Engine. Builds your personal brand, engages with your network, and generates leads on autopilot. The social seller you always wanted.</p>
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-blue-400 flex-shrink-0"></i>
-                                Daily thought leadership content creation
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-blue-400 flex-shrink-0"></i>
-                                Strategic commenting and engagement
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-blue-400 flex-shrink-0"></i>
-                                Connection request personalization
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-blue-400 flex-shrink-0"></i>
-                                DM sequence automation and follow-ups
-                            </li>
-                        </ul>
-                        <button class="w-full btn-secondary py-3 rounded-xl font-medium group-hover:bg-blue-500/20 group-hover:border-blue-500/30 transition-all">
-                            Learn More About Jordan
+                        <button class="btn-secondary px-5 py-2 rounded-full text-sm font-medium">
+                            Learn More
                         </button>
                     </div>
                 </div>
-                
-                <!-- Sam - Local SEO -->
-                <div class="reveal glass-card rounded-3xl overflow-hidden gradient-border group hover:scale-[1.02] transition-transform duration-300" style="transition-delay: 300ms;">
-                    <div class="h-48 bg-gradient-to-br from-green-600/20 to-emerald-600/20 relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <i data-lucide="map-pin" class="w-12 h-12 text-white"></i>
-                            </div>
+
+                <!-- Taylor Card -->
+                <div class="apple-card agent-card p-8">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center">
+                            <i data-lucide="file-text" class="w-7 h-7 text-orange-400"></i>
                         </div>
-                        <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 rounded-full bg-green-500/20 text-green-300 text-xs font-medium border border-green-500/30">SEO</span>
-                        </div>
+                        <span class="text-sm font-medium text-orange-400">Automation</span>
                     </div>
-                    <div class="p-8">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-2xl font-bold">Sam</h3>
-                            <span class="text-lg font-semibold text-green-400">$800/mo</span>
+                    
+                    <h3 class="text-2xl font-semibold mb-2">Taylor</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Processes documents with 99.7% accuracy. Extracts data, automates workflows, 
+                        and integrates with your existing systems.
+                    </p>
+                    
+                    <ul class="feature-list space-y-3 text-sm text-gray-300 mb-8">
+                        <li>99.7% data extraction accuracy</li>
+                        <li>Processes 1000s of documents</li>
+                        <li>Integrates with any CRM/system</li>
+                        <li>Automated workflow triggers</li>
+                    </ul>
+                    
+                    <div class="flex items-center justify-between pt-6 border-t border-white/5">
+                        <div>
+                            <span class="text-2xl font-semibold">$497</span>
+                            <span class="text-gray-500">/mo</span>
                         </div>
-                        <p class="text-gray-400 mb-6">Local SEO Domination. Gets your business ranking #1 in local searches. Optimizes Google Business Profile, builds citations, and drives foot traffic.</p>
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                                Google Business Profile optimization
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                                Local citation building and cleanup
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                                Review generation and response management
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                                Local keyword ranking reports
-                            </li>
-                        </ul>
-                        <button class="w-full btn-secondary py-3 rounded-xl font-medium group-hover:bg-green-500/20 group-hover:border-green-500/30 transition-all">
-                            Learn More About Sam
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Taylor - Document Processor -->
-                <div class="reveal glass-card rounded-3xl overflow-hidden gradient-border group hover:scale-[1.02] transition-transform duration-300" style="transition-delay: 400ms;">
-                    <div class="h-48 bg-gradient-to-br from-orange-600/20 to-amber-600/20 relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="w-24 h-24 rounded-full bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <i data-lucide="file-text" class="w-12 h-12 text-white"></i>
-                            </div>
-                        </div>
-                        <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 rounded-full bg-orange-500/20 text-orange-300 text-xs font-medium border border-orange-500/30">Operations</span>
-                        </div>
-                    </div>
-                    <div class="p-8">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-2xl font-bold">Taylor</h3>
-                            <span class="text-lg font-semibold text-orange-400">Custom</span>
-                        </div>
-                        <p class="text-gray-400 mb-6">Document Processing Wizard. Extracts data, fills forms, generates reports, and organizes your paperwork. Your back-office powerhouse.</p>
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-orange-400 flex-shrink-0"></i>
-                                Intelligent document data extraction
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-orange-400 flex-shrink-0"></i>
-                                Automated form filling and processing
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-orange-400 flex-shrink-0"></i>
-                                Report generation and distribution
-                            </li>
-                            <li class="flex items-center gap-3 text-sm text-gray-300">
-                                <i data-lucide="check" class="w-5 h-5 text-orange-400 flex-shrink-0"></i>
-                                Document classification and archiving
-                            </li>
-                        </ul>
-                        <button class="w-full btn-secondary py-3 rounded-xl font-medium group-hover:bg-orange-500/20 group-hover:border-orange-500/30 transition-all">
-                            Learn More About Taylor
+                        <button class="btn-secondary px-5 py-2 rounded-full text-sm font-medium">
+                            Learn More
                         </button>
                     </div>
                 </div>
@@ -553,448 +435,306 @@
         </div>
     </section>
 
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="relative py-24 overflow-hidden">
-        <div class="absolute inset-0 mesh-gradient opacity-20"></div>
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 reveal">
-                <span class="inline-block text-sm font-medium text-pink-400 uppercase tracking-wider mb-4">Simple Process</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-                    Deploy in <span class="gradient-text">3 Minutes</span>
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-24 lg:py-32 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
+                    Deploy in minutes, not months
                 </h2>
-                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
-                    No complex setup. No technical skills required. Your agents are ready to work in three simple steps.
+                <p class="text-lg text-gray-400">
+                    Getting started is simple. Your agents are ready to work in three easy steps.
                 </p>
             </div>
             
             <div class="grid md:grid-cols-3 gap-8">
-                <div class="reveal relative" style="transition-delay: 100ms;">
-                    <div class="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xl font-bold z-10">1</div>
-                    <div class="glass-card rounded-2xl p-8 pt-12 h-full gradient-border">
-                        <div class="w-16 h-16 rounded-2xl feature-icon flex items-center justify-center mb-6">
-                            <i data-lucide="user-plus" class="w-8 h-8 text-purple-400"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Choose Your Agents</h3>
-                        <p class="text-gray-400">Select which agents fit your needs. Mix and match based on your business priorities. Start with one or deploy the full squad.</p>
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-semibold text-blue-400">1</span>
                     </div>
-                    <div class="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-purple-500 to-transparent"></div>
+                    <h3 class="text-xl font-semibold mb-3">Choose Your Agent</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Select the agent that matches your biggest need. Start with one or deploy all four.
+                    </p>
                 </div>
                 
-                <div class="reveal relative" style="transition-delay: 200ms;">
-                    <div class="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xl font-bold z-10">2</div>
-                    <div class="glass-card rounded-2xl p-8 pt-12 h-full gradient-border">
-                        <div class="w-16 h-16 rounded-2xl feature-icon flex items-center justify-center mb-6">
-                            <i data-lucide="settings" class="w-8 h-8 text-cyan-400"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Quick Setup</h3>
-                        <p class="text-gray-400">Connect your accounts, share your brand guidelines, and set your preferences. Our onboarding wizard makes it painless.</p>
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-semibold text-purple-400">2</span>
                     </div>
-                    <div class="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-cyan-500 to-transparent"></div>
+                    <h3 class="text-xl font-semibold mb-3">Connect & Configure</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Link your accounts and set preferences. Our agents learn your voice and style.
+                    </p>
                 </div>
                 
-                <div class="reveal relative" style="transition-delay: 300ms;">
-                    <div class="absolute -top-4 -left-4 w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xl font-bold z-10">3</div>
-                    <div class="glass-card rounded-2xl p-8 pt-12 h-full gradient-border">
-                        <div class="w-16 h-16 rounded-2xl feature-icon flex items-center justify-center mb-6">
-                            <i data-lucide="rocket" class="w-8 h-8 text-pink-400"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Watch Them Work</h3>
-                        <p class="text-gray-400">Your agents start immediately. Review their work, give feedback, and watch your business grow while you focus on what matters.</p>
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
+                        <span class="text-2xl font-semibold text-green-400">3</span>
                     </div>
+                    <h3 class="text-xl font-semibold mb-3">Watch Them Work</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Your agents start immediately. Monitor progress and results in real-time.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Social Proof Section -->
-    <section class="relative py-24 bg-[#0a0a0f]">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 reveal">
-                <span class="inline-block text-sm font-medium text-green-400 uppercase tracking-wider mb-4">Success Stories</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-                    Real Results from <span class="gradient-text">Real Teams</span>
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-24 lg:py-32 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
+                    Simple, transparent pricing
                 </h2>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="reveal glass-card rounded-2xl p-8 gradient-border" style="transition-delay: 100ms;">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">SJ</div>
-                        <div>
-                            <div class="font-semibold">Sarah Johnson</div>
-                            <div class="text-sm text-gray-500">Marketing Director, TechFlow</div>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 leading-relaxed mb-4">"Maya transformed our content game. We went from struggling to post once a week to having a month's worth of content ready in advance. Our engagement is up 340%."</p>
-                    <div class="flex items-center gap-1">
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                    </div>
-                </div>
-                
-                <div class="reveal glass-card rounded-2xl p-8 gradient-border" style="transition-delay: 200ms;">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold">MR</div>
-                        <div>
-                            <div class="font-semibold">Michael Roberts</div>
-                            <div class="text-sm text-gray-500">Founder, LocalEats Restaurant</div>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 leading-relaxed mb-4">"Sam got us to #1 on Google Maps in 6 weeks. We were invisible before. Now we're getting 40+ new customers weekly from local searches alone."</p>
-                    <div class="flex items-center gap-1">
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                    </div>
-                </div>
-                
-                <div class="reveal glass-card rounded-2xl p-8 gradient-border" style="transition-delay: 300ms;">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-bold">EP</div>
-                        <div>
-                            <div class="font-semibold">Emily Parker</div>
-                            <div class="text-sm text-gray-500">CEO, Parker Consulting</div>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 leading-relaxed mb-4">"Jordan landed me 3 speaking gigs and 12 qualified leads in the first month. My LinkedIn went from 500 to 5,000 followers. Best investment I've made."</p>
-                    <div class="flex items-center gap-1">
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="reveal mt-16 glass-card rounded-2xl p-8 gradient-border" style="transition-delay: 400ms;">
-                <div class="grid md:grid-cols-4 gap-8 text-center">
-                    <div>
-                        <div class="text-4xl font-bold gradient-text mb-2">500+</div>
-                        <div class="text-sm text-gray-400">Active Agents</div>
-                    </div>
-                    <div>
-                        <div class="text-4xl font-bold gradient-text mb-2">10M+</div>
-                        <div class="text-sm text-gray-400">Tasks Completed</div>
-                    </div>
-                    <div>
-                        <div class="text-4xl font-bold gradient-text mb-2">340%</div>
-                        <div class="text-sm text-gray-400">Avg. Growth</div>
-                    </div>
-                    <div>
-                        <div class="text-4xl font-bold gradient-text mb-2">4.9/5</div>
-                        <div class="text-sm text-gray-400">Customer Rating</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Comparison Section -->
-    <section id="pricing" class="relative py-24 overflow-hidden">
-        <div class="absolute inset-0 mesh-gradient opacity-20"></div>
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 reveal">
-                <span class="inline-block text-sm font-medium text-orange-400 uppercase tracking-wider mb-4">Pricing</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-                    Choose Your <span class="gradient-text">Plan</span>
-                </h2>
-                <p class="text-lg text-gray-400 max-w-2xl mx-auto">
-                    Transparent pricing. No hidden fees. Cancel anytime. Pay only for the agents you need.
+                <p class="text-lg text-gray-400">
+                    Start with a 7-day free trial. No credit card required.
                 </p>
             </div>
             
-            <div class="grid lg:grid-cols-3 gap-8">
-                <!-- Starter -->
-                <div class="reveal glass-card rounded-3xl p-8 gradient-border" style="transition-delay: 100ms;">
-                    <div class="mb-6">
-                        <h3 class="text-xl font-bold mb-2">Starter</h3>
-                        <p class="text-sm text-gray-400">Perfect for solopreneurs</p>
-                    </div>
-                    <div class="mb-6">
-                        <span class="text-4xl font-bold">$800</span>
-                        <span class="text-gray-400">/mo</span>
-                    </div>
-                    <ul class="space-y-4 mb-8">
-                        <li class="flex items-center gap-3 text-sm">
-                            <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                            <span>Sam - Local SEO Agent</span>
-                        </li>
-                        <li class="flex items-center gap-3 text-sm">
-                            <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                            <span>Weekly performance reports</span>
-                        </li>
-                        <li class="flex items-center gap-3 text-sm">
-                            <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                            <span>Email support</span>
-                        </li>
-                        <li class="flex items-center gap-3 text-sm text-gray-500">
-                            <i data-lucide="x" class="w-5 h-5 flex-shrink-0"></i>
-                            <span>Custom integrations</span>
-                        </li>
-                    </ul>
-                    <button class="w-full btn-secondary py-3 rounded-xl font-medium">Get Started</button>
-                </div>
-                
-                <!-- Growth (Featured) -->
-                <div class="reveal relative" style="transition-delay: 200ms;">
-                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                        <span class="px-4 py-1 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-sm font-medium">Most Popular</span>
-                    </div>
-                    <div class="glass-card rounded-3xl p-8 gradient-border glow-purple h-full flex flex-col">
-                        <div class="mb-6">
-                            <h3 class="text-xl font-bold mb-2">Growth</h3>
-                            <p class="text-sm text-gray-400">For growing businesses</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <!-- Maya Pricing -->
+                <div class="apple-card p-6 flex flex-col">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                            <i data-lucide="video" class="w-5 h-5 text-purple-400"></i>
                         </div>
-                        <div class="mb-6">
-                            <span class="text-4xl font-bold gradient-text">$1,500</span>
-                            <span class="text-gray-400">/mo</span>
-                        </div>
-                        <ul class="space-y-4 mb-8 flex-grow">
-                            <li class="flex items-center gap-3 text-sm">
-                                <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                                <span>Jordan - LinkedIn Agent</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-sm">
-                                <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                                <span>Sam - Local SEO Agent</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-sm">
-                                <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                                <span>Daily performance reports</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-sm">
-                                <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                                <span>Priority support</span>
-                            </li>
-                            <li class="flex items-center gap-3 text-sm">
-                                <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                                <span>Strategy calls monthly</span>
-                            </li>
-                        </ul>
-                        <button class="w-full btn-primary py-3 rounded-xl font-medium">Get Started</button>
+                        <span class="font-medium">Maya</span>
                     </div>
-                </div>
-                
-                <!-- Enterprise -->
-                <div class="reveal glass-card rounded-3xl p-8 gradient-border" style="transition-delay: 300ms;">
-                    <div class="mb-6">
-                        <h3 class="text-xl font-bold mb-2">Enterprise</h3>
-                        <p class="text-sm text-gray-400">Full AI workforce</p>
+                    <div class="mb-4">
+                        <span class="text-3xl font-semibold">$297</span>
+                        <span class="text-gray-500">/mo</span>
                     </div>
-                    <div class="mb-6">
-                        <span class="text-4xl font-bold">Custom</span>
-                    </div>
-                    <ul class="space-y-4 mb-8">
-                        <li class="flex items-center gap-3 text-sm">
-                            <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                            <span>All 4 Agents included</span>
-                        </li>
-                        <li class="flex items-center gap-3 text-sm">
-                            <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                            <span>Maya + Taylor custom setup</span>
-                        </li>
-                        <li class="flex items-center gap-3 text-sm">
-                            <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                            <span>Real-time dashboards</span>
-                        </li>
-                        <li class="flex items-center gap-3 text-sm">
-                            <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                            <span>Dedicated account manager</span>
-                        </li>
-                        <li class="flex items-center gap-3 text-sm">
-                            <i data-lucide="check" class="w-5 h-5 text-green-400 flex-shrink-0"></i>
-                            <span>Custom integrations</span>
-                        </li>
+                    <ul class="space-y-2 text-sm text-gray-400 mb-6 flex-grow">
+                        <li>Unlimited content repurposing</li>
+                        <li>All social platforms</li>
+                        <li>Custom branding</li>
+                        <li>Priority processing</li>
                     </ul>
-                    <button class="w-full btn-secondary py-3 rounded-xl font-medium">Contact Sales</button>
+                    <button class="btn-secondary w-full py-2.5 rounded-full text-sm font-medium">
+                        Start Trial
+                    </button>
+                </div>
+
+                <!-- Jordan Pricing -->
+                <div class="apple-card pricing-highlight p-6 flex flex-col relative">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <span class="px-3 py-1 bg-blue-500 text-white text-xs font-medium rounded-full">Popular</span>
+                    </div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
+                            <i data-lucide="linkedin" class="w-5 h-5 text-blue-400"></i>
+                        </div>
+                        <span class="font-medium">Jordan</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="text-3xl font-semibold">$1,000</span>
+                        <span class="text-gray-500">/mo</span>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-400 mb-6 flex-grow">
+                        <li>Unlimited LinkedIn posts</li>
+                        <li>Auto-engagement</li>
+                        <li>Lead tracking</li>
+                        <li>Analytics dashboard</li>
+                    </ul>
+                    <button class="btn-primary w-full py-2.5 rounded-full text-sm font-medium">
+                        Start Trial
+                    </button>
+                </div>
+
+                <!-- Sam Pricing -->
+                <div class="apple-card p-6 flex flex-col">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-green-400"></i>
+                        </div>
+                        <span class="font-medium">Sam</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="text-3xl font-semibold">$800</span>
+                        <span class="text-gray-500">/mo</span>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-400 mb-6 flex-grow">
+                        <li>Unlimited locations</li>
+                        <li>Review management</li>
+                        <li>Competitor tracking</li>
+                        <li>Monthly SEO reports</li>
+                    </ul>
+                    <button class="btn-secondary w-full py-2.5 rounded-full text-sm font-medium">
+                        Start Trial
+                    </button>
+                </div>
+
+                <!-- Taylor Pricing -->
+                <div class="apple-card p-6 flex flex-col">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                            <i data-lucide="file-text" class="w-5 h-5 text-orange-400"></i>
+                        </div>
+                        <span class="font-medium">Taylor</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="text-3xl font-semibold">$497</span>
+                        <span class="text-gray-500">/mo</span>
+                    </div>
+                    <ul class="space-y-2 text-sm text-gray-400 mb-6 flex-grow">
+                        <li>1,000 docs/month</li>
+                        <li>99.7% accuracy</li>
+                        <li>API access</li>
+                        <li>Custom workflows</li>
+                    </ul>
+                    <button class="btn-secondary w-full py-2.5 rounded-full text-sm font-medium">
+                        Start Trial
+                    </button>
                 </div>
             </div>
             
-            <div class="reveal mt-12 text-center" style="transition-delay: 400ms;">
-                <p class="text-gray-400 text-sm">All plans include 14-day free trial. No credit card required.</p>
+            <!-- Enterprise CTA -->
+            <div class="apple-card p-8 text-center max-w-2xl mx-auto">
+                <h3 class="text-xl font-semibold mb-2">Need a custom solution?</h3>
+                <p class="text-gray-400 mb-6">
+                    Enterprise plans with dedicated support, custom integrations, and volume pricing.
+                </p>
+                <button class="btn-secondary px-6 py-2.5 rounded-full text-sm font-medium">
+                    Contact Sales
+                </button>
             </div>
         </div>
     </section>
 
     <!-- FAQ Section -->
-    <section id="faq" class="relative py-24 bg-[#0a0a0f]">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 reveal">
-                <span class="inline-block text-sm font-medium text-cyan-400 uppercase tracking-wider mb-4">FAQ</span>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
-                    Questions? <span class="gradient-text">Answered.</span>
+    <section id="faq" class="py-24 lg:py-32 border-t border-white/5">
+        <div class="max-w-3xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
+                    Frequently asked questions
                 </h2>
             </div>
             
-            <div class="space-y-4">
-                <div class="reveal glass-card rounded-xl overflow-hidden gradient-border" style="transition-delay: 100ms;">
-                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
-                        <span class="font-semibold">How do the AI agents actually work?</span>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 faq-icon transition-transform"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-5">
-                        <p class="text-gray-400">Each agent is powered by advanced language models trained on millions of high-quality examples in their domain. They connect to your accounts (LinkedIn, Google Business, etc.), analyze your data, and execute tasks autonomously. You review and approve their work before anything goes live.</p>
-                    </div>
+            <div class="space-y-0">
+                <div class="faq-item py-6">
+                    <h3 class="text-lg font-medium mb-2">How quickly can I get started?</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        You can deploy any agent in under 5 minutes. Most users see their first results within 24-48 hours.
+                    </p>
                 </div>
                 
-                <div class="reveal glass-card rounded-xl overflow-hidden gradient-border" style="transition-delay: 150ms;">
-                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
-                        <span class="font-semibold">Can I customize the agents for my brand?</span>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 faq-icon transition-transform"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-5">
-                        <p class="text-gray-400">Absolutely. During onboarding, you'll share your brand guidelines, tone of voice, target audience, and any specific preferences. The agents learn and adapt to match your unique style. You can update these settings anytime.</p>
-                    </div>
+                <div class="faq-item py-6">
+                    <h3 class="text-lg font-medium mb-2">Do I need technical skills?</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Not at all. Each agent has a simple dashboard where you set preferences and review outputs. We handle all the technical complexity.
+                    </p>
                 </div>
                 
-                <div class="reveal glass-card rounded-xl overflow-hidden gradient-border" style="transition-delay: 200ms;">
-                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
-                        <span class="font-semibold">What kind of results can I expect?</span>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 faq-icon transition-transform"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-5">
-                        <p class="text-gray-400">Results vary by agent and industry, but most customers see significant improvements within 30 days: Jordan users typically gain 1,000+ LinkedIn followers monthly. Sam clients often reach page 1 of local search in 6-8 weeks. Maya customers report 5-10x content output.</p>
-                    </div>
+                <div class="faq-item py-6">
+                    <h3 class="text-lg font-medium mb-2">Can I customize the agents to match my brand?</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Absolutely. All agents learn your voice, style, and preferences. The more you use them, the better they get at matching your brand.
+                    </p>
                 </div>
                 
-                <div class="reveal glass-card rounded-xl overflow-hidden gradient-border" style="transition-delay: 250ms;">
-                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
-                        <span class="font-semibold">Is my data secure?</span>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 faq-icon transition-transform"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-5">
-                        <p class="text-gray-400">Security is our top priority. We use enterprise-grade encryption, never store passwords (OAuth only), and are SOC 2 Type II certified. Your data is never used to train models or shared with third parties. You can delete all data anytime.</p>
-                    </div>
+                <div class="faq-item py-6">
+                    <h3 class="text-lg font-medium mb-2">What if I'm not satisfied?</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        We offer a 30-day money-back guarantee. If you're not happy with the results, we'll refund 100% of your payment.
+                    </p>
                 </div>
                 
-                <div class="reveal glass-card rounded-xl overflow-hidden gradient-border" style="transition-delay: 300ms;">
-                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
-                        <span class="font-semibold">Can I cancel anytime?</span>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 faq-icon transition-transform"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-5">
-                        <p class="text-gray-400">Yes. No contracts, no commitments. You can cancel, upgrade, or downgrade your plan at any time from your dashboard. If you cancel, you'll retain access until the end of your billing period.</p>
-                    </div>
-                </div>
-                
-                <div class="reveal glass-card rounded-xl overflow-hidden gradient-border" style="transition-delay: 350ms;">
-                    <button class="faq-toggle w-full px-6 py-5 flex items-center justify-between text-left">
-                        <span class="font-semibold">Do you offer refunds?</span>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 faq-icon transition-transform"></i>
-                    </button>
-                    <div class="faq-content hidden px-6 pb-5">
-                        <p class="text-gray-400">We offer a 14-day free trial so you can try before you buy. After that, we have a 30-day money-back guarantee. If you're not satisfied for any reason, contact us and we'll refund your payment, no questions asked.</p>
-                    </div>
+                <div class="faq-item py-6">
+                    <h3 class="text-lg font-medium mb-2">Can I use multiple agents together?</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Yes, many customers use all four agents as their complete AI workforce. We offer bundle discounts for multi-agent deployments.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Final CTA Section -->
-    <section class="relative py-24 overflow-hidden">
-        <div class="absolute inset-0 galaxy-bg"></div>
-        <div class="orb w-[600px] h-[600px] bg-purple-600 absolute -top-48 -right-48 opacity-30"></div>
-        <div class="orb w-[500px] h-[500px] bg-cyan-500 absolute -bottom-48 -left-48 opacity-30"></div>
-        
-        <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="reveal">
-                <h2 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-                    Ready to Meet Your<br />
-                    <span class="gradient-text">AI Team?</span>
-                </h2>
-                <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-                    Join 500+ businesses already using CoExAI to automate their growth. Start your 14-day free trial today — no credit card required.
-                </p>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <button class="btn-primary px-10 py-5 rounded-full text-lg font-semibold flex items-center gap-3">
-                        Start Free Trial
-                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                    </button>
-                    <button class="btn-secondary px-10 py-5 rounded-full text-lg font-semibold flex items-center gap-3">
-                        <i data-lucide="calendar" class="w-5 h-5"></i>
-                        Book a Demo
-                    </button>
-                </div>
-                <p class="mt-8 text-sm text-gray-500">
-                    Free 14-day trial • No credit card required • Cancel anytime
-                </p>
+    <!-- CTA Section -->
+    <section class="py-24 lg:py-32 border-t border-white/5">
+        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-6">
+                Ready to meet your AI workforce?
+            </h2>
+            <p class="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
+                Join thousands of businesses already scaling with AI agents. 
+                Start your free trial today.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#pricing" class="btn-primary px-8 py-4 rounded-full text-base font-medium text-white w-full sm:w-auto">
+                    Start Free Trial
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i>
+                    Talk to Sales
+                </a>
             </div>
+            <p class="mt-6 text-sm text-gray-500">No credit card required. Cancel anytime.</p>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="relative py-16 bg-[#050508] border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
-                <div class="lg:col-span-2">
+    <footer class="py-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div>
                     <div class="flex items-center gap-2 mb-4">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                            <i data-lucide="bot" class="w-5 h-5 text-white"></i>
+                        <div class="w-6 h-6 rounded-md bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                            <i data-lucide="cpu" class="w-3 h-3 text-white"></i>
                         </div>
-                        <span class="text-xl font-bold">CoEx<span class="gradient-text">AI</span></span>
+                        <span class="font-semibold">CoExAI</span>
                     </div>
-                    <p class="text-gray-400 mb-6 max-w-sm">
-                        Your AI workforce. Four specialized agents working 24/7 to grow your business, create content, optimize SEO, and process documents.
+                    <p class="text-sm text-gray-500">
+                        AI agents that work for you. 24/7. Automatically.
                     </p>
-                    <div class="flex items-center gap-4">
-                        <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/10 transition-colors">
-                            <i data-lucide="twitter" class="w-5 h-5 text-gray-400"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/10 transition-colors">
-                            <i data-lucide="linkedin" class="w-5 h-5 text-gray-400"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/10 transition-colors">
-                            <i data-lucide="youtube" class="w-5 h-5 text-gray-400"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/10 transition-colors">
-                            <i data-lucide="github" class="w-5 h-5 text-gray-400"></i>
-                        </a>
-                    </div>
                 </div>
                 
                 <div>
-                    <h4 class="font-semibold mb-4">Agents</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Maya - Content</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Jordan - LinkedIn</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Sam - Local SEO</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Taylor - Documents</a></li>
+                    <h4 class="font-medium mb-4 text-sm">Product</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Maya</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Jordan</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Sam</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Taylor</a></li>
+                        <li><a href="#pricing" class="hover:text-white transition-colors">Pricing</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="font-semibold mb-4">Company</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">About Us</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Careers</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Blog</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Press Kit</a></li>
+                    <h4 class="font-medium mb-4 text-sm">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
                     </ul>
                 </div>
                 
                 <div>
-                    <h4 class="font-semibold mb-4">Support</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Help Center</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Contact Us</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Privacy Policy</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors text-sm">Terms of Service</a></li>
+                    <h4 class="font-medium mb-4 text-sm">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Security</a></li>
                     </ul>
                 </div>
             </div>
             
-            <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-                <p class="text-sm text-gray-500">© 2025 CoExAI. All rights reserved.</p>
-                <div class="flex items-center gap-6">
-                    <a href="#" class="text-sm text-gray-500 hover:text-white transition-colors">Privacy</a>
-                    <a href="#" class="text-sm text-gray-500 hover:text-white transition-colors">Terms</a>
-                    <a href="#" class="text-sm text-gray-500 hover:text-white transition-colors">Cookies</a>
+            <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="text-sm text-gray-500">
+                    © 2026 CoExAI. All rights reserved.
+                </p>
+                <div class="flex items-center gap-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i data-lucide="twitter" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i data-lucide="linkedin" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i data-lucide="github" class="w-5 h-5"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -1003,72 +743,6 @@
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
-        
-        // Generate stars
-        const starsContainer = document.getElementById('stars-container');
-        for (let i = 0; i < 50; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.width = Math.random() * 3 + 'px';
-            star.style.height = star.style.width;
-            star.style.left = Math.random() * 100 + '%';
-            star.style.top = Math.random() * 100 + '%';
-            star.style.animationDelay = Math.random() * 3 + 's';
-            starsContainer.appendChild(star);
-        }
-        
-        // Scroll reveal animation
-        const revealElements = document.querySelectorAll('.reveal');
-        
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        });
-        
-        revealElements.forEach(el => revealObserver.observe(el));
-        
-        // FAQ accordion
-        document.querySelectorAll('.faq-toggle').forEach(button => {
-            button.addEventListener('click', () => {
-                const content = button.nextElementSibling;
-                const icon = button.querySelector('.faq-icon');
-                
-                content.classList.toggle('hidden');
-                icon.style.transform = content.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
-            });
-        });
-        
-        // Smooth scroll for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-        
-        // Navigation background on scroll
-        const nav = document.querySelector('nav');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 100) {
-                nav.classList.add('shadow-lg');
-                nav.classList.add('shadow-purple-500/10');
-            } else {
-                nav.classList.remove('shadow-lg');
-                nav.classList.remove('shadow-purple-500/10');
-            }
-        });
     </script>
 </body>
 </html>
