@@ -1,99 +1,227 @@
-# CoExAI Setup Instructions
+# 🚀 CoExAI Setup Guide
 
-## 1. Supabase Setup
+Complete guide to setting up CoExAI with real authentication, payments, and platform connections.
 
-1. Create account at https://supabase.com
-2. Create new project
-3. Go to SQL Editor
-4. Run the schema: `database/schema.sql`
-5. Copy Project URL and Anon Key to `.env.local`
+## 📋 Prerequisites
 
-## 2. Stripe Setup
+- Node.js 18+
+- Supabase account (free tier works)
+- Stripe account (free tier works)
+- Google Cloud Console (for YouTube OAuth)
+- TikTok Developer account (for TikTok OAuth)
 
-1. Create account at https://stripe.com
-2. Get API keys from Developers > API Keys
-3. Create 5 products:
-   - Alex ($2,000/mo)
-   - Maya ($1,500/mo)
-   - Jordan ($1,000/mo)
-   - Sam ($800/mo)
-   - Taylor ($497/mo)
-4. Copy price IDs to `.env.local`
+---
 
-## 3. OpenAI Setup
+## Step 1: Supabase Setup
 
-1. Get API key from https://platform.openai.com
-2. Add to `.env.local`
+### 1. Create Supabase Project
+1. Go to [supabase.com](https://supabase.com)
+2. Click "New Project"
+3. Name it "coexai"
+4. Choose region closest to your users
+5. Wait for project to be created
 
-## 4. Twilio Setup (for Alex)
+### 2. Get API Keys
+1. Go to Project Settings → API
+2. Copy:
+   - `URL` → `SUPABASE_URL`
+   - `anon public` → `SUPABASE_ANON_KEY`
+   - `service_role secret` → `SUPABASE_SERVICE_KEY`
 
-1. Create account at https://twilio.com
-2. Get Account SID and Auth Token
-3. Buy a phone number
-4. Add credentials to `.env.local`
+### 3. Run Database Schema
+1. Go to SQL Editor
+2. Copy contents of `database/auth-schema.sql`
+3. Paste and run
 
-## 5. Local Development
+---
 
+## Step 2: Stripe Setup
+
+### 1. Create Stripe Account
+1. Go to [stripe.com](https://stripe.com)
+2. Create account (free)
+3. Go to Developers → API Keys
+4. Copy:
+   - `Secret key` → `STRIPE_SECRET_KEY`
+   - `Publishable key` → `STRIPE_PUBLISHABLE_KEY`
+
+### 2. Create Products & Prices
+1. Go to Products → Add Product
+2. Create 4 products:
+   - **Starter** - $500/month
+   - **Growth** - $700/month  
+   - **Pro** - $1,000/month
+   - **Empire** - $1,200/month
+
+3. For each product:
+   - Set recurring monthly
+   - Copy Price ID to `.env`
+
+### 3. Set Up Webhook
+1. Go to Developers → Webhooks
+2. Add endpoint: `https://your-domain.com/api/payments/webhook`
+3. Select events:
+   - `checkout.session.completed`
+   - `invoice.payment_failed`
+   - `customer.subscription.deleted`
+4. Copy signing secret → `STRIPE_WEBHOOK_SECRET`
+
+---
+
+## Step 3: YouTube OAuth Setup
+
+### 1. Google Cloud Console
+1. Go to [console.cloud.google.com](https://console.cloud.google.com)
+2. Create new project "CoExAI"
+3. Enable YouTube Data API v3
+
+### 2. OAuth Consent Screen
+1. APIs & Services → OAuth consent screen
+2. Choose "External"
+3. Fill in:
+   - App name: CoExAI
+   - User support email: your email
+   - Developer contact: your email
+4. Add scopes:
+   - `https://www.googleapis.com/auth/youtube.readonly`
+   - `https://www.googleapis.com/auth/youtube.force-ssl`
+5. Add test users (your email)
+
+### 3. Create Credentials
+1. APIs & Services → Credentials
+2. Create OAuth 2.0 Client ID
+3. Application type: Web application
+4. Authorized redirect URIs:
+   - `http://localhost:3000/api/connect/youtube/callback` (dev)
+   - `https://your-domain.com/api/connect/youtube/callback` (prod)
+5. Copy:
+   - `Client ID` → `YOUTUBE_CLIENT_ID`
+   - `Client Secret` → `YOUTUBE_CLIENT_SECRET`
+
+---
+
+## Step 4: Environment Setup
+
+### 1. Copy Environment File
 ```bash
-# Install dependencies
+cp .env.example .env
+```
+
+### 2. Fill In All Values
+Edit `.env` with all the keys you collected above.
+
+---
+
+## Step 5: Install & Run
+
+### 1. Install Dependencies
+```bash
 npm install
-
-# Copy environment variables
-cp .env.example .env.local
-
-# Edit .env.local with your keys
-
-# Run development server
-npm run dev
 ```
 
-## 6. Deploy to Vercel
-
+### 2. Start Development Server
 ```bash
-# Install Vercel CLI
+npm start
+# or
+node api/server.js
+```
+
+### 3. Test Locally
+- Landing page: http://localhost:3000
+- Auth: http://localhost:3000/auth
+- API: http://localhost:3000/api
+
+---
+
+## Step 6: Deploy
+
+### Option A: Vercel (Frontend)
+```bash
 npm i -g vercel
-
-# Deploy
-vercel --prod
+vercel
 ```
 
-## Testing Maya
+### Option B: Railway (Backend)
+1. Push to GitHub
+2. Connect Railway to repo
+3. Add environment variables
+4. Deploy
 
+### Option C: Self-Hosted
 ```bash
-# Set your OpenAI key
-export OPENAI_API_KEY=sk-...
-
-# Run test
-node test-maya.js "https://youtube.com/watch?v=..."
+# Using PM2
+npm i -g pm2
+pm2 start api/server.js --name coexai-api
 ```
 
-## File Structure
+---
 
-```
-├── agents/
-│   ├── alex/         # Appointment setter
-│   ├── maya/         # Content creator
-│   ├── jordan/       # LinkedIn growth
-│   ├── sam/          # Local SEO
-│   └── taylor/       # Document processor
-├── api/              # API routes
-├── components/       # React components
-├── database/         # SQL schema
-├── pages/            # Next.js pages
-├── public/           # Static assets
-└── styles/           # CSS files
-```
+## 🔧 Testing the Flow
 
-## Next Steps
+### 1. Sign Up Flow
+1. Visit landing page
+2. Click "Start Free Trial"
+3. Select Growth plan
+4. Create account
+5. Check email for confirmation
+6. Connect YouTube
+7. Access dashboard
 
-1. ✅ Database schema created
-2. ✅ Maya core functions ready
-3. ⏳ Next: Build dashboard UI
-4. ⏳ Next: Add Stripe payments
-5. ⏳ Next: Test Maya end-to-end
-6. ⏳ Next: Build Alex agent
-7. ⏳ Next: Build Jordan, Sam, Taylor
+### 2. Test Payments
+1. Use Stripe test card: `4242 4242 4242 4242`
+2. Any future date, any 3-digit CVC
+3. Should create subscription
 
-## Support
+### 3. Test AI Agents
+1. Upload test video
+2. Check Maya processes it
+3. Check Engage replies to comments
 
-Questions? Contact: hello@coexai.com
+---
+
+## 🐛 Troubleshooting
+
+### Supabase Connection Issues
+- Check URL and key are correct
+- Ensure RLS policies allow operations
+- Check database tables exist
+
+### Stripe Webhook Not Working
+- Verify webhook URL is accessible
+- Check signing secret is correct
+- Use Stripe CLI for local testing:
+  ```bash
+  stripe listen --forward-to localhost:3000/api/payments/webhook
+  ```
+
+### OAuth Callback Errors
+- Verify redirect URIs match exactly
+- Check client ID/secret
+- Ensure user is added as test user (Google)
+
+---
+
+## 📚 Next Steps
+
+1. **Add TikTok OAuth** - Similar process to YouTube
+2. **Add Instagram OAuth** - Requires Facebook app
+3. **Add Twitter OAuth** - Apply for developer account
+4. **Build Pitch Agent** - Brand deal hunter
+5. **Add Analytics** - Track user behavior
+
+---
+
+## 💰 Revenue Model
+
+| Plan | Price | Target |
+|------|-------|--------|
+| Starter | $500/mo | 10K-100K followers |
+| Growth | $700/mo | 100K-500K followers |
+| Pro | $1,000/mo | 500K-1M followers |
+| Empire | $1,200/mo | 1M+ followers |
+
+**Goal:** 100 customers × $700 avg = $70K MRR = $840K ARR
+
+---
+
+**Need help?** Contact support@coexai.com

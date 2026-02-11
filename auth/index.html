@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="auth()">
+<html lang="en" x-data="realAuth()">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,14 +21,27 @@
         .gradient-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .step-active { border-color: #667eea; color: #667eea; }
         .step-completed { border-color: #10b981; color: #10b981; }
-        .plan-card { transition: all 0.3s ease; }
+        .plan-card { transition: all 0.3s ease; cursor: pointer; }
         .plan-card:hover { transform: translateY(-4px); }
         .plan-selected { border-color: #667eea; box-shadow: 0 0 0 2px #667eea; }
+        .error-message { color: #ef4444; font-size: 0.875rem; margin-top: 0.5rem; }
         [x-cloak] { display: none !important; }
     </style>
 </head>
 <body class="min-h-screen">
-    
+
+    <script>
+        // Initialize Supabase client
+        const supabaseUrl = 'YOUR_SUPABASE_URL';
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        
+        // API base URL
+        const API_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000' 
+            : 'https://api.coexai.com';
+    </script>
+
     <!-- Navigation -->
     <nav class="border-b border-white/5">
         <div class="max-w-6xl mx-auto px-4 py-4">
@@ -40,6 +53,12 @@
             </a>
         </div>
     </nav>
+
+    <!-- Error Banner -->
+    <div x-show="error" x-cloak class="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 text-center">
+        <span x-text="error"></span>
+        <button @click="error = null" class="ml-2 text-red-300 hover:text-red-200">×</button>
+    </div>
 
     <!-- Progress Steps -->
     <div class="max-w-4xl mx-auto px-4 py-8">
@@ -91,7 +110,7 @@
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <template x-for="plan in plans" :key="plan.id">
                     <div 
-                        class="plan-card p-6 rounded-2xl bg-white/5 border border-white/10 cursor-pointer"
+                        class="plan-card p-6 rounded-2xl bg-white/5 border border-white/10"
                         :class="{ 'plan-selected': selectedPlan === plan.id }"
                         @click="selectedPlan = plan.id"
                     >
@@ -122,7 +141,7 @@
                         </ul>
 
                         <div class="text-xs text-gray-500">
-                            <span x-text="plan.agents.length + ' AI Agents'"></span>
+                            Includes <span x-text="plan.agents.length"></span> AI agents
                         </div>
                     </div>
                 </template>
@@ -145,12 +164,12 @@
             <div class="max-w-md mx-auto">
                 <div class="text-center mb-8">
                     <h1 class="text-3xl font-bold mb-2">Create Your Account</h1>
-                    <p class="text-gray-400">Start your 14-day free trial</p>
+                    <p class="text-gray-400">Start your 14-day free trial - no credit card required</p>
                 </div>
 
                 <form @submit.prevent="createAccount" class="space-y-4">
                     <div>
-                        <label class="block text-sm text-gray-400 mb-1">Full Name</label>
+                        <label class="block text-sm text-gray-400 mb-1">Full Name *</label>
                         <input 
                             type="text" 
                             x-model="form.name"
@@ -161,7 +180,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm text-gray-400 mb-1">Email</label>
+                        <label class="block text-sm text-gray-400 mb-1">Email *</label>
                         <input 
                             type="email" 
                             x-model="form.email"
@@ -169,10 +188,11 @@
                             placeholder="john@example.com"
                             required
                         >
+                        <p class="error-message" x-show="errors.email" x-text="errors.email"></p>
                     </div>
 
                     <div>
-                        <label class="block text-sm text-gray-400 mb-1">Password</label>
+                        <label class="block text-sm text-gray-400 mb-1">Password *</label>
                         <input 
                             type="password" 
                             x-model="form.password"
@@ -182,6 +202,7 @@
                             minlength="8"
                         >
                         <p class="text-xs text-gray-500 mt-1">Must be at least 8 characters</p>
+                        <p class="error-message" x-show="errors.password" x-text="errors.password"></p>
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -189,24 +210,25 @@
                             type="checkbox" 
                             x-model="form.agreed"
                             id="terms"
-                            class="rounded bg-white/5 border-white/10"
+                            class="rounded bg-white/5 border-white/10 w-4 h-4"
                             required
                         >
                         <label for="terms" class="text-sm text-gray-400">
-                            I agree to the <a href="#" class="text-purple-400 hover:underline">Terms</a> and <a href="#" class="text-purple-400 hover:underline">Privacy Policy</a>
+                            I agree to the <a href="#" class="text-purple-400 hover:underline">Terms</a> and <a href="#" class="text-purple-400 hover:underline">Privacy Policy</a> *
                         </label>
                     </div>
 
                     <button 
                         type="submit"
-                        class="w-full gradient-purple py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
-                        :disabled="loading"
+                        class="w-full gradient-purple py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                        :disabled="loading || !form.agreed"
+                        :class="{ 'opacity-50 cursor-not-allowed': loading || !form.agreed }"
                     >
                         <template x-if="!loading">
                             <span>Create Account & Start Free Trial</span>
                         </template>
                         <template x-if="loading">
-                            <span class="flex items-center justify-center gap-2">
+                            <span class="flex items-center gap-2">
                                 <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
                                 Creating account...
                             </span>
@@ -217,10 +239,11 @@
                 <div class="mt-6 text-center">
                     <p class="text-sm text-gray-400">
                         Already have an account? 
-                        <a href="#" @click.prevent="showLogin = true" class="text-purple-400 hover:underline">Sign in</a>
+                        <a href="/auth/login" class="text-purple-400 hover:underline">Sign in</a>
                     </p>
                 </div>
 
+                <!-- Social Login -->
                 <div class="mt-8">
                     <div class="flex items-center gap-4 mb-4">
                         <div class="flex-1 h-px bg-white/10"></div>
@@ -229,14 +252,29 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
-                        <button class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-                            <i data-lucide="chrome" class="w-5 h-5"></i>
+                        <button 
+                            @click="socialLogin('google')"
+                            type="button"
+                            class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                        >
+                            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
                             <span class="text-sm">Google</span>
                         </button>
                         
-                        <button class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-                            <i data-lucide="twitter" class="w-5 h-5"></i>
-                            <span class="text-sm">Twitter</span>
+                        <button 
+                            @click="socialLogin('twitter')"
+                            type="button"
+                            class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                        >
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                            <span class="text-sm">X / Twitter</span>
                         </button>
                     </div>
                 </div>
@@ -255,7 +293,7 @@
                     <template x-for="platform in platforms" :key="platform.id">
                         <div 
                             class="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between"
-                            :class="{ 'border-green-500/50': platform.connected }"
+                            :class="{ 'border-green-500/50 bg-green-500/5': platform.connected }"
                         >
                             <div class="flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-xl flex items-center justify-center"
@@ -266,19 +304,33 @@
                                 
                                 <div>
                                     <div class="font-semibold" x-text="platform.name"></div>
-                                    <div class="text-sm text-gray-400" x-text="platform.connected ? 'Connected' : 'Not connected'"></div>
+                                    <div class="text-sm text-gray-400" 
+                                          x-text="platform.connected ? (platform.channelName || 'Connected') : 'Not connected'"
+                                    ></div>
                                 </div>
                             </div>
 
                             <button 
-                                @click="connectPlatform(platform)"
-                                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                @click="platform.connected ? disconnectPlatform(platform) : connectPlatform(platform)"
+                                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
                                 :class="platform.connected ? 'bg-green-500/10 text-green-400' : 'bg-white/10 hover:bg-white/20'"
+                                :disabled="platform.loading"
                             >
+                                <template x-if="platform.loading">
+                                    <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                                </template>
+                                
                                 <span x-text="platform.connected ? 'Connected ✓' : 'Connect'"></span>
                             </button>
                         </div>
                     </template>
+                </div>
+
+                <!-- Skip option -->
+                <div class="mt-6 text-center">
+                    <button @click="finishSetup()" class="text-sm text-gray-400 hover:text-white">
+                        Skip for now →
+                    </button>
                 </div>
 
                 <div class="mt-8 flex justify-between">
@@ -301,13 +353,13 @@
     </div>
 
     <script>
-        function auth() {
+        function realAuth() {
             return {
                 currentStep: 0,
                 steps: ['Choose Plan', 'Create Account', 'Connect'],
                 selectedPlan: null,
                 loading: false,
-                showLogin: false,
+                error: null,
                 
                 form: {
                     name: '',
@@ -315,6 +367,8 @@
                     password: '',
                     agreed: false
                 },
+                
+                errors: {},
 
                 plans: [
                     {
@@ -332,7 +386,7 @@
                         price: 700,
                         followers: '100K-500K followers',
                         popular: true,
-                        features: ['Maya + Engage', 'Priority support', 'Unlimited videos', 'Analytics dashboard'],
+                        features: ['Maya + Engage', 'Priority support', 'Unlimited videos'],
                         agents: ['maya', 'engage']
                     },
                     {
@@ -341,7 +395,7 @@
                         price: 1000,
                         followers: '500K-1M followers',
                         popular: false,
-                        features: ['Maya + Engage + Pitch', '24/7 support', 'Brand deal finder', 'Advanced analytics'],
+                        features: ['Maya + Engage + Pitch', '24/7 support', 'Brand deals'],
                         agents: ['maya', 'engage', 'pitch']
                     },
                     {
@@ -350,7 +404,7 @@
                         price: 1200,
                         followers: '1M+ followers',
                         popular: false,
-                        features: ['All 4 AI Agents', 'Dedicated manager', 'Custom integrations', 'White-label options'],
+                        features: ['All 4 AI Agents', 'Dedicated manager', 'Custom integrations'],
                         agents: ['maya', 'engage', 'pitch', 'analyze']
                     }
                 ],
@@ -362,7 +416,9 @@
                         icon: 'youtube',
                         bgColor: 'bg-red-500/10',
                         textColor: 'text-red-400',
-                        connected: false
+                        connected: false,
+                        loading: false,
+                        channelName: null
                     },
                     {
                         id: 'tiktok',
@@ -370,7 +426,9 @@
                         icon: 'video',
                         bgColor: 'bg-pink-500/10',
                         textColor: 'text-pink-400',
-                        connected: false
+                        connected: false,
+                        loading: false,
+                        channelName: null
                     },
                     {
                         id: 'instagram',
@@ -378,7 +436,9 @@
                         icon: 'instagram',
                         bgColor: 'bg-purple-500/10',
                         textColor: 'text-purple-400',
-                        connected: false
+                        connected: false,
+                        loading: false,
+                        channelName: null
                     },
                     {
                         id: 'twitter',
@@ -386,47 +446,170 @@
                         icon: 'twitter',
                         bgColor: 'bg-blue-500/10',
                         textColor: 'text-blue-400',
-                        connected: false
+                        connected: false,
+                        loading: false,
+                        channelName: null
                     }
                 ],
 
                 async createAccount() {
                     this.loading = true;
+                    this.errors = {};
                     
-                    // Simulate API call
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                    
-                    // Store user data in localStorage (demo)
-                    localStorage.setItem('coexai_user', JSON.stringify({
-                        email: this.form.email,
-                        name: this.form.name,
-                        plan: this.selectedPlan,
-                        created_at: new Date().toISOString()
-                    }));
-                    
-                    this.loading = false;
-                    this.currentStep = 2;
+                    try {
+                        // Call your API
+                        const response = await fetch(`${API_URL}/api/auth/register`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                email: this.form.email,
+                                password: this.form.password,
+                                name: this.form.name,
+                                plan: this.selectedPlan
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (!response.ok) {
+                            throw new Error(data.error || 'Failed to create account');
+                        }
+                        
+                        // Store session
+                        if (data.session) {
+                            localStorage.setItem('coexai_session', JSON.stringify(data.session));
+                        }
+                        
+                        // Move to next step
+                        this.currentStep = 2;
+                        
+                    } catch (err) {
+                        this.error = err.message;
+                        this.errors.email = err.message.includes('email') ? err.message : null;
+                        this.errors.password = err.message.includes('password') ? err.message : null;
+                    } finally {
+                        this.loading = false;
+                    }
                 },
 
-                connectPlatform(platform) {
-                    // Simulate OAuth flow
-                    platform.connected = !platform.connected;
+                async socialLogin(provider) {
+                    try {
+                        const { data, error } = await supabase.auth.signInWithOAuth({
+                            provider: provider,
+                            options: {
+                                redirectTo: `${window.location.origin}/auth/callback`,
+                                queryParams: {
+                                    plan: this.selectedPlan
+                                }
+                            }
+                        });
+                        
+                        if (error) throw error;
+                        
+                    } catch (err) {
+                        this.error = err.message;
+                    }
+                },
+
+                async connectPlatform(platform) {
+                    platform.loading = true;
+                    
+                    try {
+                        const token = JSON.parse(localStorage.getItem('coexai_session'))?.access_token;
+                        
+                        const response = await fetch(`${API_URL}/api/connect/${platform.id}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        
+                        const data = await response.json();
+                        
+                        if (data.url) {
+                            window.location.href = data.url;
+                        }
+                        
+                    } catch (err) {
+                        this.error = err.message;
+                    } finally {
+                        platform.loading = false;
+                    }
+                },
+
+                async disconnectPlatform(platform) {
+                    platform.loading = true;
+                    
+                    try {
+                        const token = JSON.parse(localStorage.getItem('coexai_session'))?.access_token;
+                        
+                        await fetch(`${API_URL}/api/platforms/${platform.id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        
+                        platform.connected = false;
+                        platform.channelName = null;
+                        
+                    } catch (err) {
+                        this.error = err.message;
+                    } finally {
+                        platform.loading = false;
+                    }
                 },
 
                 finishSetup() {
-                    // Mark onboarding complete
                     localStorage.setItem('coexai_onboarding_complete', 'true');
-                    
-                    // Redirect to dashboard
                     window.location.href = '/dashboard';
                 },
 
+                async loadConnectedPlatforms() {
+                    try {
+                        const token = JSON.parse(localStorage.getItem('coexai_session'))?.access_token;
+                        
+                        const response = await fetch(`${API_URL}/api/platforms`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        
+                        const data = await response.json();
+                        
+                        // Update platforms
+                        data.connections?.forEach(conn => {
+                            const platform = this.platforms.find(p => p.id === conn.platform);
+                            if (platform) {
+                                platform.connected = true;
+                                platform.channelName = conn.channel_name;
+                            }
+                        });
+                        
+                    } catch (err) {
+                        console.error('Failed to load platforms:', err);
+                    }
+                },
+
                 init() {
-                    // Check if user already has plan in URL
+                    // Check URL for plan parameter
                     const urlParams = new URLSearchParams(window.location.search);
                     const plan = urlParams.get('plan');
                     if (plan) {
                         this.selectedPlan = plan;
+                    }
+                    
+                    // Check if returning from OAuth
+                    const connected = urlParams.get('connected');
+                    if (connected) {
+                        this.currentStep = 2;
+                        this.loadConnectedPlatforms();
+                    }
+                    
+                    // Check if already logged in
+                    const session = localStorage.getItem('coexai_session');
+                    if (session) {
+                        this.currentStep = 2;
+                        this.loadConnectedPlatforms();
                     }
                 }
             }
