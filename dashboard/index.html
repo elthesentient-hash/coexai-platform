@@ -30,38 +30,14 @@
         .stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; }
         .nav-item { transition: all 0.2s ease; border-radius: 12px; }
         .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.06); }
-        .demo-banner { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); animation: demoPulse 2s infinite; }
-        @keyframes demoPulse { 0%, 100% { opacity: 0.9; } 50% { opacity: 1; } }
-        [x-cloak] { display: none !important; }
-    </style>
-</head>
-            background: rgba(255,255,255,0.06);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-        }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
         .status-active { background: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.2), 0 0 8px #10b981; }
         .status-paused { background: #f59e0b; box-shadow: 0 0 0 2px rgba(245,158,11,0.2); }
-
-        .sidebar {
-            background: rgba(10,10,10,0.95);
-            border-right: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .progress-bar {
-            background: rgba(255,255,255,0.1);
-            border-radius: 999px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            border-radius: 999px;
-            transition: width 0.5s ease;
-        }
-
+        .sidebar { background: rgba(10,10,10,0.95); border-right: 1px solid rgba(255,255,255,0.05); }
+        .progress-bar { background: rgba(255,255,255,0.1); border-radius: 999px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 999px; transition: width 0.5s ease; }
+        .demo-banner { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); animation: demoPulse 2s infinite; }
+        @keyframes demoPulse { 0%, 100% { opacity: 0.9; } 50% { opacity: 1; } }
         [x-cloak] { display: none !important; }
     </style>
 </head>
@@ -72,16 +48,6 @@
         🎮 DEMO MODE - You're viewing simulated data. 
         <a href="/demo" class="underline hover:text-white ml-2">Restart Demo →</a>
     </div>
-
-    <script>
-        // DEMO MODE: Check for demo session
-        const demoSession = JSON.parse(localStorage.getItem('coexai_demo_session'));
-        if (!demoSession) {
-            console.log('No demo session found, redirecting to demo...');
-            // Optional: redirect to demo start
-            // window.location.href = '/demo';
-        }
-    </script>
 
     <!-- Sidebar -->
     <aside class="fixed left-0 top-0 bottom-0 w-64 sidebar z-50 flex flex-col">
@@ -541,7 +507,6 @@
 
                 selectAgent(id) {
                     this.selectedAgent = id;
-                    // In real app, this would navigate to agent detail page
                     console.log(`Selected agent: ${id}`);
                 }
             }
