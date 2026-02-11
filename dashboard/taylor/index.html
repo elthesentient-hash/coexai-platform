@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taylor | Document Processor Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        galaxy: {
+                            900: '#0a0a1a',
+                            800: '#12122a',
+                            700: '#1a1a3a',
+                            600: '#252550',
+                            500: '#3a3a70',
+                        },
+                        accent: {
+                            cyan: '#00d4ff',
+                            purple: '#8b5cf6',
+                            green: '#10b981',
+                            amber: '#f59e0b',
+                            rose: '#f43f5e',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0a1a 0%, #12122a 50%, #1a1a3a 100%);
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        .glass-card:hover {
+            border-color: rgba(0, 212, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 212, 255, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 50%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .accuracy-glow {
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.5), 0 0 60px rgba(16, 185, 129, 0.3);
+        }
+        .star-bg {
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.2), transparent),
+                radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.3), transparent);
+            background-repeat: repeat;
+            background-size: 200px 200px;
+        }
+        .upload-zone {
+            background: linear-gradient(135deg, rgba(0,212,255,0.05) 0%, rgba(139,92,246,0.05) 100%);
+            border: 2px dashed rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: #00d4ff;
+            background: linear-gradient(135deg, rgba(0,212,255,0.1) 0%, rgba(139,92,246,0.1) 100%);
+        }
+        .status-badge {
+            position: relative;
+            overflow: hidden;
+        }
+        .status-badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        .metric-ring {
+            background: conic-gradient(from 0deg, #10b981 0deg, #10b981 358.92deg, rgba(255,255,255,0.1) 358.92deg);
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(0,212,255,0.2) 0%, transparent 100%);
+            border-left: 3px solid #00d4ff;
+        }
+        .workflow-node {
+            transition: all 0.3s ease;
+        }
+        .workflow-node:hover {
+            transform: scale(1.02);
+        }
+        .connection-line {
+            stroke-dasharray: 5,5;
+            animation: dash 1s linear infinite;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: -10; }
+        }
+    </style>
+</head>
+<body class="text-gray-200 font-sans star-bg" x-data="taylorApp()" x-init="init()">
+    
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 glass z-50 flex flex-col">
+        <!-- Logo -->
+        <div class="p-6 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-cyan to-accent-purple flex items-center justify-center">
+                    <i class="fas fa-file-contract text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-white">Taylor</h1>
+                    <p class="text-xs text-gray-400">Document Processor</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 py-4">
+            <div class="px-4 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Main</div>
+            <a href="#" @click.prevent="currentView = 'dashboard'" 
+               :class="{'active': currentView === 'dashboard'}"
+               class="nav-item flex items-center gap-3 px-6 py-3 text-sm hover:bg-white/5 transition-colors">
+                <i class="fas fa-grid-2 text-accent-cyan"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" @click.prevent="currentView = 'upload'" 
+               :class="{'active': currentView === 'upload'}"
+               class="nav-item flex items-center gap-3 px-6 py-3 text-sm hover:bg-white/5 transition-colors">
+                <i class="fas fa-cloud-upload-alt text-accent-purple"></i>
+                <span>Upload Documents</span>
+                <span class="ml-auto bg-accent-purple/20 text-accent-purple text-xs px-2 py-0.5 rounded-full" x-show="uploadQueue.length > 0" x-text="uploadQueue.length"></span>
+            </a>
+            <a href="#" @click.prevent="currentView = 'queue'" 
+               :class="{'active': currentView === 'queue'}"
+               class="nav-item flex items-center gap-3 px-6 py-3 text-sm hover:bg-white/5 transition-colors">
+                <i class="fas fa-tasks text-accent-amber"></i>
+                <span>Processing Queue</span>
+            </a>
+            <a href="#" @click.prevent="currentView = 'data'" 
+               :class="{'active': currentView === 'data'}"
+               class="nav-item flex items-center gap-3 px-6 py-3 text-sm hover:bg-white/5 transition-colors">
+                <i class="fas fa-database text-accent-green"></i>
+                <span>Extracted Data</span>
+            </a>
+
+            <div class="px-4 mt-6 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">Automation</div>
+            <a href="#" @click.prevent="currentView = 'workflows'" 
+               :class="{'active': currentView === 'workflows'}"
+               class="nav-item flex items-center gap-3 px-6 py-3 text-sm hover:bg-white/5 transition-colors">
+                <i class="fas fa-project-diagram text-accent-cyan"></i>
+                <span>Workflow Builder</span>
+            </a>
+            <a href="#" @click.prevent="currentView = 'integrations'" 
+               :class="{'active': currentView === 'integrations'}"
+               class="nav-item flex items-center gap-3 px-6 py-3 text-sm hover:bg-white/5 transition-colors">
+                <i class="fas fa-plug text-accent-purple"></i>
+                <span>Integrations</span>
+            </a>
+            <a href="#" @click.prevent="currentView = 'templates'" 
+               :class="{'active': currentView === 'templates'}"
+               class="nav-item flex items-center gap-3 px-6 py-3 text-sm hover:bg-white/5 transition-colors">
+                <i class="fas fa-copy text-accent-amber"></i>
+                <span>Templates</span>
+            </a>
+
+            <div class="px-4 mt-6 mb-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">System</div>
+            <a href="#" @click.prevent="currentView = 'audit'" 
+               :class="{'active': currentView === 'audit'}"
+               class="nav-item flex items-center gap-3 px-6 py-3 text-sm hover:bg-white/5 transition-colors">
+                <i class="fas fa-history text-gray-400"></i>
+                <span>Audit Log</span>
+            </a>
+            <a href="#" @click.prevent="currentView = 'settings'" 
+               :class="{'active': currentView === 'settings'}"
+               class="nav-item flex items-center gap-3 px-6 py-3 text-sm hover:bg-white/5 transition-colors">
+                <i class="fas fa-cog text-gray-400"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <!-- API Status -->
+        <div class="p-4 border-t border-white/10">
+            <div class="glass-card rounded-lg p-3">
+                <div class="flex items-center gap-2 mb-2">
+                    <div class="w-2 h-2 rounded-full bg-accent-green animate-pulse"></div>
+                    <span class="text-xs font-medium">System Online</span>
+                </div>
+                <div class="text-xs text-gray-400">API Latency: <span class="text-accent-cyan">24ms</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 min-h-screen">
+        <!-- Top Bar -->
+        <header class="glass sticky top-0 z-40 px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <h2 class="text-xl font-semibold text-white" x-text="pageTitle"></h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <!-- Search -->
+                <div class="relative">
+                    <input type="text" placeholder="Search documents..." 
+                           class="glass-card rounded-lg pl-10 pr-4 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-accent-cyan/50">
+                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+                </div>
+                <!-- Notifications -->
+                <button class="relative p-2 hover:bg-white/5 rounded-lg transition-colors">
+                    <i class="fas fa-bell text-gray-400"></i>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-accent-rose rounded-full"></span>
+                </button>
+                <!-- User -->
+                <div class="flex items-center gap-3 pl-4 border-l border-white/10">
+                    <div class="text-right">
+                        <div class="text-sm font-medium text-white">Admin User</div>
+                        <div class="text-xs text-gray-400">Enterprise Plan</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-accent-cyan to-accent-purple flex items-center justify-center">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="p-8">
+            
+            <!-- Dashboard View -->
+            <div x-show="currentView === 'dashboard'" class="space-y-6">
+                <!-- Hero Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Accuracy Card - Prominent -->
+                    <div class="glass-card rounded-2xl p-6 relative overflow-hidden lg:col-span-1">
+                        <div class="absolute inset-0 bg-gradient-to-br from-accent-green/10 to-transparent"></div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-gray-400 text-sm">Extraction Accuracy</span>
+                                <i class="fas fa-check-circle text-accent-green"></i>
+                            </div>
+                            <div class="flex items-end gap-2">
+                                <span class="text-5xl font-bold text-accent-green accuracy-glow">99.7</span>
+                                <span class="text-2xl text-accent-green mb-1">%</span>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-400">Industry-leading precision</div>
+                            <div class="mt-3 flex items-center gap-2 text-xs">
+                                <span class="text-accent-green"><i class="fas fa-arrow-up"></i> 0.3%</span>
+                                <span class="text-gray-500">vs last month</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documents Processed -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-400 text-sm">Documents Processed</span>
+                            <i class="fas fa-file-alt text-accent-cyan"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-white">2.4M</div>
+                        <div class="mt-2 text-xs text-gray-400">+12,847 this week</div>
+                        <div class="mt-3 h-1 bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-accent-cyan rounded-full" style="width: 78%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Active Workflows -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-400 text-sm">Active Workflows</span>
+                            <i class="fas fa-cogs text-accent-purple"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-white">47</div>
+                        <div class="mt-2 text-xs text-gray-400">3 pending setup</div>
+                        <div class="mt-3 flex -space-x-2">
+                            <div class="w-6 h-6 rounded-full bg-accent-cyan/30 border border-accent-cyan flex items-center justify-center text-xs">W</div>
+                            <div class="w-6 h-6 rounded-full bg-accent-purple/30 border border-accent-purple flex items-center justify-center text-xs">I</div>
+                            <div class="w-6 h-6 rounded-full bg-accent-green/30 border border-accent-green flex items-center justify-center text-xs">A</div>
+                            <div class="w-6 h-6 rounded-full bg-accent-amber/30 border border-accent-amber flex items-center justify-center text-xs">+44</div>
+                        </div>
+                    </div>
+
+                    <!-- Processing Speed -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-400 text-sm">Avg. Processing</span>
+                            <i class="fas fa-bolt text-accent-amber"></i>
+                        </div>
+                        <div class="text-3xl font-bold text-white">1.2s</div>
+                        <div class="mt-2 text-xs text-gray-400">Per document</div>
+                        <div class="mt-3 text-xs text-accent-green">
+                            <i class="fas fa-arrow-down"></i> 15% faster
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Upload & Recent Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Quick Upload -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">Quick Upload</h3>
+                        <div class="upload-zone rounded-xl p-8 text-center cursor-pointer"
+                             @dragover.prevent="dragover = true"
+                             @dragleave.prevent="dragover = false"
+                             @drop.prevent="handleDrop($event)"
+                             :class="{'dragover': dragover}"
+                             @click="$refs.quickUpload.click()">
+                            <input type="file" x-ref="quickUpload" class="hidden" multiple @change="handleFileSelect($event)">
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-accent-cyan/10 flex items-center justify-center">
+                                <i class="fas fa-cloud-upload-alt text-2xl text-accent-cyan"></i>
+                            </div>
+                            <p class="text-sm text-gray-300 mb-2">Drag & drop files here</p>
+                            <p class="text-xs text-gray-500">PDF, DOCX, PNG, JPG, TIFF up to 50MB</p>
+                        </div>
+                        <div class="mt-4 flex gap-2">
+                            <button class="flex-1 py-2 rounded-lg bg-accent-cyan/20 text-accent-cyan text-sm hover:bg-accent-cyan/30 transition-colors">
+                                <i class="fas fa-folder-open mr-2"></i>Browse
+                            </button>
+                            <button class="flex-1 py-2 rounded-lg bg-accent-purple/20 text-accent-purple text-sm hover:bg-accent-purple/30 transition-colors">
+                                <i class="fas fa-link mr-2"></i>URL
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Processing Status -->
+                    <div class="glass-card rounded-2xl p-6 lg:col-span-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-white">Processing Status</h3>
+                            <button class="text-sm text-accent-cyan hover:underline">View All</button>
+                        </div>
+                        <div class="space-y-3">
+                            <template x-for="doc in recentDocuments" :key="doc.id">
+                                <div class="flex items-center gap-4 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                                    <div class="w-10 h-10 rounded-lg flex items-center justify-center"
+                                         :class="{
+                                             'bg-accent-cyan/20 text-accent-cyan': doc.type === 'pdf',
+                                             'bg-accent-green/20 text-accent-green': doc.type === 'docx',
+                                             'bg-accent-amber/20 text-accent-amber': doc.type === 'image'
+                                         }">
+                                        <i class="fas" :class="{
+                                            'fa-file-pdf': doc.type === 'pdf',
+                                            'fa-file-word': doc.type === 'docx',
+                                            'fa-file-image': doc.type === 'image'
+                                        }"></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-sm font-medium text-white truncate" x-text="doc.name"></div>
+                                        <div class="text-xs text-gray-400" x-text="doc.size + ' • ' + doc.time"></div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                            <div class="h-full rounded-full transition-all duration-500"
+                                                 :class="{
+                                                     'bg-accent-green': doc.status === 'completed',
+                                                     'bg-accent-cyan': doc.status === 'processing',
+                                                     'bg-accent-amber': doc.status === 'queued'
+                                                 }"
+                                                 :style="`width: ${doc.progress}%`"></div>
+                                        </div>
+                                        <span class="text-xs" :class="{
+                                            'text-accent-green': doc.status === 'completed',
+                                            'text-accent-cyan': doc.status === 'processing',
+                                            'text-accent-amber': doc.status === 'queued'
+                                        }" x-text="doc.statusText"></span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Integration Status & Batch Jobs -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glass-card rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">Connected Integrations</h3>
+                        <div class="grid grid-cols-4 gap-4">
+                            <template x-for="integration in integrations" :key="integration.name">
+                                <div class="text-center p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+                                    <div class="w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center text-xl transition-transform group-hover:scale-110"
+                                         :class="integration.connected ? 'bg-accent-green/20 text-accent-green' : 'bg-white/10 text-gray-500'">
+                                        <i :class="integration.icon"></i>
+                                    </div>
+                                    <div class="text-xs text-gray-400" x-text="integration.name"></div>
+                                    <div class="text-xs mt-1" :class="integration.connected ? 'text-accent-green' : 'text-gray-600'" 
+                                         x-text="integration.connected ? 'Active' : 'Disabled'"></div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">Recent Batch Jobs</h3>
+                        <div class="space-y-3">
+                            <template x-for="batch in batchJobs.slice(0, 4)" :key="batch.id">
+                                <div class="flex items-center gap-4 p-3 rounded-lg bg-white/5">
+                                    <div class="w-10 h-10 rounded-lg bg-accent-purple/20 flex items-center justify-center">
+                                        <i class="fas fa-layer-group text-accent-purple"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="text-sm font-medium text-white" x-text="batch.name"></div>
+                                        <div class="text-xs text-gray-400" x-text="batch.documents + ' documents'"></div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-sm font-medium" :class="batch.status === 'completed' ? 'text-accent-green' : 'text-accent-cyan'" 
+                                             x-text="batch.progress + '%'"></div>
+                                        <div class="text-xs text-gray-400" x-text="batch.status"></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload View -->
+            <div x-show="currentView === 'upload'" class="space-y-6" style="display: none;">
+                <div class="glass-card rounded-2xl p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold text-white mb-2">Upload Documents</h2>
+                        <p class="text-gray-400">Process single files or batch upload hundreds of documents</p>
+                    </div>
+
+                    <!-- Main Upload Zone -->
+                    <div class="upload-zone rounded-2xl p-12 text-center cursor-pointer mb-6"
+                         @dragover.prevent="dragover = true"
+                         @dragleave.prevent="dragover = false"
+                         @drop.prevent="handleDrop($event)"
+                         :class="{'dragover': dragover}"
+                         @click="$refs.fileInput.click()">
+                        <input type="file" x-ref="fileInput" class="hidden" multiple @change="handleFileSelect($event)">
+                        <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-accent-cyan/20 to-accent-purple/20 flex items-center justify-center animate-float">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-accent-cyan"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Drag & drop your files here</h3>
+                        <p class="text-gray-400 mb-4">or click to browse from your computer</p>
+                        <div class="flex items-center justify-center gap-2 text-sm text-gray-500">
+                            <span class="px-3 py-1 rounded-full bg-white/5">PDF</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5">DOCX</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5">PNG</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5">JPG</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5">TIFF</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5">+15 more</span>
+                        </div>
+                    </div>
+
+                    <!-- Upload Options -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+                            <i class="fas fa-link text-accent-cyan text-xl mb-2"></i>
+                            <div class="font-medium text-white">URL Import</div>
+                            <div class="text-xs text-gray-400">Import from cloud storage</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+                            <i class="fas fa-envelope text-accent-purple text-xl mb-2"></i>
+                            <div class="font-medium text-white">Email Forward</div>
+                            <div class="text-xs text-gray-400">Forward emails to process</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-pointer">
+                            <i class="fas fa-code text-accent-green text-xl mb-2"></i>
+                            <div class="font-medium text-white">API Upload</div>
+                            <div class="text-xs text-gray-400">Use our REST API</div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Files -->
+                    <div x-show="uploadQueue.length > 0" class="space-y-3">
+                        <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Selected Files</h4>
+                        <template x-for="(file, index) in uploadQueue" :key="index">
+                            <div class="flex items-center gap-4 p-4 rounded-xl bg-white/5">
+                                <div class="w-12 h-12 rounded-lg bg-accent-cyan/20 flex items-center justify-center">
+                                    <i class="fas fa-file text-accent-cyan"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="text-sm font-medium text-white" x-text="file.name"></div>
+                                    <div class="text-xs text-gray-400" x-text="formatFileSize(file.size)"></div>
+                                </div>
+                                <select class="glass-card rounded-lg px-3 py-2 text-sm text-gray-300">
+                                    <option>Auto-detect</option>
+                                    <option>Invoice</option>
+                                    <option>Receipt</option>
+                                    <option>Contract</option>
+                                    <option>ID Document</option>
+                                </select>
+                                <button @click="uploadQueue.splice(index, 1)" class="p-2 hover:bg-accent-rose/20 rounded-lg text-gray-400 hover:text-accent-rose transition-colors">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </template>
+                        <div class="flex gap-3 mt-4">
+                            <button @click="startBatchUpload()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-purple text-white font-medium hover:opacity-90 transition-opacity">
+                                <i class="fas fa-play mr-2"></i>Start Processing
+                            </button>
+                            <button @click="uploadQueue = []" class="px-6 py-3 rounded-xl bg-white/10 text-gray-300 hover:bg-white/20 transition-colors">
+                                Clear All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Queue View -->
+            <div x-show="currentView === 'queue'" class="space-y-6" style="display: none;">
+                <div class="glass-card rounded-2xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h2 class="text-xl font-bold text-white">Processing Queue</h2>
+                            <p class="text-sm text-gray-400">Real-time status of all documents</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="px-4 py-2 rounded-lg bg-accent-green/20 text-accent-green text-sm hover:bg-accent-green/30 transition-colors">
+                                <i class="fas fa-play mr-2"></i>Resume All
+                            </button>
+                            <button class="px-4 py-2 rounded-lg bg-accent-amber/20 text-accent-amber text-sm hover:bg-accent-amber/30 transition-colors">
+                                <i class="fas fa-pause mr-2"></i>Pause
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Queue Stats -->
+                    <div class="grid grid-cols-4 gap-4 mb-6">
+                        <div class="p-4 rounded-xl bg-white/5 text-center">
+                            <div class="text-2xl font-bold text-white">156</div>
+                            <div class="text-xs text-gray-400">Queued</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/5 text-center">
+                            <div class="text-2xl font-bold text-accent-cyan">23</div>
+                            <div class="text-xs text-gray-400">Processing</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/5 text-center">
+                            <div class="text-2xl font-bold text-accent-green">12.4K</div>
+                            <div class="text-xs text-gray-400">Completed Today</div>
+                        </div>
+                        <div class="p-4 rounded-xl bg-white/5 text-center">
+                            <div class="text-2xl font-bold text-accent-rose">3</div>
+                            <div class="text-xs text-gray-400">Failed</div>
+                        </div>
+                    </div>
+
+                    <!-- Queue Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="text-left text-xs text-gray-500 uppercase tracking-wider border-b border-white/10">
+                                    <th class="pb-3 pl-4">Document</th>
+                                    <th class="pb-3">Type</th>
+                                    <th class="pb-3">Template</th>
+                                    <th class="pb-3">Status</th>
+                                    <th class="pb-3">Progress</th>
+                                    <th class="pb-3">Time</th>
+                                    <th class="pb-3 pr-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <template x-for="doc in processingQueue" :key="doc.id">
+                                    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <td class="py-4 pl-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-lg bg-accent-cyan/20 flex items-center justify-center">
+                                                    <i class="fas fa-file-pdf text-accent-cyan text-xs"></i>
+                                                </div>
+                                                <span class="text-white" x-text="doc.name"></span>
+                                            </div>
+                                        </td>
+                                        <td class="py-4 text-gray-400" x-text="doc.type"></td>
+                                        <td class="py-4">
+                                            <span class="px-2 py-1 rounded-full bg-accent-purple/20 text-accent-purple text-xs" x-text="doc.template"></span>
+                                        </td>
+                                        <td class="py-4">
+                                            <span class="px-2 py-1 rounded-full text-xs"
+                                                  :class="{
+                                                      'bg-accent-green/20 text-accent-green': doc.status === 'completed',
+                                                      'bg-accent-cyan/20 text-accent-cyan': doc.status === 'processing',
+                                                      'bg-accent-amber/20 text-accent-amber': doc.status === 'queued',
+                                                      'bg-accent-rose/20 text-accent-rose': doc.status === 'failed'
+                                                  }"
+                                                  x-text="doc.status"></span>
+                                        </td>
+                                        <td class="py-4">
+                                            <div class="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                                <div class="h-full rounded-full transition-all duration-500"
+                                                     :class="{
+                                                         'bg-accent-green': doc.status === 'completed',
+                                                         'bg-accent-cyan': doc.status === 'processing',
+                                                         'bg-accent-amber': doc.status === 'queued'
+                                                     }"
+                                                     :style="`width: ${doc.progress}%`"></div>
+                                            </div>
+                                        </td>
+                                        <td class="py-4 text-gray-400" x-text="doc.time"></td>
+                                        <td class="py-4 pr-4">
+                                            <button class="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-colors">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-colors">
+                                                <i class="fas fa-redo"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Viewer -->
+            <div x-show="currentView === 'data'" class="space-y-6" style="display: none;">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Extracted Data</h2>
+                        <p class="text-sm text-gray-400">Structured data from processed documents</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="px-4 py-2 rounded-lg glass-card hover:bg-white/10 transition-colors text-sm">
+                            <i class="fas fa-filter mr-2"></i>Filter
+                        </button>
+                        <button class="px-4 py-2 rounded-lg bg-accent-cyan/20 text-accent-cyan text-sm hover:bg-accent-cyan/30 transition-colors">
+                            <i class="fas fa-download mr-2"></i>Export All
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden">
+                    <div class="p-4 border-b border-white/10 flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" class="rounded bg-white/10 border-white/20">
+                        </div>
+                        <div class="flex-1 flex items-center gap-4">
+                            <select class="glass-card rounded-lg px-3 py-2 text-sm text-gray-300">
+                                <option>All Documents</option>
+                                <option>Invoices</option>
+                                <option>Receipts</option>
+                                <option>Contracts</option>
+                            </select>
+                            <input type="text" placeholder="Search extracted data..." class="glass-card rounded-lg px-4 py-2 text-sm flex-1">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="text-left text-xs text-gray-500 uppercase tracking-wider bg-white/5">
+                                    <th class="py-3 pl-4 w-10"><input type="checkbox" class="rounded bg-white/10 border-white/20"></th>
+                                    <th class="py-3">Document</th>
+                                    <th class="py-3">Vendor</th>
+                                    <th class="py-3">Date</th>
+                                    <th class="py-3">Amount</th>
+                                    <th class="py-3">Category</th>
+                                    <th class="py-3">Confidence</th>
+                                    <th class="py-3 pr-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <template x-for="data in extractedData" :key="data.id">
+                                    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <td class="py-4 pl-4"><input type="checkbox" class="rounded bg-white/10 border-white/20"></td>
+                                        <td class="py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div class="w-8 h-8 rounded-lg bg-accent-cyan/20 flex items-center justify-center">
+                                                    <i class="fas fa-file-invoice text-accent-cyan text-xs"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="text-white" x-text="data.document"></div>
+                                                    <div class="text-xs text-gray-500" x-text="data.id"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="py-4 text-white" x-text="data.vendor"></td>
+                                        <td class="py-4 text-gray-400" x-text="data.date"></td>
+                                        <td class="py-4 text-accent-green font-mono" x-text="data.amount"></td>
+                                        <td class="py-4">
+                                            <span class="px-2 py-1 rounded-full bg-accent-purple/20 text-accent-purple text-xs" x-text="data.category"></span>
+                                        </td>
+                                        <td class="py-4">
+                                            <div class="flex items-center gap-2">
+                                                <div class="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-accent-green rounded-full" :style="`width: ${data.confidence}%`"></div>
+                                                </div>
+                                                <span class="text-xs text-gray-400" x-text="data.confidence + '%'"></span>
+                                            </div>
+                                        </td>
+                                        <td class="py-4 pr-4">
+                                            <button class="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-colors">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white transition-colors">
+                                                <i class="fas fa-download"></i>
+                                            </button>
+                                            <button class="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-accent-rose transition-colors">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow Builder -->
+            <div x-show="currentView === 'workflows'" class="space-y-6" style="display: none;">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Workflow Builder</h2>
+                        <p class="text-sm text-gray-400">Create automated document processing pipelines</p>
+                    </div>
+                    <button class="px-4 py-2 rounded-lg bg-gradient-to-r from-accent-cyan to-accent-purple text-white text-sm hover:opacity-90 transition-opacity">
+                        <i class="fas fa-plus mr-2"></i>New Workflow
+                    </button>
+                </div>
+
+                <!-- Workflow Canvas -->
+                <div class="glass-card rounded-2xl p-6 min-h-[500px] relative">
+                    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    
+                    <!-- Workflow Nodes -->
+                    <div class="relative z-10 flex flex-col items-center gap-8 py-8">
+                        <!-- Trigger Node -->
+                        <div class="workflow-node glass-card rounded-xl p-4 w-64 cursor-pointer border-accent-cyan/30">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-accent-cyan/20 flex items-center justify-center">
+                                    <i class="fas fa-bolt text-accent-cyan"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">Document Upload</div>
+                                    <div class="text-xs text-gray-400">Trigger</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Arrow -->
+                        <div class="flex flex-col items-center">
+                            <div class="w-0.5 h-8 bg-gradient-to-b from-accent-cyan to-accent-purple"></div>
+                            <i class="fas fa-chevron-down text-accent-purple text-xs"></i>
+                        </div>
+
+                        <!-- Extract Node -->
+                        <div class="workflow-node glass-card rounded-xl p-4 w-64 cursor-pointer border-accent-purple/30">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-accent-purple/20 flex items-center justify-center">
+                                    <i class="fas fa-magic text-accent-purple"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">AI Extraction</div>
+                                    <div class="text-xs text-gray-400">OCR + NLP Processing</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Branch -->
+                        <div class="flex items-center gap-16">
+                            <div class="flex flex-col items-center">
+                                <div class="w-0.5 h-8 bg-gradient-to-b from-accent-purple to-accent-green"></div>
+                                <div class="workflow-node glass-card rounded-xl p-4 w-56 cursor-pointer border-accent-green/30">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-accent-green/20 flex items-center justify-center">
+                                            <i class="fas fa-check text-accent-green text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium text-white text-sm">Validation Pass</div>
+                                            <div class="text-xs text-gray-400">Confidence > 95%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-0.5 h-8 bg-gradient-to-b from-accent-green to-accent-cyan"></div>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-0.5 h-8 bg-gradient-to-b from-accent-purple to-accent-amber"></div>
+                                <div class="workflow-node glass-card rounded-xl p-4 w-56 cursor-pointer border-accent-amber/30">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-accent-amber/20 flex items-center justify-center">
+                                            <i class="fas fa-exclamation text-accent-amber text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium text-white text-sm">Review Required</div>
+                                            <div class="text-xs text-gray-400">Confidence < 95%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-0.5 h-8 bg-gradient-to-b from-accent-amber to-accent-cyan"></div>
+                            </div>
+                        </div>
+
+                        <!-- Export Node -->
+                        <div class="workflow-node glass-card rounded-xl p-4 w-64 cursor-pointer border-accent-cyan/30">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-accent-cyan/20 flex items-center justify-center">
+                                    <i class="fas fa-database text-accent-cyan"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-white">Export Data</div>
+                                    <div class="text-xs text-gray-400">Save to Database</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Workflow Templates -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-card rounded-xl p-4 hover:border-accent-cyan/50 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-accent-cyan/20 flex items-center justify-center">
+                                <i class="fas fa-file-invoice text-accent-cyan"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-white">Invoice Processing</div>
+                                <div class="text-xs text-gray-400">Extract & validate invoices</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-500">5 steps • 2.3K runs</div>
+                    </div>
+                    <div class="glass-card rounded-xl p-4 hover:border-accent-cyan/50 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-accent-purple/20 flex items-center justify-center">
+                                <i class="fas fa-id-card text-accent-purple"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-white">ID Verification</div>
+                                <div class="text-xs text-gray-400">KYC document processing</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-500">4 steps • 892 runs</div>
+                    </div>
+                    <div class="glass-card rounded-xl p-4 hover:border-accent-cyan/50 transition-colors cursor-pointer">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-accent-green/20 flex items-center justify-center">
+                                <i class="fas fa-file-contract text-accent-green"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium text-white">Contract Analysis</div>
+                                <div class="text-xs text-gray-400">Extract clauses & terms</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-500">6 steps • 456 runs</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integrations -->
+            <div x-show="currentView === 'integrations'" class="space-y-6" style="display: none;">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Integration Hub</h2>
+                        <p class="text-sm text-gray-400">Connect Taylor to your favorite tools</p>
+                    </div>
+                    <button class="px-4 py-2 rounded-lg glass-card hover:bg-white/10 transition-colors text-sm">
+                        <i class="fas fa-key mr-2"></i>API Keys
+                    </button>
+                </div>
+
+                <!-- Integration Categories -->
+                <div class="flex gap-2 mb-4">
+                    <button class="px-4 py-2 rounded-lg bg-accent-cyan/20 text-accent-cyan text-sm">All</button>
+                    <button class="px-4 py-2 rounded-lg glass-card hover:bg-white/10 transition-colors text-sm text-gray-400">CRM</button>
+                    <button class="px-4 py-2 rounded-lg glass-card hover:bg-white/10 transition-colors text-sm text-gray-400">Storage</button>
+                    <button class="px-4 py-2 rounded-lg glass-card hover:bg-white/10 transition-colors text-sm text-gray-400">Accounting</button>
+                    <button class="px-4 py-2 rounded-lg glass-card hover:bg-white/10 transition-colors text-sm text-gray-400">Database</button>
+                </div>
+
+                <!-- Integration Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <template x-for="integration in allIntegrations" :key="integration.name">
+                        <div class="glass-card rounded-xl p-6 hover:border-accent-cyan/30 transition-colors">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                                     :class="integration.connected ? 'bg-accent-green/20 text-accent-green' : 'bg-white/10 text-gray-400'">
+                                    <i :class="integration.icon"></i>
+                                </div>
+                                <span class="px-2 py-1 rounded-full text-xs"
+                                      :class="integration.connected ? 'bg-accent-green/20 text-accent-green' : 'bg-gray-700 text-gray-400'"
+                                      x-text="integration.connected ? 'Connected' : 'Not Connected'"></span>
+                            </div>
+                            <h3 class="font-semibold text-white mb-1" x-text="integration.name"></h3>
+                            <p class="text-sm text-gray-400 mb-4" x-text="integration.description"></p>
+                            <button class="w-full py-2 rounded-lg text-sm transition-colors"
+                                    :class="integration.connected ? 'bg-accent-rose/20 text-accent-rose hover:bg-accent-rose/30' : 'bg-accent-cyan/20 text-accent-cyan hover:bg-accent-cyan/30'"
+                                    x-text="integration.connected ? 'Disconnect' : 'Connect'"></button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Templates -->
+            <div x-show="currentView === 'templates'" class="space-y-6" style="display: none;">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Template Library</h2>
+                        <p class="text-sm text-gray-400">Pre-configured extraction templates</p>
+                    </div>
+                    <button class="px-4 py-2 rounded-lg bg-gradient-to-r from-accent-cyan to-accent-purple text-white text-sm hover:opacity-90 transition-opacity">
+                        <i class="fas fa-plus mr-2"></i>Create Template
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <template x-for="template in templates" :key="template.name">
+                        <div class="glass-card rounded-xl p-6 hover:border-accent-cyan/30 transition-colors group">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl transition-transform group-hover:scale-110"
+                                     :class="template.color">
+                                    <i :class="template.icon"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-white" x-text="template.name"></h3>
+                                    <p class="text-xs text-gray-400" x-text="template.fields + ' fields' + ' • ' + template.usage + ' uses'"></p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-400 mb-4" x-text="template.description"></p>
+                            <div class="flex gap-2">
+                                <button class="flex-1 py-2 rounded-lg bg-accent-cyan/20 text-accent-cyan text-sm hover:bg-accent-cyan/30 transition-colors">
+                                    Use Template
+                                </button>
+                                <button class="px-3 py-2 rounded-lg glass-card hover:bg-white/10 transition-colors">
+                                    <i class="fas fa-ellipsis-v text-gray-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Audit Log -->
+            <div x-show="currentView === 'audit'" class="space-y-6" style="display: none;">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-white">Audit Log</h2>
+                        <p class="text-sm text-gray-400">Complete history of all processing activities</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="px-4 py-2 rounded-lg glass-card hover:bg-white/10 transition-colors text-sm">
+                            <i class="fas fa-filter mr-2"></i>Filter
+                        </button>
+                        <button class="px-4 py-2 rounded-lg glass-card hover:bg-white/10 transition-colors text-sm">
+                            <i class="fas fa-download mr-2"></i>Export Log
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden">
+                    <div class="p-4 border-b border-white/10 flex items-center gap-4">
+                        <input type="text" placeholder="Search audit log..." class="glass-card rounded-lg px-4 py-2 text-sm flex-1">
+                        <select class="glass-card rounded-lg px-3 py-2 text-sm text-gray-300">
+                            <option>All Actions</option>
+                            <option>Upload</option>
+                            <option>Process</option>
+                            <option>Export</option>
+                            <option>Delete</option>
+                        </select>
+                        <input type="date" class="glass-card rounded-lg px-3 py-2 text-sm text-gray-300">
+                    </div>
+                    <div class="overflow-x-auto max-h-[600px] overflow-y-auto">
+                        <table class="w-full">
+                            <thead class="sticky top-0 bg-galaxy-800">
+                                <tr class="text-left text-xs text-gray-500 uppercase tracking-wider">
+                                    <th class="py-3 pl-4">Timestamp</th>
+                                    <th class="py-3">Action</th>
+                                    <th class="py-3">User</th>
+                                    <th class="py-3">Document</th>
+                                    <th class="py-3">Status</th>
+                                    <th class="py-3">Details</th>
+                                    <th class="py-3 pr-4">IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <template x-for="log in auditLog" :key="log.id">
+                                    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                        <td class="py-3 pl-4 text-gray-400 font-mono text-xs" x-text="log.timestamp"></td>
+                                        <td class="py-3">
+                                            <span class="px-2 py-1 rounded-full text-xs"
+                                                  :class="{
+                                                      'bg-accent-cyan/20 text-accent-cyan': log.action === 'Upload',
+                                                      'bg-accent-purple/20 text-accent-purple': log.action === 'Process',
+                                                      'bg-accent-green/20 text-accent-green': log.action === 'Export',
+                                                      'bg-accent-rose/20 text-accent-rose': log.action === 'Delete'
+                                                  }"
+                                                  x-text="log.action"></span>
+                                        </td>
+                                        <td class="py-3 text-white" x-text="log.user"></td>
+                                        <td class="py-3 text-gray-400" x-text="log.document"></td>
+                                        <td class="py-3">
+                                            <span class="text-xs" :class="{
+                                                'text-accent-green': log.status === 'Success',
+                                                'text-accent-rose': log.status === 'Failed'
+                                            }" x-text="log.status"></span>
+                                        </td>
+                                        <td class="py-3 text-gray-400 text-xs" x-text="log.details"></td>
+                                        <td class="py-3 pr-4 text-gray-500 font-mono text-xs" x-text="log.ip"></td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div x-show="currentView === 'settings'" class="space-y-6" style="display: none;">
+                <div class="glass-card rounded-2xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-6">Settings</h2>
+                    
+                    <div class="space-y-6">
+                        <!-- General Settings -->
+                        <div class="border-b border-white/10 pb-6">
+                            <h3 class="text-lg font-semibold text-white mb-4">General</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Organization Name</label>
+                                    <input type="text" value="Acme Corp" class="glass-card rounded-lg px-4 py-2 text-sm w-full">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-400 mb-2">Default Language</label>
+                                    <select class="glass-card rounded-lg px-4 py-2 text-sm w-full">
+                                        <option>English (US)</option>
+                                        <option>English (UK)</option>
+                                        <option>Spanish</option>
+                                        <option>French</option>
+                                        <option>German</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Processing Settings -->
+                        <div class="border-b border-white/10 pb-6">
+                            <h3 class="text-lg font-semibold text-white mb-4">Processing</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                                    <div>
+                                        <div class="font-medium text-white">Auto-processing</div>
+                                        <div class="text-sm text-gray-400">Automatically start processing on upload</div>
+                                    </div>
+                                    <button class="w-12 h-6 rounded-full bg-accent-cyan relative transition-colors" @click="$el.classList.toggle('bg-accent-cyan'); $el.classList.toggle('bg-gray-600')">
+                                        <div class="w-4 h-4 rounded-full bg-white absolute right-1 top-1 transition-transform"></div>
+                                    </button>
+                                </div>
+                                <div class="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                                    <div>
+                                        <div class="font-medium text-white">Confidence Threshold</div>
+                                        <div class="text-sm text-gray-400">Minimum accuracy for auto-approval</div>
+                                    </div>
+                                    <select class="glass-card rounded-lg px-3 py-2 text-sm">
+                                        <option>95% (Recommended)</option>
+                                        <option>90%</option>
+                                        <option>85%</option>
+                                        <option>80%</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notifications -->
+                        <div>
+                            <h3 class="text-lg font-semibold text-white mb-4">Notifications</h3>
+                            <div class="space-y-3">
+                                <label class="flex items-center gap-3 p-3 rounded-xl bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                                    <input type="checkbox" checked class="rounded bg-white/10 border-white/20">
+                                    <span class="text-sm text-gray-300">Email notifications for failed processing</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-xl bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                                    <input type="checkbox" checked class="rounded bg-white/10 border-white/20">
+                                    <span class="text-sm text-gray-300">Daily processing summary</span>
+                                </label>
+                                <label class="flex items-center gap-3 p-3 rounded-xl bg-white/5 cursor-pointer hover:bg-white/10 transition-colors">
+                                    <input type="checkbox" class="rounded bg-white/10 border-white/20">
+                                    <span class="text-sm text-gray-300">Webhook notifications</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3 pt-4">
+                            <button class="px-6 py-2 rounded-lg bg-gradient-to-r from-accent-cyan to-accent-purple text-white font-medium hover:opacity-90 transition-opacity">
+                                Save Changes
+                            </button>
+                            <button class="px-6 py-2 rounded-lg glass-card hover:bg-white/10 transition-colors text-gray-300">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function taylorApp() {
+            return {
+                currentView: 'dashboard',
+                dragover: false,
+                uploadQueue: [],
+                
+                get pageTitle() {
+                    const titles = {
+                        dashboard: 'Dashboard',
+                        upload: 'Upload Documents',
+                        queue: 'Processing Queue',
+                        data: 'Extracted Data',
+                        workflows: 'Workflow Builder',
+                        integrations: 'Integration Hub',
+                        templates: 'Template Library',
+                        audit: 'Audit Log',
+                        settings: 'Settings'
+                    };
+                    return titles[this.currentView] || 'Dashboard';
+                },
+
+                recentDocuments: [
+                    { id: 1, name: 'Invoice_2024_001.pdf', size: '2.4 MB', type: 'pdf', time: '2 min ago', status: 'processing', statusText: 'Processing', progress: 65 },
+                    { id: 2, name: 'Receipt_Store_456.jpg', size: '1.8 MB', type: 'image', time: '5 min ago', status: 'completed', statusText: 'Completed', progress: 100 },
+                    { id: 3, name: 'Contract_Legal_v2.docx', size: '856 KB', type: 'docx', time: '12 min ago', status: 'queued', statusText: 'Queued', progress: 0 },
+                    { id: 4, name: 'Statement_Q4.pdf', size: '4.2 MB', type: 'pdf', time: '18 min ago', status: 'completed', statusText: 'Completed', progress: 100 },
+                    { id: 5, name: 'ID_Verification.png', size: '3.1 MB', type: 'image', time: '25 min ago', status: 'processing', statusText: 'Processing', progress: 45 },
+                ],
+
+                processingQueue: [
+                    { id: 'DOC-78432', name: 'Invoice_AcmeCorp_Mar.pdf', type: 'PDF', template: 'Invoice', status: 'processing', progress: 65, time: '1m 23s' },
+                    { id: 'DOC-78433', name: 'Receipt_Grocery_0315.jpg', type: 'Image', template: 'Receipt', status: 'queued', progress: 0, time: '--' },
+                    { id: 'DOC-78434', name: 'Contract_Service2024.docx', type: 'DOCX', template: 'Contract', status: 'processing', progress: 32, time: '45s' },
+                    { id: 'DOC-78435', name: 'Statement_Bank_Feb.pdf', type: 'PDF', template: 'Statement', status: 'completed', progress: 100, time: '2m 15s' },
+                    { id: 'DOC-78436', name: 'Invoice_Vendor_7823.pdf', type: 'PDF', template: 'Invoice', status: 'completed', progress: 100, time: '1m 45s' },
+                    { id: 'DOC-78437', name: 'ID_Passport_Scan.pdf', type: 'PDF', template: 'ID Document', status: 'failed', progress: 0, time: '--' },
+                ],
+
+                extractedData: [
+                    { id: 'EXT-4521', document: 'Invoice_001.pdf', vendor: 'Acme Supplies Inc.', date: '2024-03-15', amount: '$1,247.50', category: 'Office Supplies', confidence: 99.2 },
+                    { id: 'EXT-4522', document: 'Receipt_Store.jpg', vendor: 'Best Buy', date: '2024-03-14', amount: '$899.99', category: 'Electronics', confidence: 98.7 },
+                    { id: 'EXT-4523', document: 'Invoice_002.pdf', vendor: 'Amazon Business', date: '2024-03-13', amount: '$3,456.00', category: 'Equipment', confidence: 99.8 },
+                    { id: 'EXT-4524', document: 'Receipt_Restaurant.pdf', vendor: 'Bistro Central', date: '2024-03-12', amount: '$127.40', category: 'Meals', confidence: 97.5 },
+                    { id: 'EXT-4525', document: 'Invoice_003.pdf', vendor: 'Staples', date: '2024-03-11', amount: '$234.67', category: 'Office Supplies', confidence: 99.4 },
+                ],
+
+                batchJobs: [
+                    { id: 1, name: 'Q1 Invoices Batch', documents: 256, progress: 100, status: 'completed' },
+                    { id: 2, name: 'Employee Documents', documents: 48, progress: 75, status: 'processing' },
+                    { id: 3, name: 'Receipt Archive 2023', documents: 1247, progress: 32, status: 'processing' },
+                    { id: 4, name: 'Contract Review', documents: 23, progress: 100, status: 'completed' },
+                    { id: 5, name: 'Tax Documents', documents: 89, progress: 0, status: 'queued' },
+                ],
+
+                integrations: [
+                    { name: 'Salesforce', icon: 'fab fa-salesforce', connected: true },
+                    { name: 'HubSpot', icon: 'fab fa-hubspot', connected: true },
+                    { name: 'Slack', icon: 'fab fa-slack', connected: false },
+                    { name: 'Dropbox', icon: 'fab fa-dropbox', connected: true },
+                    { name: 'Drive', icon: 'fab fa-google-drive', connected: true },
+                    { name: 'OneDrive', icon: 'fab fa-microsoft', connected: false },
+                    { name: 'QuickBooks', icon: 'fas fa-book', connected: true },
+                    { name: 'Stripe', icon: 'fab fa-stripe', connected: false },
+                ],
+
+                allIntegrations: [
+                    { name: 'Salesforce', icon: 'fab fa-salesforce', connected: true, description: 'Sync extracted data to Salesforce CRM' },
+                    { name: 'HubSpot', icon: 'fab fa-hubspot', connected: true, description: 'Automate contact and deal creation' },
+                    { name: 'Slack', icon: 'fab fa-slack', connected: false, description: 'Get notifications in your channels' },
+                    { name: 'Dropbox', icon: 'fab fa-dropbox', connected: true, description: 'Import documents from Dropbox' },
+                    { name: 'Google Drive', icon: 'fab fa-google-drive', connected: true, description: 'Import and export to Google Drive' },
+                    { name: 'OneDrive', icon: 'fab fa-microsoft', connected: false, description: 'Microsoft 365 integration' },
+                    { name: 'QuickBooks', icon: 'fas fa-book', connected: true, description: 'Automated bookkeeping entries' },
+                    { name: 'Stripe', icon: 'fab fa-stripe', connected: false, description: 'Process payments from invoices' },
+                    { name: 'Zapier', icon: 'fas fa-bolt', connected: true, description: 'Connect to 5000+ apps' },
+                    { name: 'MySQL', icon: 'fas fa-database', connected: false, description: 'Export to MySQL databases' },
+                    { name: 'PostgreSQL', icon: 'fas fa-database', connected: true, description: 'Export to PostgreSQL databases' },
+                    { name: 'MongoDB', icon: 'fas fa-leaf', connected: false, description: 'NoSQL document storage' },
+                ],
+
+                templates: [
+                    { name: 'Invoice', icon: 'fas fa-file-invoice', color: 'bg-accent-cyan/20 text-accent-cyan', fields: 12, usage: '2.3K', description: 'Extract vendor, amounts, dates, and line items from invoices' },
+                    { name: 'Receipt', icon: 'fas fa-receipt', color: 'bg-accent-green/20 text-accent-green', fields: 8, usage: '5.1K', description: 'Parse receipts for expense tracking and reimbursement' },
+                    { name: 'Contract', icon: 'fas fa-file-contract', color: 'bg-accent-purple/20 text-accent-purple', fields: 25, usage: '892', description: 'Extract clauses, parties, dates, and key terms from contracts' },
+                    { name: 'ID Document', icon: 'fas fa-id-card', color: 'bg-accent-amber/20 text-accent-amber', fields: 15, usage: '1.2K', description: 'Extract personal information from passports and IDs' },
+                    { name: 'Bank Statement', icon: 'fas fa-university', color: 'bg-blue-500/20 text-blue-400', fields: 10, usage: '756', description: 'Parse transactions and balances from bank statements' },
+                    { name: 'Tax Form', icon: 'fas fa-file-alt', color: 'bg-red-500/20 text-red-400', fields: 30, usage: '2.1K', description: 'Extract data from W-2s, 1099s, and other tax documents' },
+                    { name: 'Resume/CV', icon: 'fas fa-user-tie', color: 'bg-indigo-500/20 text-indigo-400', fields: 18, usage: '3.4K', description: 'Parse candidate information from resumes' },
+                    { name: 'Medical Record', icon: 'fas fa-file-medical', color: 'bg-teal-500/20 text-teal-400', fields: 35, usage: '445', description: 'Extract patient data from medical forms and records' },
+                ],
+
+                auditLog: [
+                    { id: 1, timestamp: '2024-03-15 14:23:45', action: 'Upload', user: 'john.doe@company.com', document: 'Invoice_001.pdf', status: 'Success', details: '2.4 MB uploaded', ip: '192.168.1.45' },
+                    { id: 2, timestamp: '2024-03-15 14:23:52', action: 'Process', user: 'system', document: 'Invoice_001.pdf', status: 'Success', details: 'Processing started', ip: 'internal' },
+                    { id: 3, timestamp: '2024-03-15 14:24:15', action: 'Process', user: 'system', document: 'Invoice_001.pdf', status: 'Success', details: 'Extraction complete - 99.2% confidence', ip: 'internal' },
+                    { id: 4, timestamp: '2024-03-15 14:25:03', action: 'Export', user: 'system', document: 'Invoice_001.pdf', status: 'Success', details: 'Exported to Salesforce', ip: 'internal' },
+                    { id: 5, timestamp: '2024-03-15 14:26:12', action: 'Upload', user: 'jane.smith@company.com', document: 'Receipt_Store.jpg', status: 'Success', details: '1.8 MB uploaded', ip: '192.168.1.47' },
+                    { id: 6, timestamp: '2024-03-15 14:26:45', action: 'Upload', user: 'jane.smith@company.com', document: 'Contract_Service.docx', status: 'Success', details: '856 KB uploaded', ip: '192.168.1.47' },
+                    { id: 7, timestamp: '2024-03-15 14:27:33', action: 'Process', user: 'system', document: 'Contract_Service.docx', status: 'Success', details: 'Processing started', ip: 'internal' },
+                    { id: 8, timestamp: '2024-03-15 14:28:01', action: 'Process', user: 'system', document: 'ID_Passport.pdf', status: 'Failed', details: 'Low image quality', ip: 'internal' },
+                    { id: 9, timestamp: '2024-03-15 14:30:22', action: 'Export', user: 'admin@company.com', document: 'Batch_Q1_Invoices', status: 'Success', details: 'CSV export - 256 records', ip: '192.168.1.10' },
+                    { id: 10, timestamp: '2024-03-15 14:32:15', action: 'Delete', user: 'john.doe@company.com', document: 'Temp_Scan.pdf', status: 'Success', details: 'User deleted document', ip: '192.168.1.45' },
+                ],
+
+                handleDrop(e) {
+                    this.dragover = false;
+                    const files = Array.from(e.dataTransfer.files);
+                    this.uploadQueue.push(...files);
+                },
+
+                handleFileSelect(e) {
+                    const files = Array.from(e.target.files);
+                    this.uploadQueue.push(...files);
+                },
+
+                formatFileSize(bytes) {
+                    if (bytes === 0) return '0 Bytes';
+                    const k = 1024;
+                    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+                },
+
+                startBatchUpload() {
+                    // Simulate upload
+                    this.uploadQueue = [];
+                    alert('Batch upload started! Documents are being processed.');
+                    this.currentView = 'queue';
+                },
+
+                init() {
+                    // Simulate real-time updates
+                    setInterval(() => {
+                        this.recentDocuments.forEach(doc => {
+                            if (doc.status === 'processing' && doc.progress < 100) {
+                                doc.progress = Math.min(doc.progress + Math.random() * 5, 100);
+                                if (doc.progress === 100) {
+                                    doc.status = 'completed';
+                                    doc.statusText = 'Completed';
+                                }
+                            }
+                        });
+                    }, 2000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

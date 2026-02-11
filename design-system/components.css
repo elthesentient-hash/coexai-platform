@@ -1,0 +1,1342 @@
+/**
+ * CoExAI Design System - Components
+ * Apple-inspired, Galaxy-feel UI Components
+ * Version: 1.0.0
+ */
+
+@import url('./tokens.css');
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--gradient-cosmic);
+  background-attachment: fixed;
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Selection styling */
+::selection {
+  background: rgba(168, 85, 247, 0.4);
+  color: var(--color-text-primary);
+}
+
+/* Scrollbar styling - WebKit */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-strong);
+}
+
+/* ============================================
+   TYPOGRAPHY COMPONENTS
+   ============================================ */
+
+.coex-heading-1 {
+  font-size: var(--text-5xl);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  background: var(--gradient-aurora);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.coex-heading-2 {
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+.coex-heading-3 {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-snug);
+}
+
+.coex-heading-4 {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-snug);
+}
+
+.coex-heading-5 {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-snug);
+}
+
+.coex-heading-6 {
+  font-size: var(--text-lg);
+  font-weight: var(--font-medium);
+  line-height: var(--leading-snug);
+}
+
+.coex-text-large {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+}
+
+.coex-text-body {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+}
+
+.coex-text-small {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  color: var(--color-text-tertiary);
+}
+
+.coex-text-xs {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+/* ============================================
+   BUTTONS
+   Apple-level polished buttons
+   ============================================ */
+
+.coex-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  line-height: var(--leading-none);
+  text-decoration: none;
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.coex-btn:focus-visible {
+  outline: 2px solid var(--color-accent-purple);
+  outline-offset: 2px;
+}
+
+.coex-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Primary Button - Cosmic Glow */
+.coex-btn--primary {
+  background: var(--gradient-sunset);
+  color: white;
+  box-shadow: var(--shadow-glow-sm), var(--shadow-md);
+}
+
+.coex-btn--primary:hover {
+  box-shadow: var(--shadow-glow-md), var(--shadow-lg);
+  transform: translateY(-1px);
+}
+
+.coex-btn--primary:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-glow-sm), var(--shadow-sm);
+}
+
+/* Secondary Button - Glass Effect */
+.coex-btn--secondary {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+}
+
+.coex-btn--secondary:hover {
+  background: var(--color-bg-glass-hover);
+  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
+}
+
+.coex-btn--secondary:active {
+  transform: translateY(0);
+}
+
+/* Ghost Button - Minimal */
+.coex-btn--ghost {
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+
+.coex-btn--ghost:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+/* Destructive Button */
+.coex-btn--destructive {
+  background: var(--color-error);
+  color: white;
+}
+
+.coex-btn--destructive:hover {
+  background: var(--color-error-light);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+/* Button Sizes */
+.coex-btn--xs {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-md);
+}
+
+.coex-btn--sm {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+}
+
+.coex-btn--lg {
+  padding: var(--space-4) var(--space-6);
+  font-size: var(--text-base);
+  border-radius: var(--radius-xl);
+}
+
+.coex-btn--xl {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--text-lg);
+  border-radius: var(--radius-xl);
+}
+
+/* Icon Button */
+.coex-btn--icon {
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+}
+
+.coex-btn--icon.coex-btn--sm {
+  padding: var(--space-1);
+}
+
+.coex-btn--icon.coex-btn--lg {
+  padding: var(--space-3);
+}
+
+/* Loading State */
+.coex-btn--loading {
+  pointer-events: none;
+}
+
+.coex-btn--loading .coex-btn__text {
+  opacity: 0;
+}
+
+.coex-btn__spinner {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: var(--radius-full);
+  animation: coex-spin 0.8s linear infinite;
+}
+
+@keyframes coex-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   CARDS
+   Glassmorphism cards
+   ============================================ */
+
+.coex-card {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.coex-card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+.coex-card--elevated {
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-md);
+}
+
+.coex-card--elevated:hover {
+  box-shadow: var(--shadow-xl), var(--shadow-glow-sm);
+  transform: translateY(-2px);
+}
+
+.coex-card--gradient {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
+  border-color: var(--color-border-glow);
+}
+
+.coex-card--interactive {
+  cursor: pointer;
+}
+
+.coex-card--interactive:hover {
+  background: var(--color-bg-glass-hover);
+}
+
+.coex-card__header {
+  padding: var(--space-5) var(--space-5) 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.coex-card__title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.coex-card__subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  margin-top: var(--space-1);
+}
+
+.coex-card__body {
+  padding: var(--space-5);
+}
+
+.coex-card__footer {
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* ============================================
+   INPUTS
+   Clean, modern form inputs
+   ============================================ */
+
+.coex-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.coex-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+}
+
+.coex-label--required::after {
+  content: '*';
+  color: var(--color-error);
+  margin-left: var(--space-1);
+}
+
+.coex-input,
+.coex-textarea,
+.coex-select {
+  appearance: none;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  outline: none;
+}
+
+.coex-input::placeholder,
+.coex-textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+.coex-input:hover,
+.coex-textarea:hover,
+.coex-select:hover {
+  border-color: var(--color-border-strong);
+}
+
+.coex-input:focus,
+.coex-textarea:focus,
+.coex-select:focus {
+  border-color: var(--color-accent-purple);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+}
+
+.coex-input:disabled,
+.coex-textarea:disabled,
+.coex-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.coex-input--error,
+.coex-textarea--error,
+.coex-select--error {
+  border-color: var(--color-error);
+}
+
+.coex-input--error:focus,
+.coex-textarea--error:focus,
+.coex-select--error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.coex-input--success,
+.coex-textarea--success,
+.coex-select--success {
+  border-color: var(--color-success);
+}
+
+/* Input with icon */
+.coex-input-wrapper {
+  position: relative;
+}
+
+.coex-input-wrapper .coex-input {
+  padding-left: var(--space-10);
+}
+
+.coex-input__icon {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.coex-input-wrapper .coex-input:focus + .coex-input__icon {
+  color: var(--color-accent-purple);
+}
+
+/* Textarea */
+.coex-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Select */
+.coex-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.6)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  background-size: 16px;
+  padding-right: var(--space-10);
+}
+
+/* Checkbox and Radio */
+.coex-checkbox,
+.coex-radio {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.coex-checkbox input,
+.coex-radio input {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--color-border-strong);
+  background: var(--color-bg-secondary);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.coex-checkbox input {
+  border-radius: var(--radius-sm);
+}
+
+.coex-radio input {
+  border-radius: var(--radius-full);
+}
+
+.coex-checkbox input:checked,
+.coex-radio input:checked {
+  background: var(--color-accent-purple);
+  border-color: var(--color-accent-purple);
+}
+
+.coex-checkbox input:checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+  background-size: 14px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.coex-checkbox input:focus,
+.coex-radio input:focus {
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+}
+
+/* Toggle/Switch */
+.coex-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.coex-toggle__switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-full);
+  transition: background var(--transition-base);
+  flex-shrink: 0;
+}
+
+.coex-toggle__switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: var(--radius-full);
+  transition: transform var(--transition-bounce);
+  box-shadow: var(--shadow-sm);
+}
+
+.coex-toggle input {
+  appearance: none;
+  position: absolute;
+}
+
+.coex-toggle input:checked + .coex-toggle__switch {
+  background: var(--gradient-sunset);
+}
+
+.coex-toggle input:checked + .coex-toggle__switch::after {
+  transform: translateX(20px);
+}
+
+/* Helper text */
+.coex-form-helper {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.coex-form-error {
+  font-size: var(--text-xs);
+  color: var(--color-error);
+}
+
+/* ============================================
+   MODALS
+   Elegant modal dialogs
+   ============================================ */
+
+.coex-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(var(--blur-sm));
+  -webkit-backdrop-filter: blur(var(--blur-sm));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  z-index: var(--z-modal-backdrop);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-slow);
+}
+
+.coex-modal-overlay--open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.coex-modal {
+  background: var(--color-bg-card);
+  backdrop-filter: blur(var(--blur-xl));
+  -webkit-backdrop-filter: blur(var(--blur-xl));
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-2xl);
+  width: 100%;
+  max-width: var(--size-md);
+  max-height: calc(100vh - var(--space-8));
+  overflow: hidden;
+  box-shadow: var(--shadow-xl), var(--shadow-glow-sm);
+  transform: scale(0.95) translateY(10px);
+  transition: transform var(--transition-spring);
+}
+
+.coex-modal-overlay--open .coex-modal {
+  transform: scale(1) translateY(0);
+}
+
+.coex-modal--sm {
+  max-width: var(--size-sm);
+}
+
+.coex-modal--lg {
+  max-width: var(--size-lg);
+}
+
+.coex-modal--xl {
+  max-width: var(--size-xl);
+}
+
+.coex-modal--fullscreen {
+  max-width: calc(100vw - var(--space-8));
+  max-height: calc(100vh - var(--space-8));
+}
+
+.coex-modal__header {
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.coex-modal__title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+}
+
+.coex-modal__close {
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.coex-modal__close:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.coex-modal__body {
+  padding: var(--space-6);
+  overflow-y: auto;
+  max-height: calc(100vh - 300px);
+}
+
+.coex-modal__footer {
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* ============================================
+   NAVIGATION
+   Sleek navigation components
+   ============================================ */
+
+.coex-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-fixed);
+  background: rgba(10, 10, 15, 0.7);
+  backdrop-filter: blur(var(--blur-xl));
+  -webkit-backdrop-filter: blur(var(--blur-xl));
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.coex-navbar__container {
+  max-width: var(--size-7xl);
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.coex-navbar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  color: var(--color-text-primary);
+}
+
+.coex-navbar__logo {
+  width: 32px;
+  height: 32px;
+  background: var(--gradient-sunset);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-bold);
+  font-size: var(--text-sm);
+}
+
+.coex-navbar__brand-text {
+  font-weight: var(--font-semibold);
+  font-size: var(--text-lg);
+}
+
+.coex-navbar__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.coex-navbar__link {
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-text-tertiary);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.coex-navbar__link:hover,
+.coex-navbar__link--active {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.coex-navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Sidebar Navigation */
+.coex-sidebar {
+  position: fixed;
+  left: 0;
+  top: 64px;
+  bottom: 0;
+  width: 260px;
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border-subtle);
+  overflow-y: auto;
+  padding: var(--space-4);
+}
+
+.coex-sidebar__section {
+  margin-bottom: var(--space-6);
+}
+
+.coex-sidebar__label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+  padding: 0 var(--space-3);
+  margin-bottom: var(--space-2);
+}
+
+.coex-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.coex-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  color: var(--color-text-tertiary);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+}
+
+.coex-sidebar__link:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.coex-sidebar__link--active {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-default);
+}
+
+.coex-sidebar__link-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
+}
+
+.coex-sidebar__link--active .coex-sidebar__link-icon {
+  opacity: 1;
+  color: var(--color-accent-purple);
+}
+
+/* ============================================
+   TABS
+   Clean tab navigation
+   ============================================ */
+
+.coex-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--color-border-subtle);
+  gap: var(--space-1);
+}
+
+.coex-tab {
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-tertiary);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: -1px;
+}
+
+.coex-tab:hover {
+  color: var(--color-text-secondary);
+}
+
+.coex-tab--active {
+  color: var(--color-accent-purple);
+  border-bottom-color: var(--color-accent-purple);
+}
+
+/* Pill Tabs */
+.coex-tabs--pills {
+  border-bottom: none;
+  background: var(--color-bg-secondary);
+  padding: var(--space-1);
+  border-radius: var(--radius-lg);
+  gap: var(--space-1);
+}
+
+.coex-tabs--pills .coex-tab {
+  border-bottom: none;
+  border-radius: var(--radius-md);
+  margin-bottom: 0;
+}
+
+.coex-tabs--pills .coex-tab--active {
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================
+   DROPDOWN
+   Elegant dropdown menus
+   ============================================ */
+
+.coex-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.coex-dropdown__menu {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 200px;
+  background: var(--color-bg-card);
+  backdrop-filter: blur(var(--blur-xl));
+  -webkit-backdrop-filter: blur(var(--blur-xl));
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  z-index: var(--z-dropdown);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all var(--transition-slow);
+  overflow: hidden;
+}
+
+.coex-dropdown--open .coex-dropdown__menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.coex-dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-sans);
+}
+
+.coex-dropdown__item:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.coex-dropdown__item--danger {
+  color: var(--color-error);
+}
+
+.coex-dropdown__item--danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.coex-dropdown__divider {
+  height: 1px;
+  background: var(--color-border-subtle);
+  margin: var(--space-2) 0;
+}
+
+/* ============================================
+   BADGES & TAGS
+   ============================================ */
+
+.coex-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.coex-badge--default {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
+}
+
+.coex-badge--primary {
+  background: rgba(168, 85, 247, 0.2);
+  color: var(--color-accent-purple-light);
+}
+
+.coex-badge--success {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--color-success);
+}
+
+.coex-badge--warning {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--color-warning);
+}
+
+.coex-badge--error {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--color-error);
+}
+
+.coex-badge--dot::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: currentColor;
+  border-radius: var(--radius-full);
+}
+
+/* ============================================
+   TOOLTIP
+   ============================================ */
+
+.coex-tooltip {
+  position: relative;
+}
+
+.coex-tooltip__content {
+  position: absolute;
+  bottom: calc(100% + var(--space-2));
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  z-index: var(--z-tooltip);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border-default);
+}
+
+.coex-tooltip__content::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--color-bg-elevated);
+}
+
+.coex-tooltip:hover .coex-tooltip__content {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+
+.coex-toast-container {
+  position: fixed;
+  bottom: var(--space-6);
+  right: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  z-index: var(--z-toast);
+}
+
+.coex-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-bg-card);
+  backdrop-filter: blur(var(--blur-xl));
+  -webkit-backdrop-filter: blur(var(--blur-xl));
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  min-width: 320px;
+  max-width: 400px;
+  animation: coex-toast-in 0.4s var(--transition-spring);
+}
+
+@keyframes coex-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.coex-toast--success {
+  border-left: 3px solid var(--color-success);
+}
+
+.coex-toast--error {
+  border-left: 3px solid var(--color-error);
+}
+
+.coex-toast--warning {
+  border-left: 3px solid var(--color-warning);
+}
+
+.coex-toast--info {
+  border-left: 3px solid var(--color-info);
+}
+
+.coex-toast__icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.coex-toast__content {
+  flex: 1;
+}
+
+.coex-toast__title {
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-1);
+}
+
+.coex-toast__message {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+}
+
+.coex-toast__close {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.coex-toast__close:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+/* ============================================
+   DIVIDER
+   ============================================ */
+
+.coex-divider {
+  border: none;
+  height: 1px;
+  background: var(--color-border-subtle);
+  margin: var(--space-6) 0;
+}
+
+.coex-divider--vertical {
+  width: 1px;
+  height: auto;
+  margin: 0 var(--space-6);
+}
+
+/* ============================================
+   AVATAR
+   ============================================ */
+
+.coex-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: var(--gradient-sunset);
+  color: white;
+  font-weight: var(--font-semibold);
+  flex-shrink: 0;
+}
+
+.coex-avatar--xs {
+  width: 24px;
+  height: 24px;
+  font-size: var(--text-xs);
+}
+
+.coex-avatar--sm {
+  width: 32px;
+  height: 32px;
+  font-size: var(--text-sm);
+}
+
+.coex-avatar--md {
+  width: 40px;
+  height: 40px;
+  font-size: var(--text-base);
+}
+
+.coex-avatar--lg {
+  width: 48px;
+  height: 48px;
+  font-size: var(--text-lg);
+}
+
+.coex-avatar--xl {
+  width: 64px;
+  height: 64px;
+  font-size: var(--text-xl);
+}
+
+.coex-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Avatar Group */
+.coex-avatar-group {
+  display: flex;
+}
+
+.coex-avatar-group .coex-avatar {
+  border: 2px solid var(--color-bg-primary);
+  margin-left: -8px;
+}
+
+.coex-avatar-group .coex-avatar:first-child {
+  margin-left: 0;
+}
+
+/* ============================================
+   SKELETON LOADING
+   ============================================ */
+
+.coex-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-tertiary) 0%,
+    var(--color-bg-elevated) 50%,
+    var(--color-bg-tertiary) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: var(--radius-md);
+  animation: coex-skeleton-loading 1.5s ease-in-out infinite;
+}
+
+@keyframes coex-skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.coex-skeleton--text {
+  height: 1em;
+  margin-bottom: var(--space-2);
+}
+
+.coex-skeleton--circle {
+  border-radius: var(--radius-full);
+}
+
+.coex-skeleton--card {
+  height: 200px;
+  border-radius: var(--radius-xl);
+}
+
+/* ============================================
+   PROGRESS & LOADING
+   ============================================ */
+
+.coex-progress {
+  width: 100%;
+  height: 8px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.coex-progress__bar {
+  height: 100%;
+  background: var(--gradient-aurora);
+  border-radius: var(--radius-full);
+  transition: width var(--transition-slow);
+}
+
+.coex-progress--indeterminate .coex-progress__bar {
+  width: 30%;
+  animation: coex-progress-indeterminate 1.5s ease-in-out infinite;
+}
+
+@keyframes coex-progress-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(300%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* Spinner */
+.coex-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-border-default);
+  border-top-color: var(--color-accent-purple);
+  border-radius: var(--radius-full);
+  animation: coex-spin 0.8s linear infinite;
+}
+
+.coex-spinner--sm {
+  width: 16px;
+  height: 16px;
+  border-width: 1.5px;
+}
+
+.coex-spinner--lg {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}

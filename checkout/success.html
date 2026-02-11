@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to CoExAI | Order Confirmed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent-cyan: #22d3ee;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --bg-dark: #0a0a0f;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --success: #22c55e;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Animated Galaxy Background */
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(34, 211, 238, 0.05) 0%, transparent 70%),
+                var(--bg-dark);
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent);
+            background-size: 350px 200px;
+            animation: twinkle 8s ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Success Animation */
+        .success-animation {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .success-circle {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--success), #16a34a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scale-in 0.5s ease-out, pulse-success 2s ease-in-out infinite 0.5s;
+            box-shadow: 0 0 60px rgba(34, 197, 94, 0.4);
+        }
+
+        @keyframes scale-in {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes pulse-success {
+            0%, 100% { box-shadow: 0 0 60px rgba(34, 197, 94, 0.4); }
+            50% { box-shadow: 0 0 80px rgba(34, 197, 94, 0.6); }
+        }
+
+        .success-circle svg {
+            width: 60px;
+            height: 60px;
+            color: white;
+            animation: checkmark 0.5s ease-out 0.3s both;
+        }
+
+        @keyframes checkmark {
+            0% { transform: scale(0) rotate(-45deg); }
+            50% { transform: scale(1.2) rotate(0deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        /* Confetti */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .success-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .success-header {
+            margin-bottom: 3rem;
+        }
+
+        .success-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--success);
+            margin-bottom: 1.5rem;
+            animation: fade-in-up 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fade-in-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fade-in-up 0.6s ease-out 0.3s both;
+        }
+
+        .success-header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
+            animation: fade-in-up 0.6s ease-out 0.4s both;
+        }
+
+        /* Order Details Card */
+        .order-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(20px);
+            animation: fade-in-up 0.6s ease-out 0.5s both;
+        }
+
+        .order-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .order-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .order-icon.bundle {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(168, 85, 247, 0.1));
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        .order-info {
+            flex: 1;
+        }
+
+        .order-info h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .order-info p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .order-price {
+            text-align: right;
+        }
+
+        .order-price .amount {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .order-price .period {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        @media (max-width: 600px) {
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-item {
+            text-align: left;
+        }
+
+        .detail-item .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-item .value {
+            font-size: 0.9375rem;
+            font-weight: 500;
+        }
+
+        /* Next Steps */
+        .next-steps {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            animation: fade-in-up 0.6s ease-out 0.6s both;
+        }
+
+        .next-steps h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 1rem;
+            text-align: left;
+            transition: transform 0.2s;
+        }
+
+        .step-item:hover {
+            transform: translateX(4px);
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-content p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Slack CTA */
+        .slack-cta {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            animation: fade-in-up 0.6s ease-out 0.7s both;
+        }
+
+        .slack-cta h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .slack-cta p {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-slack {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            color: white;
+            border: none;
+            border-radius: 0.875rem;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-slack:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.3);
+        }
+
+        /* Referral Section */
+        .referral-section {
+            background: rgba(34, 211, 238, 0.05);
+            border: 1px solid rgba(34, 211, 238, 0.2);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            animation: fade-in-up 0.6s ease-out 0.8s both;
+        }
+
+        .referral-section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .referral-section p {
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .referral-code {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .referral-input {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.75rem;
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            font-family: monospace;
+        }
+
+        .btn-copy {
+            padding: 0.875rem 1.25rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.75rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-copy:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-copy.copied {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        /* Support Section */
+        .support-section {
+            animation: fade-in-up 0.6s ease-out 0.9s both;
+        }
+
+        .support-section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .support-options {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .support-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .support-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .support-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--glass-border);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .footer-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* What's Next Cards */
+        .what-next-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 600px) {
+            .what-next-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .what-next-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .what-next-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .what-next-card .icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 0.75rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .what-next-card .icon svg {
+            width: 22px;
+            height: 22px;
+            color: white;
+        }
+
+        .what-next-card h4 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .what-next-card p {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="galaxy-bg"></div>
+    <div class="stars"></div>
+    <div class="confetti-container" id="confetti"></div>
+
+    <div class="loading-overlay" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <div class="success-container">
+        <!-- Success Animation -->
+        <div class="success-animation">
+            <div class="success-circle">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header class="success-header">
+            <div class="success-badge">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                Order Confirmed
+            </div>
+            <h1>Welcome to CoExAI! 🎉</h1>
+            <p>Your AI agent is being prepared and will be ready to work with you within the next 15 minutes.</p>
+        </header>
+
+        <!-- Order Details -->
+        <div class="order-card">
+            <h2>Order Details</h2>
+            
+            <div class="order-item">
+                <div class="order-icon" id="order-icon">✨</div>
+                <div class="order-info">
+                    <h3 id="order-name">Maya - Content Creator</h3>
+                    <p id="order-billing">Monthly subscription</p>
+                </div>
+                <div class="order-price">
+                    <div class="amount" id="order-amount">$297</div>
+                    <div class="period" id="order-period">/month</div>
+                </div>
+            </div>
+
+            <div class="order-details">
+                <div class="detail-item">
+                    <div class="label">Order ID</div>
+                    <div class="value" id="order-id">#CX-78432</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Date</div>
+                    <div class="value" id="order-date">Feb 11, 2026</div>
+                </div>
+                <div class="detail-item">
+                    <div class="label">Next Billing</div>
+                    <div class="value" id="next-billing">Mar 11, 2026</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="next-steps">
+            <h2>What happens next?</h2>
+            
+            <div class="steps-list">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Check your email</h3>
+                        <p>We've sent your onboarding guide and Slack invitation to your email address.</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Join your dedicated Slack channel</h3>
+                        <p>Click the invitation link to join your private channel where you'll communicate with your AI agent.</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Meet your agent</h3>
+                        <p>Your AI agent will introduce themselves and ask about your goals. Start delegating tasks right away!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slack CTA -->
+        <div class="slack-cta">
+            <h3>🔗 Connect on Slack</h3>
+            <p>Your AI agent lives in Slack and is available 24/7. Click below to join your dedicated workspace.</p>
+            <a href="#" class="btn-slack">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313zM8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312zM18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312zM15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>
+                Join Slack Channel
+            </a>
+        </div>
+
+        <!-- What's Next -->
+        <div class="what-next-grid">
+            <div class="what-next-card">
+                <div class="icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+                <h4>View Documentation</h4>
+                <p>Learn how to get the most out of your AI agent with our comprehensive guides.</p>
+            </div>
+
+            <div class="what-next-card">
+                <div class="icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+                <h4>Invite Your Team</h4>
+                <p>Add team members to collaborate with your AI agent together.</p>
+            </div>
+
+            <div class="what-next-card">
+                <div class="icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </div>
+                <h4>Quick Start Guide</h4>
+                <p>Get up and running in under 5 minutes with our quick start tutorial.</p>
+            </div>
+
+            <div class="what-next-card">
+                <div class="icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                </div>
+                <h4>Customize Settings</h4>
+                <p>Configure your agent's personality, tone, and workflow preferences.</p>
+            </div>
+        </div>
+
+        <!-- Referral Section -->
+        <div class="referral-section">
+            <h3>🎁 Give $100, Get $100</h3>
+            <p>Share CoExAI with friends and colleagues. They get $100 off their first month, and you get $100 credit when they subscribe.</p>
+            
+            <div class="referral-code">
+                <input type="text" class="referral-input" id="referral-code" value="COEX-FRIEND-78432" readonly>
+                <button class="btn-copy" onclick="copyReferral()" id="copy-btn">Copy Code</button>
+            </div>
+        </div>
+
+        <!-- Support -->
+        <div class="support-section">
+            <h3>Need help getting started?</h3>
+            <div class="support-options">
+                <a href="#" class="support-btn">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    Live Chat
+                </a>
+                <a href="#" class="support-btn">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    Email Support
+                </a>
+                <a href="#" class="support-btn">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    Help Center
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-logo">CoExAI</div>
+        <p class="footer-text">Your AI-powered team, ready to work 24/7</p>
+    </footer>
+
+    <script>
+        // Plan data
+        const plans = {
+            maya: { name: 'Maya', role: 'Content Creator', icon: '✨' },
+            jordan: { name: 'Jordan', role: 'Growth Strategist', icon: '🚀' },
+            sam: { name: 'Sam', role: 'Developer', icon: '💻' },
+            taylor: { name: 'Taylor', role: 'Operations Manager', icon: '🎯' },
+            bundle: { name: 'Complete AI Team', role: 'All 4 Agents', icon: '👥', isBundle: true }
+        };
+
+        // Generate confetti
+        function createConfetti() {
+            const container = document.getElementById('confetti');
+            const colors = ['#6366f1', '#a855f7', '#ec4899', '#22d3ee', '#22c55e'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    container.appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Parse URL params
+            const urlParams = new URLSearchParams(window.location.search);
+            const planId = urlParams.get('plan') || 'maya';
+            const billing = urlParams.get('billing') || 'monthly';
+            const amount = urlParams.get('amount');
+
+            // Update order details
+            const plan = plans[planId] || plans.maya;
+            const isAnnual = billing === 'annual';
+            
+            document.getElementById('order-icon').textContent = plan.icon;
+            document.getElementById('order-icon').classList.toggle('bundle', plan.isBundle);
+            document.getElementById('order-name').textContent = `${plan.name} - ${plan.role}`;
+            document.getElementById('order-billing').textContent = isAnnual ? 'Annual subscription (20% savings)' : 'Monthly subscription';
+            
+            const price = amount || (isAnnual ? Math.round(plan.monthly * 0.8 * 12) : plan.monthly);
+            document.getElementById('order-amount').textContent = `$${parseInt(price).toLocaleString()}`;
+            document.getElementById('order-period').textContent = isAnnual ? '/year' : '/month';
+
+            // Generate order ID
+            const orderId = 'CX-' + Math.floor(10000 + Math.random() * 90000);
+            document.getElementById('order-id').textContent = '#' + orderId;
+
+            // Set dates
+            const today = new Date();
+            document.getElementById('order-date').textContent = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            
+            const nextBilling = new Date(today);
+            if (isAnnual) {
+                nextBilling.setFullYear(nextBilling.getFullYear() + 1);
+            } else {
+                nextBilling.setMonth(nextBilling.getMonth() + 1);
+            }
+            document.getElementById('next-billing').textContent = nextBilling.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+            // Update referral code
+            document.getElementById('referral-code').value = `COEX-FRIEND-${orderId.split('-')[1]}`;
+
+            // Hide loading and show confetti
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+                createConfetti();
+            }, 800);
+        });
+
+        // Copy referral code
+        function copyReferral() {
+            const input = document.getElementById('referral-code');
+            const btn = document.getElementById('copy-btn');
+            
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            
+            setTimeout(() => {
+                btn.textContent = 'Copy Code';
+                btn.classList.remove('copied');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

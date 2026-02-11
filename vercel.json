@@ -1,0 +1,78 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "landing-page/index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dashboard/*/index.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "checkout/*.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/landing-page/index.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/dashboard/index.html"
+    },
+    {
+      "src": "/dashboard/maya",
+      "dest": "/dashboard/maya/index.html"
+    },
+    {
+      "src": "/dashboard/jordan",
+      "dest": "/dashboard/jordan/index.html"
+    },
+    {
+      "src": "/dashboard/sam",
+      "dest": "/dashboard/sam/index.html"
+    },
+    {
+      "src": "/dashboard/taylor",
+      "dest": "/dashboard/taylor/index.html"
+    },
+    {
+      "src": "/pricing",
+      "dest": "/checkout/pricing.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/landing-page/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.coexai.com;"
+        }
+      ]
+    }
+  ]
+}

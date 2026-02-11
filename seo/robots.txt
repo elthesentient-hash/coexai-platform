@@ -1,0 +1,26 @@
+User-agent: *
+Allow: /
+
+# Disallow dashboard and API
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemap location
+Sitemap: https://coexai.com/sitemap.xml
+
+# Crawl rate for major bots
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Block specific bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

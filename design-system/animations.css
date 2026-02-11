@@ -1,0 +1,966 @@
+/**
+ * CoExAI Design System - Animations
+ * Apple-level micro-interactions
+ * Version: 1.0.0
+ */
+
+@import url('./tokens.css');
+
+/* ============================================
+   EASING FUNCTIONS
+   Apple-style smooth curves
+   ============================================ */
+
+:root {
+  /* Standard easings */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Apple-style easings */
+  --ease-apple: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-dramatic: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-entrance: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  
+  /* Duration scale */
+  --duration-instant: 50ms;
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+  --duration-dramatic: 800ms;
+}
+
+/* ============================================
+   FADE ANIMATIONS
+   ============================================ */
+
+@keyframes coex-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes coex-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes coex-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes coex-fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes coex-fade-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes coex-fade-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes coex-fade-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animation utility classes */
+.coex-animate-fade-in {
+  animation: coex-fade-in var(--duration-normal) var(--ease-smooth) forwards;
+}
+
+.coex-animate-fade-in-up {
+  animation: coex-fade-in-up var(--duration-slow) var(--ease-spring) forwards;
+}
+
+.coex-animate-fade-in-down {
+  animation: coex-fade-in-down var(--duration-slow) var(--ease-spring) forwards;
+}
+
+.coex-animate-fade-in-left {
+  animation: coex-fade-in-left var(--duration-slow) var(--ease-spring) forwards;
+}
+
+.coex-animate-fade-in-right {
+  animation: coex-fade-in-right var(--duration-slow) var(--ease-spring) forwards;
+}
+
+.coex-animate-fade-scale-in {
+  animation: coex-fade-scale-in var(--duration-slow) var(--ease-spring) forwards;
+}
+
+/* Stagger children animations */
+.coex-animate-stagger > * {
+  opacity: 0;
+  animation: coex-fade-in-up var(--duration-slow) var(--ease-spring) forwards;
+}
+
+.coex-animate-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.coex-animate-stagger > *:nth-child(2) { animation-delay: 50ms; }
+.coex-animate-stagger > *:nth-child(3) { animation-delay: 100ms; }
+.coex-animate-stagger > *:nth-child(4) { animation-delay: 150ms; }
+.coex-animate-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.coex-animate-stagger > *:nth-child(6) { animation-delay: 250ms; }
+.coex-animate-stagger > *:nth-child(7) { animation-delay: 300ms; }
+.coex-animate-stagger > *:nth-child(8) { animation-delay: 350ms; }
+.coex-animate-stagger > *:nth-child(9) { animation-delay: 400ms; }
+.coex-animate-stagger > *:nth-child(10) { animation-delay: 450ms; }
+
+/* ============================================
+   SCALE & TRANSFORM ANIMATIONS
+   ============================================ */
+
+@keyframes coex-scale-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes coex-scale-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+@keyframes coex-scale-bounce {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes coex-press {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.97);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes coex-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes coex-pulse-scale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.coex-animate-scale-in {
+  animation: coex-scale-in var(--duration-slow) var(--ease-spring) forwards;
+}
+
+.coex-animate-scale-bounce {
+  animation: coex-scale-bounce var(--duration-slower) var(--ease-bounce);
+}
+
+.coex-animate-press {
+  animation: coex-press var(--duration-fast) var(--ease-smooth);
+}
+
+.coex-animate-float {
+  animation: coex-float 3s ease-in-out infinite;
+}
+
+.coex-animate-pulse-scale {
+  animation: coex-pulse-scale 2s ease-in-out infinite;
+}
+
+/* ============================================
+   SLIDE ANIMATIONS
+   ============================================ */
+
+@keyframes coex-slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes coex-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes coex-slide-in-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes coex-slide-in-down {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes coex-slide-out-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes coex-slide-out-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.coex-animate-slide-in-left {
+  animation: coex-slide-in-left var(--duration-slow) var(--ease-spring) forwards;
+}
+
+.coex-animate-slide-in-right {
+  animation: coex-slide-in-right var(--duration-slow) var(--ease-spring) forwards;
+}
+
+.coex-animate-slide-in-up {
+  animation: coex-slide-in-up var(--duration-slow) var(--ease-spring) forwards;
+}
+
+.coex-animate-slide-in-down {
+  animation: coex-slide-in-down var(--duration-slow) var(--ease-spring) forwards;
+}
+
+/* ============================================
+   GLOW & PULSE EFFECTS
+   ============================================ */
+
+@keyframes coex-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.4), 0 0 60px rgba(99, 102, 241, 0.2);
+  }
+}
+
+@keyframes coex-glow-rotate {
+  0% {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+  }
+  25% {
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.3);
+  }
+  75% {
+    box-shadow: 0 0 30px rgba(236, 72, 153, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+  }
+}
+
+@keyframes coex-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes coex-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.coex-animate-glow-pulse {
+  animation: coex-glow-pulse 2s ease-in-out infinite;
+}
+
+.coex-animate-glow-rotate {
+  animation: coex-glow-rotate 4s linear infinite;
+}
+
+.coex-animate-pulse {
+  animation: coex-pulse 2s ease-in-out infinite;
+}
+
+.coex-animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: coex-shimmer 2s infinite;
+}
+
+/* ============================================
+   SPIN & ROTATE ANIMATIONS
+   ============================================ */
+
+@keyframes coex-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes coex-spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes coex-spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes coex-wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+}
+
+.coex-animate-spin {
+  animation: coex-spin 0.8s linear infinite;
+}
+
+.coex-animate-spin-slow {
+  animation: coex-spin-slow 3s linear infinite;
+}
+
+.coex-animate-wiggle {
+  animation: coex-wiggle 0.5s ease-in-out;
+}
+
+/* ============================================
+   SHAKE & BOUNCE ANIMATIONS
+   ============================================ */
+
+@keyframes coex-shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-4px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes coex-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-25%);
+  }
+}
+
+@keyframes coex-bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes coex-heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.1);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.1);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+.coex-animate-shake {
+  animation: coex-shake 0.5s ease-in-out;
+}
+
+.coex-animate-bounce {
+  animation: coex-bounce 1s var(--ease-bounce) infinite;
+}
+
+.coex-animate-bounce-subtle {
+  animation: coex-bounce-subtle 2s ease-in-out infinite;
+}
+
+.coex-animate-heartbeat {
+  animation: coex-heartbeat 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   FLIP & 3D ANIMATIONS
+   ============================================ */
+
+@keyframes coex-flip-x {
+  from {
+    transform: perspective(400px) rotateX(90deg);
+    opacity: 0;
+  }
+  to {
+    transform: perspective(400px) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes coex-flip-y {
+  from {
+    transform: perspective(400px) rotateY(90deg);
+    opacity: 0;
+  }
+  to {
+    transform: perspective(400px) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes coex-flip-in-x {
+  from {
+    transform: perspective(400px) rotateX(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: perspective(400px) rotateX(0);
+    opacity: 1;
+  }
+}
+
+.coex-animate-flip-x {
+  animation: coex-flip-x var(--duration-slower) var(--ease-spring) forwards;
+  backface-visibility: hidden;
+}
+
+.coex-animate-flip-y {
+  animation: coex-flip-y var(--duration-slower) var(--ease-spring) forwards;
+  backface-visibility: hidden;
+}
+
+/* ============================================
+   COSMIC / GALAXY SPECIFIC ANIMATIONS
+   ============================================ */
+
+@keyframes coex-twinkle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes coex-orbit {
+  from {
+    transform: rotate(0deg) translateX(50px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(50px) rotate(-360deg);
+  }
+}
+
+@keyframes coex-nebula-pulse {
+  0%, 100% {
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  50% {
+    filter: hue-rotate(15deg) brightness(1.1);
+  }
+}
+
+@keyframes coex-star-field {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100px 100px;
+  }
+}
+
+@keyframes coex-aurora {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.coex-animate-twinkle {
+  animation: coex-twinkle 3s ease-in-out infinite;
+}
+
+.coex-animate-orbit {
+  animation: coex-orbit 20s linear infinite;
+}
+
+.coex-animate-nebula {
+  animation: coex-nebula-pulse 8s ease-in-out infinite;
+}
+
+.coex-animate-aurora {
+  background: var(--gradient-aurora);
+  background-size: 200% 200%;
+  animation: coex-aurora 5s ease infinite;
+}
+
+/* ============================================
+   MICRO-INTERACTIONS
+   Subtle hover/tap feedback
+   ============================================ */
+
+/* Hover lift effect */
+.coex-hover-lift {
+  transition: transform var(--duration-fast) var(--ease-smooth),
+              box-shadow var(--duration-fast) var(--ease-smooth);
+}
+
+.coex-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.coex-hover-lift:active {
+  transform: translateY(0);
+}
+
+/* Hover glow effect */
+.coex-hover-glow {
+  transition: box-shadow var(--duration-fast) var(--ease-smooth);
+}
+
+.coex-hover-glow:hover {
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+}
+
+/* Hover scale effect */
+.coex-hover-scale {
+  transition: transform var(--duration-fast) var(--ease-smooth);
+}
+
+.coex-hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.coex-hover-scale:active {
+  transform: scale(0.98);
+}
+
+/* Hover brightness */
+.coex-hover-bright {
+  transition: filter var(--duration-fast) var(--ease-smooth);
+}
+
+.coex-hover-bright:hover {
+  filter: brightness(1.1);
+}
+
+/* Focus ring animation */
+.coex-focus-ring {
+  transition: box-shadow var(--duration-fast) var(--ease-smooth);
+}
+
+.coex-focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.4);
+}
+
+/* Ripple effect base */
+.coex-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.coex-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-full);
+  transform: translate(-50%, -50%);
+  transition: width var(--duration-slow) var(--ease-out),
+              height var(--duration-slow) var(--ease-out),
+              opacity var(--duration-slow) var(--ease-out);
+}
+
+.coex-ripple:active::after {
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+}
+
+/* Magnetic hover effect preparation */
+.coex-magnetic {
+  transition: transform var(--duration-fast) var(--ease-smooth);
+}
+
+/* ============================================
+   PAGE TRANSITIONS
+   ============================================ */
+
+@keyframes coex-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes coex-page-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
+}
+
+.coex-page-transition-enter {
+  animation: coex-page-in var(--duration-slower) var(--ease-spring) forwards;
+}
+
+.coex-page-transition-exit {
+  animation: coex-page-out var(--duration-normal) var(--ease-in) forwards;
+}
+
+/* ============================================
+   DRAWER / SHEET ANIMATIONS
+   ============================================ */
+
+@keyframes coex-drawer-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes coex-drawer-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes coex-drawer-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes coex-backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.coex-drawer-animate-left {
+  animation: coex-drawer-in-left var(--duration-slower) var(--ease-spring) forwards;
+}
+
+.coex-drawer-animate-right {
+  animation: coex-drawer-in-right var(--duration-slower) var(--ease-spring) forwards;
+}
+
+.coex-drawer-animate-bottom {
+  animation: coex-drawer-in-bottom var(--duration-slower) var(--ease-spring) forwards;
+}
+
+.coex-backdrop-animate {
+  animation: coex-backdrop-fade-in var(--duration-normal) var(--ease-smooth) forwards;
+}
+
+/* ============================================
+   NOTIFICATION ANIMATIONS
+   ============================================ */
+
+@keyframes coex-toast-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes coex-toast-out-right {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes coex-pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  70% {
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.coex-toast-animate-in {
+  animation: coex-toast-in-right 0.4s var(--ease-spring) forwards;
+}
+
+.coex-toast-animate-out {
+  animation: coex-toast-out-right 0.3s var(--ease-in) forwards;
+}
+
+.coex-pop-animate {
+  animation: coex-pop-in 0.5s var(--ease-bounce) forwards;
+}
+
+/* ============================================
+   TEXT ANIMATIONS
+   ============================================ */
+
+@keyframes coex-text-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes coex-typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes coex-text-glow {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.8), 0 0 40px rgba(168, 85, 247, 0.4);
+  }
+}
+
+.coex-text-reveal {
+  animation: coex-text-reveal var(--duration-slower) var(--ease-smooth) forwards;
+}
+
+.coex-text-glow {
+  animation: coex-text-glow 2s ease-in-out infinite;
+}
+
+/* Gradient text animation */
+@keyframes coex-gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.coex-text-gradient-animate {
+  background: var(--gradient-sunset);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: coex-gradient-shift 3s ease infinite;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Animation delay utilities */
+.coex-delay-0 { animation-delay: 0ms; }
+.coex-delay-1 { animation-delay: 50ms; }
+.coex-delay-2 { animation-delay: 100ms; }
+.coex-delay-3 { animation-delay: 150ms; }
+.coex-delay-4 { animation-delay: 200ms; }
+.coex-delay-5 { animation-delay: 250ms; }
+.coex-delay-6 { animation-delay: 300ms; }
+.coex-delay-7 { animation-delay: 400ms; }
+.coex-delay-8 { animation-delay: 500ms; }
+.coex-delay-9 { animation-delay: 600ms; }
+.coex-delay-10 { animation-delay: 800ms; }
+
+/* Duration utilities */
+.coex-duration-fast { animation-duration: var(--duration-fast); }
+.coex-duration-normal { animation-duration: var(--duration-normal); }
+.coex-duration-slow { animation-duration: var(--duration-slow); }
+.coex-duration-slower { animation-duration: var(--duration-slower); }
+.coex-duration-dramatic { animation-duration: var(--duration-dramatic); }
+
+/* Fill mode */
+.coex-fill-forwards { animation-fill-mode: forwards; }
+.coex-fill-backwards { animation-fill-mode: backwards; }
+.coex-fill-both { animation-fill-mode: both; }
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

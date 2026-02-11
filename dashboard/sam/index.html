@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sam | Local SEO Dashboard - #1 Maps Ranking Guaranteed</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .galaxy-bg {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3e 25%, #0f0f23 50%, #1a1a2e 75%, #0a0a1a 100%);
+            position: relative;
+        }
+        
+        .galaxy-bg::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(139,92,246,0.2), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.2), transparent),
+                radial-gradient(2px 2px at 160px 120px, rgba(59,130,246,0.15), transparent),
+                radial-gradient(1px 1px at 230px 180px, rgba(255,255,255,0.1), transparent),
+                radial-gradient(2px 2px at 300px 80px, rgba(139,92,246,0.1), transparent),
+                radial-gradient(1px 1px at 380px 220px, rgba(255,255,255,0.15), transparent);
+            background-size: 400px 250px;
+            animation: twinkle 8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .glass-card:hover {
+            background: linear-gradient(145deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #a78bfa 0%, #3b82f6 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-border {
+            position: relative;
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(167,139,250,0.5), rgba(59,130,246,0.3), rgba(6,182,212,0.2));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        
+        .glow-purple {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        .glow-blue {
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        
+        .ranking-badge {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+        }
+        
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 255, 255, 0.08);
+            border-left: 3px solid #8b5cf6;
+        }
+        
+        .score-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .pulse-ring {
+            animation: pulse-ring 2s ease-out infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+        
+        .status-dot {
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scroll-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 200px;
+        }
+        
+        .star-gold {
+            color: #fbbf24;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #8b5cf6 0%, #3b82f6 100%);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+        }
+        
+        .notification-badge {
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+    </style>
+</head>
+<body class="galaxy-bg text-gray-200 min-h-screen" x-data="samDashboard()">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 glass z-40 hidden md:block">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center">
+                    <i class="fas fa-map-marker-alt text-white text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold gradient-text">SAM</h1>
+                    <p class="text-xs text-gray-400">Local SEO Agent</p>
+                </div>
+            </div>
+            
+            <nav class="space-y-1">
+                <button @click="activeTab = 'dashboard'" 
+                        :class="{'active': activeTab === 'dashboard'}"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-all">
+                    <i class="fas fa-chart-line text-violet-400"></i>
+                    Dashboard
+                </button>
+                <button @click="activeTab = 'rankings'" 
+                        :class="{'active': activeTab === 'rankings'}"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-all">
+                    <i class="fas fa-trophy text-yellow-400"></i>
+                    Rankings
+                </button>
+                <button @click="activeTab = 'reviews'" 
+                        :class="{'active': activeTab === 'reviews'}"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-all">
+                    <i class="fas fa-star text-amber-400"></i>
+                    Reviews
+                    <span x-show="newReviewCount > 0" x-text="newReviewCount" class="notification-badge ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full"></span>
+                </button>
+                <button @click="activeTab = 'optimization'" 
+                        :class="{'active': activeTab === 'optimization'}"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-all">
+                    <i class="fas fa-tools text-cyan-400"></i>
+                    Optimization
+                </button>
+                <button @click="activeTab = 'competitors'" 
+                        :class="{'active': activeTab === 'competitors'}"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-all">
+                    <i class="fas fa-chess text-purple-400"></i>
+                    Competitors
+                </button>
+                <button @click="activeTab = 'keywords'" 
+                        :class="{'active': activeTab === 'keywords'}"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-all">
+                    <i class="fas fa-search text-green-400"></i>
+                    Keywords
+                </button>
+                <button @click="activeTab = 'traffic'" 
+                        :class="{'active': activeTab === 'traffic'}"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-all">
+                    <i class="fas fa-walking text-orange-400"></i>
+                    Foot Traffic
+                </button>
+                <button @click="activeTab = 'tasks'" 
+                        :class="{'active': activeTab === 'tasks'}"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-all">
+                    <i class="fas fa-tasks text-pink-400"></i>
+                    Action Items
+                    <span x-show="pendingTasks > 0" x-text="pendingTasks" class="notification-badge ml-auto bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full"></span>
+                </button>
+                <button @click="activeTab = 'reports'" 
+                        :class="{'active': activeTab === 'reports'}"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-all">
+                    <i class="fas fa-file-pdf text-red-400"></i>
+                    Reports
+                </button>
+                <button @click="activeTab = 'settings'" 
+                        :class="{'active': activeTab === 'settings'}"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-sm font-medium transition-all">
+                    <i class="fas fa-cog text-gray-400"></i>
+                    Settings
+                </button>
+            </nav>
+        </div>
+        
+        <!-- Plan Info -->
+        <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-white/10">
+            <div class="glass-card rounded-xl p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-semibold text-white">Pro Plan</span>
+                    <span class="text-lg font-bold gradient-text">$800/mo</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-gray-400">
+                    <span class="status-dot w-2 h-2 bg-green-500 rounded-full"></span>
+                    Active since Jan 2026
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Header -->
+    <div class="md:hidden fixed top-0 left-0 right-0 glass z-50 px-4 py-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center">
+                    <i class="fas fa-map-marker-alt text-white text-sm"></i>
+                </div>
+                <span class="font-bold gradient-text">SAM</span>
+            </div>
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2">
+                <i class="fas fa-bars text-gray-300"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Mobile Menu -->
+    <div x-show="mobileMenuOpen" 
+         x-transition
+         class="md:hidden fixed inset-0 glass z-40 pt-16 px-4">
+        <nav class="space-y-1">
+            <button @click="activeTab = 'dashboard'; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                <i class="fas fa-chart-line text-violet-400"></i> Dashboard
+            </button>
+            <button @click="activeTab = 'rankings'; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                <i class="fas fa-trophy text-yellow-400"></i> Rankings
+            </button>
+            <button @click="activeTab = 'reviews'; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                <i class="fas fa-star text-amber-400"></i> Reviews
+            </button>
+            <button @click="activeTab = 'optimization'; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                <i class="fas fa-tools text-cyan-400"></i> Optimization
+            </button>
+            <button @click="activeTab = 'competitors'; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                <i class="fas fa-chess text-purple-400"></i> Competitors
+            </button>
+            <button @click="activeTab = 'keywords'; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                <i class="fas fa-search text-green-400"></i> Keywords
+            </button>
+            <button @click="activeTab = 'traffic'; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                <i class="fas fa-walking text-orange-400"></i> Foot Traffic
+            </button>
+            <button @click="activeTab = 'tasks'; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                <i class="fas fa-tasks text-pink-400"></i> Action Items
+            </button>
+            <button @click="activeTab = 'reports'; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                <i class="fas fa-file-pdf text-red-400"></i> Reports
+            </button>
+            <button @click="activeTab = 'settings'; mobileMenuOpen = false" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                <i class="fas fa-cog text-gray-400"></i> Settings
+            </button>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64 min-h-screen">
+        <!-- Top Header -->
+        <header class="glass sticky top-0 z-30 px-6 py-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white" x-text="pageTitle"></h2>
+                    <p class="text-sm text-gray-400" x-text="pageSubtitle"></p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="relative p-2 glass-card rounded-lg hover:bg-white/5 transition-all">
+                        <i class="fas fa-bell text-gray-300"></i>
+                        <span x-show="notifications.length > 0" x-text="notifications.length" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center"></span>
+                    </button>
+                    <button class="flex items-center gap-3 glass-card rounded-lg px-3 py-2">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center text-white font-semibold text-sm">
+                            JD
+                        </div>
+                        <span class="text-sm font-medium hidden sm:block">John's Pizza</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-6">
+            <!-- DASHBOARD TAB -->
+            <div x-show="activeTab === 'dashboard'" x-transition>
+                <!-- Hero Achievement Banner -->
+                <div class="glass-card rounded-2xl p-8 mb-6 gradient-border relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full blur-3xl"></div>
+                    <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="text-center md:text-left">
+                            <div class="inline-flex items-center gap-2 ranking-badge text-white px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+                                <i class="fas fa-crown"></i>
+                                #1 ACHIEVED
+                            </div>
+                            <h3 class="text-3xl font-bold text-white mb-2">Congratulations! 🎉</h3>
+                            <p class="text-gray-300 text-lg">Your business now ranks <span class="text-green-400 font-bold">#1</span> for "pizza near me" in Austin, TX</p>
+                            <p class="text-sm text-gray-400 mt-2">After 3 months of optimization • 247% increase in visibility</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="text-center">
+                                <div class="w-24 h-24 rounded-full ranking-badge flex items-center justify-center text-4xl font-bold text-white">
+                                    1
+                                </div>
+                                <p class="text-xs text-gray-400 mt-2">Current Rank</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="glass-card rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                                <i class="fas fa-eye text-violet-400"></i>
+                            </div>
+                            <span class="text-green-400 text-sm font-medium">+34%</span>
+                        </div>
+                        <p class="text-2xl font-bold text-white">12,847</p>
+                        <p class="text-sm text-gray-400">Monthly Impressions</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                <i class="fas fa-mouse-pointer text-blue-400"></i>
+                            </div>
+                            <span class="text-green-400 text-sm font-medium">+52%</span>
+                        </div>
+                        <p class="text-2xl font-bold text-white">2,156</p>
+                        <p class="text-sm text-gray-400">Profile Clicks</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                                <i class="fas fa-star text-amber-400"></i>
+                            </div>
+                            <span class="text-green-400 text-sm font-medium">+0.3</span>
+                        </div>
+                        <p class="text-2xl font-bold text-white">4.8</p>
+                        <p class="text-sm text-gray-400">Average Rating</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                                <i class="fas fa-walking text-green-400"></i>
+                            </div>
+                            <span class="text-green-400 text-sm font-medium">+89%</span>
+                        </div>
+                        <p class="text-2xl font-bold text-white">487</p>
+                        <p class="text-sm text-gray-400">Store Visits</p>
+                    </div>
+                </div>
+
+                <!-- Main Dashboard Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Ranking Chart -->
+                    <div class="lg:col-span-2 glass-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-white">Ranking History</h3>
+                            <select class="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm text-gray-300">
+                                <option>Last 3 Months</option>
+                                <option>Last 6 Months</option>
+                                <option>Last Year</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="rankingChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- GMB Health Score -->
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">Listing Health Score</h3>
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-40 h-40">
+                                <svg class="w-40 h-40 score-ring">
+                                    <circle cx="80" cy="80" r="70" stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="none"/>
+                                    <circle cx="80" cy="80" r="70" stroke="url(#gradient)" stroke-width="12" fill="none"
+                                            stroke-dasharray="440" :stroke-dashoffset="440 - (440 * healthScore / 100)"
+                                            stroke-linecap="round"/>
+                                    <defs>
+                                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" style="stop-color:#8b5cf6"/>
+                                            <stop offset="100%" style="stop-color:#3b82f6"/>
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-4xl font-bold text-white" x-text="healthScore"></span>
+                                    <span class="text-sm text-gray-400">/100</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-center">
+                                <span class="text-green-400 font-semibold">Excellent</span>
+                                <p class="text-xs text-gray-400 mt-1">Your listing is fully optimized!</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 space-y-3">
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-gray-400">Business Info</span>
+                                <span class="text-green-400"><i class="fas fa-check-circle"></i> Complete</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-gray-400">Photos</span>
+                                <span class="text-green-400"><i class="fas fa-check-circle"></i> 48 photos</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-gray-400">Posts</span>
+                                <span class="text-green-400"><i class="fas fa-check-circle"></i> Weekly</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span class="text-gray-400">Q&A</span>
+                                <span class="text-green-400"><i class="fas fa-check-circle"></i> Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity & Competitors -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                    <!-- Recent Reviews -->
+                    <div class="glass-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-white">Recent Reviews</h3>
+                            <button @click="activeTab = 'reviews'" class="text-sm text-violet-400 hover:text-violet-300">View All</button>
+                        </div>
+                        <div class="space-y-4">
+                            <template x-for="review in recentReviews" :key="review.id">
+                                <div class="flex gap-3 p-3 rounded-lg bg-white/5">
+                                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0">
+                                        <span x-text="review.initials"></span>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-medium text-white text-sm" x-text="review.name"></span>
+                                            <div class="flex text-amber-400 text-xs">
+                                                <template x-for="i in 5">
+                                                    <i :class="i <= review.rating ? 'fas fa-star' : 'far fa-star'"></i>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <p class="text-sm text-gray-400 mt-1 truncate" x-text="review.text"></p>
+                                        <div class="flex items-center gap-3 mt-2">
+                                            <span class="text-xs text-gray-500" x-text="review.time"></span>
+                                            <span x-show="!review.replied" class="text-xs text-amber-400">• Needs Reply</span>
+                                            <span x-show="review.replied" class="text-xs text-green-400">• Replied</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Top Competitors -->
+                    <div class="glass-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-white">Your Competitors</h3>
+                            <button @click="activeTab = 'competitors'" class="text-sm text-violet-400 hover:text-violet-300">Full Analysis</button>
+                        </div>
+                        <div class="space-y-3">
+                            <template x-for="competitor in topCompetitors" :key="competitor.name">
+                                <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sm font-semibold"
+                                             :class="competitor.rank === 1 ? 'bg-green-500/20 text-green-400' : 'text-gray-400'">
+                                            <span x-text="competitor.rank"></span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium text-white" x-text="competitor.name"></p>
+                                            <p class="text-xs text-gray-500" x-text="competitor.distance + ' away'"> </p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="flex items-center gap-1 text-amber-400 text-sm">
+                                            <span x-text="competitor.rating"></span>
+                                            <i class="fas fa-star text-xs"></i>
+                                        </div>
+                                        <p class="text-xs text-gray-500" x-text="competitor.reviews + ' reviews'"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="mt-4 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                            <div class="flex items-center gap-2 text-green-400 text-sm">
+                                <i class="fas fa-check-circle"></i>
+                                <span class="font-medium">You're #1!</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1">Outranking all local competitors for target keywords</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Items Preview -->
+                <div class="glass-card rounded-xl p-6 mt-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-white">Sam's Recommendations</h3>
+                        <button @click="activeTab = 'tasks'" class="text-sm text-violet-400 hover:text-violet-300">View All Tasks</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <template x-for="task in topTasks" :key="task.id">
+                            <div class="p-4 rounded-lg bg-gradient-to-br from-violet-500/10 to-blue-500/10 border border-violet-500/20">
+                                <div class="flex items-start justify-between mb-2">
+                                    <span :class="task.priority === 'high' ? 'bg-red-500/20 text-red-400' : 'bg-amber-500/20 text-amber-400'" 
+                                          class="text-xs px-2 py-1 rounded-full" x-text="task.priority"></span>
+                                    <i :class="task.icon" class="text-violet-400"></i>
+                                </div>
+                                <p class="text-sm font-medium text-white" x-text="task.title"></p>
+                                <p class="text-xs text-gray-400 mt-1" x-text="task.description"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RANKINGS TAB -->
+            <div x-show="activeTab === 'rankings'" x-transition class="space-y-6">
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-semibold text-white">Google Maps Ranking Tracker</h3>
+                        <div class="flex gap-2">
+                            <button class="px-4 py-2 bg-white/5 rounded-lg text-sm hover:bg-white/10 transition-all">
+                                <i class="fas fa-download mr-2"></i>Export
+                            </button>
+                            <button class="px-4 py-2 btn-primary rounded-lg text-sm text-white">
+                                <i class="fas fa-sync mr-2"></i>Update Now
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <div class="glass-card rounded-lg p-4 text-center">
+                            <p class="text-gray-400 text-sm mb-2">Current Position</p>
+                            <p class="text-5xl font-bold text-green-400">#1</p>
+                            <p class="text-green-400 text-sm mt-1"><i class="fas fa-arrow-up"></i> From #12 (Jan)</p>
+                        </div>
+                        <div class="glass-card rounded-lg p-4 text-center">
+                            <p class="text-gray-400 text-sm mb-2">Visibility Score</p>
+                            <p class="text-5xl font-bold text-violet-400">94%</p>
+                            <p class="text-green-400 text-sm mt-1"><i class="fas fa-arrow-up"></i> +23% this month</p>
+                        </div>
+                        <div class="glass-card rounded-lg p-4 text-center">
+                            <p class="text-gray-400 text-sm mb-2">Keywords Tracked</p>
+                            <p class="text-5xl font-bold text-blue-400">24</p>
+                            <p class="text-green-400 text-sm mt-1"><i class="fas fa-check"></i> 18 in top 3</p>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="text-left text-gray-400 text-sm border-b border-white/10">
+                                    <th class="pb-3 font-medium">Keyword</th>
+                                    <th class="pb-3 font-medium">Current</th>
+                                    <th class="pb-3 font-medium">Last Week</th>
+                                    <th class="pb-3 font-medium">Last Month</th>
+                                    <th class="pb-3 font-medium">Trend</th>
+                                    <th class="pb-3 font-medium">Search Vol</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b border-white/5">
+                                    <td class="py-4 font-medium text-white">pizza near me</td>
+                                    <td class="py-4"><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">#1</span></td>
+                                    <td class="py-4 text-gray-400">#2</td>
+                                    <td class="py-4 text-gray-400">#4</td>
+                                    <td class="py-4"><i class="fas fa-arrow-up text-green-400"></i></td>
+                                    <td class="py-4 text-gray-400">14.8K/mo</td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-4 font-medium text-white">best pizza austin</td>
+                                    <td class="py-4"><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">#1</span></td>
+                                    <td class="py-4 text-gray-400">#1</td>
+                                    <td class="py-4 text-gray-400">#3</td>
+                                    <td class="py-4"><i class="fas fa-minus text-gray-400"></i></td>
+                                    <td class="py-4 text-gray-400">8.2K/mo</td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-4 font-medium text-white">italian restaurant downtown</td>
+                                    <td class="py-4"><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">#2</span></td>
+                                    <td class="py-4 text-gray-400">#3</td>
+                                    <td class="py-4 text-gray-400">#5</td>
+                                    <td class="py-4"><i class="fas fa-arrow-up text-green-400"></i></td>
+                                    <td class="py-4 text-gray-400">3.1K/mo</td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-4 font-medium text-white">late night pizza</td>
+                                    <td class="py-4"><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-bold">#1</span></td>
+                                    <td class="py-4 text-gray-400">#1</td>
+                                    <td class="py-4 text-gray-400">#2</td>
+                                    <td class="py-4"><i class="fas fa-minus text-gray-400"></i></td>
+                                    <td class="py-4 text-gray-400">2.8K/mo</td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-4 font-medium text-white">family pizza restaurant</td>
+                                    <td class="py-4"><span class="bg-amber-500/20 text-amber-400 px-2 py-1 rounded text-xs font-bold">#3</span></td>
+                                    <td class="py-4 text-gray-400">#4</td>
+                                    <td class="py-4 text-gray-400">#6</td>
+                                    <td class="py-4"><i class="fas fa-arrow-up text-green-400"></i></td>
+                                    <td class="py-4 text-gray-400">1.9K/mo</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEWS TAB -->
+            <div x-show="activeTab === 'reviews'" x-transition class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="glass-card rounded-xl p-5 text-center">
+                        <p class="text-4xl font-bold text-white">4.8</p>
+                        <div class="flex justify-center gap-1 text-amber-400 text-sm my-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p class="text-sm text-gray-400">Average Rating</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5 text-center">
+                        <p class="text-4xl font-bold text-white">347</p>
+                        <p class="text-sm text-green-400 mt-2"><i class="fas fa-arrow-up"></i> +23 this month</p>
+                        <p class="text-sm text-gray-400">Total Reviews</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5 text-center">
+                        <p class="text-4xl font-bold text-white">92%</p>
+                        <p class="text-sm text-gray-400 mt-2">Reply Rate</p>
+                        <p class="text-sm text-gray-400">Response time: 4h avg</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5 text-center">
+                        <p class="text-4xl font-bold text-white">87%</p>
+                        <p class="text-sm text-green-400 mt-2">Positive</p>
+                        <p class="text-sm text-gray-400">Sentiment Score</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-white">Review Management</h3>
+                            <p class="text-sm text-gray-400">Monitor and respond to customer reviews</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <select class="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-300">
+                                <option>All Reviews</option>
+                                <option>5 Stars</option>
+                                <option>4 Stars</option>
+                                <option>3 Stars</option>
+                                <option>2 Stars</option>
+                                <option>1 Star</option>
+                                <option>Needs Reply</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <template x-for="review in allReviews" :key="review.id">
+                            <div class="p-4 rounded-xl bg-white/5 border border-white/5">
+                                <div class="flex items-start justify-between mb-3">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center text-white font-bold" x-text="review.initials"></div>
+                                        <div>
+                                            <p class="font-medium text-white" x-text="review.name"></p>
+                                            <div class="flex items-center gap-2">
+                                                <div class="flex text-amber-400 text-sm">
+                                                    <template x-for="i in 5">
+                                                        <i :class="i <= review.rating ? 'fas fa-star' : 'far fa-star'"></i>
+                                                    </template>
+                                                </div>
+                                                <span class="text-xs text-gray-500" x-text="review.time"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <button x-show="!review.replied" @click="review.showReply = !review.showReply" class="px-3 py-1.5 bg-violet-500/20 text-violet-400 rounded-lg text-sm hover:bg-violet-500/30 transition-all">
+                                            <i class="fas fa-reply mr-1"></i> Reply
+                                        </button>
+                                        <button class="p-2 text-gray-400 hover:text-white">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="text-gray-300 text-sm mb-3" x-text="review.text"></p>
+                                <div x-show="review.replied" class="ml-4 pl-4 border-l-2 border-green-500/30">
+                                    <div class="flex items-center gap-2 text-green-400 text-sm mb-1">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="font-medium">Your Response</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400" x-text="review.replyText"></p>
+                                </div>
+                                <div x-show="review.showReply" class="mt-3">
+                                    <textarea class="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-gray-300 resize-none" rows="3" placeholder="Write your response..."></textarea>
+                                    <div class="flex justify-end gap-2 mt-2">
+                                        <button @click="review.showReply = false" class="px-4 py-2 text-sm text-gray-400 hover:text-white">Cancel</button>
+                                        <button @click="submitReply(review)" class="px-4 py-2 btn-primary rounded-lg text-sm text-white">Post Reply</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OPTIMIZATION TAB -->
+            <div x-show="activeTab === 'optimization'" x-transition class="space-y-6">
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-white">GMB Listing Health Check</h3>
+                            <p class="text-sm text-gray-400">Complete optimization checklist</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="text-right">
+                                <p class="text-3xl font-bold text-white" x-text="healthScore"></p>
+                                <p class="text-sm text-gray-400">Overall Score</p>
+                            </div>
+                            <div class="w-16 h-16">
+                                <svg class="w-16 h-16 score-ring">
+                                    <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.1)" stroke-width="6" fill="none"/>
+                                    <circle cx="32" cy="32" r="28" stroke="#22c55e" stroke-width="6" fill="none"
+                                            stroke-dasharray="176" :stroke-dashoffset="176 - (176 * healthScore / 100)"
+                                            stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <template x-for="category in optimizationCategories" :key="category.name">
+                            <div class="p-4 rounded-xl bg-white/5">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center gap-2">
+                                        <i :class="category.icon" class="text-violet-400"></i>
+                                        <span class="font-medium text-white" x-text="category.name"></span>
+                                    </div>
+                                    <span :class="category.score >= 90 ? 'text-green-400' : category.score >= 70 ? 'text-amber-400' : 'text-red-400'" 
+                                          class="font-bold" x-text="category.score + '%'"></span>
+                                </div>
+                                <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                                    <div class="h-full rounded-full transition-all duration-1000"
+                                         :class="category.score >= 90 ? 'bg-green-500' : category.score >= 70 ? 'bg-amber-500' : 'bg-red-500'"
+                                         :style="'width: ' + category.score + '%'"></div>
+                                </div>
+                                <ul class="mt-3 space-y-2">
+                                    <template x-for="item in category.items" :key="item.name">
+                                        <li class="flex items-center justify-between text-sm">
+                                            <span class="text-gray-400" x-text="item.name"></span>
+                                            <i :class="item.done ? 'fas fa-check-circle text-green-400' : 'far fa-circle text-gray-600'"></i>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Photo Optimization -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-white mb-4">Photo Optimization</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="glass-card rounded-lg p-4 text-center">
+                            <p class="text-3xl font-bold text-violet-400">48</p>
+                            <p class="text-sm text-gray-400">Total Photos</p>
+                            <p class="text-xs text-green-400 mt-1"><i class="fas fa-check"></i> Above average</p>
+                        </div>
+                        <div class="glass-card rounded-lg p-4 text-center">
+                            <p class="text-3xl font-bold text-blue-400">12</p>
+                            <p class="text-sm text-gray-400">This Month</p>
+                            <p class="text-xs text-green-400 mt-1"><i class="fas fa-arrow-up"></i> +4 vs last</p>
+                        </div>
+                        <div class="glass-card rounded-lg p-4 text-center">
+                            <p class="text-3xl font-bold text-amber-400">2.3K</p>
+                            <p class="text-sm text-gray-400">Photo Views</p>
+                            <p class="text-xs text-green-400 mt-1"><i class="fas fa-arrow-up"></i> +18%</p>
+                        </div>
+                        <div class="glass-card rounded-lg p-4 text-center">
+                            <p class="text-3xl font-bold text-green-400">98%</p>
+                            <p class="text-sm text-gray-400">Quality Score</p>
+                            <p class="text-xs text-green-400 mt-1"><i class="fas fa-check"></i> Excellent</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPETITORS TAB -->
+            <div x-show="activeTab === 'competitors'" x-transition class="space-y-6">
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-white">Competitor Analysis</h3>
+                            <p class="text-sm text-gray-400">See who's ranking and why</p>
+                        </div>
+                        <button class="px-4 py-2 btn-primary rounded-lg text-sm text-white">
+                            <i class="fas fa-plus mr-2"></i>Add Competitor
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="text-left text-gray-400 text-sm border-b border-white/10">
+                                    <th class="pb-3 font-medium">Rank</th>
+                                    <th class="pb-3 font-medium">Business</th>
+                                    <th class="pb-3 font-medium">Rating</th>
+                                    <th class="pb-3 font-medium">Reviews</th>
+                                    <th class="pb-3 font-medium">Photos</th>
+                                    <th class="pb-3 font-medium">GMB Activity</th>
+                                    <th class="pb-3 font-medium">Strengths</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b border-white/5 bg-green-500/5">
+                                    <td class="py-4"><span class="ranking-badge text-white px-3 py-1 rounded-full text-xs font-bold">#1 YOU</span></td>
+                                    <td class="py-4">
+                                        <p class="font-medium text-white">John's Artisan Pizza</p>
+                                        <p class="text-xs text-gray-500">0.0 mi • Your location</p>
+                                    </td>
+                                    <td class="py-4"><span class="text-amber-400 font-bold">4.8</span> <i class="fas fa-star text-amber-400 text-xs"></i></td>
+                                    <td class="py-4">347</td>
+                                    <td class="py-4">48</td>
+                                    <td class="py-4"><span class="text-green-400">Very High</span></td>
+                                    <td class="py-4"><span class="text-xs bg-violet-500/20 text-violet-400 px-2 py-1 rounded">Photos</span> <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Keywords</span></td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-4 text-gray-400 font-bold">#2</td>
+                                    <td class="py-4">
+                                        <p class="font-medium text-white">Tony's Pizzeria</p>
+                                        <p class="text-xs text-gray-500">0.3 mi • 4th Street</p>
+                                    </td>
+                                    <td class="py-4"><span class="text-amber-400 font-bold">4.6</span> <i class="fas fa-star text-amber-400 text-xs"></i></td>
+                                    <td class="py-4">521</td>
+                                    <td class="py-4">32</td>
+                                    <td class="py-4"><span class="text-amber-400">Medium</span></td>
+                                    <td class="py-4"><span class="text-xs bg-amber-500/20 text-amber-400 px-2 py-1 rounded">Review Count</span></td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-4 text-gray-400 font-bold">#3</td>
+                                    <td class="py-4">
+                                        <p class="font-medium text-white">Pasta Palace</p>
+                                        <p class="text-xs text-gray-500">0.5 mi • Downtown</p>
+                                    </td>
+                                    <td class="py-4"><span class="text-amber-400 font-bold">4.4</span> <i class="fas fa-star text-amber-400 text-xs"></i></td>
+                                    <td class="py-4">198</td>
+                                    <td class="py-4">67</td>
+                                    <td class="py-4"><span class="text-green-400">High</span></td>
+                                    <td class="py-4"><span class="text-xs bg-violet-500/20 text-violet-400 px-2 py-1 rounded">Photos</span></td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-4 text-gray-400 font-bold">#4</td>
+                                    <td class="py-4">
+                                        <p class="font-medium text-white">Mario's Italian</p>
+                                        <p class="text-xs text-gray-500">0.8 mi • West End</p>
+                                    </td>
+                                    <td class="py-4"><span class="text-amber-400 font-bold">4.7</span> <i class="fas fa-star text-amber-400 text-xs"></i></td>
+                                    <td class="py-4">412</td>
+                                    <td class="py-4">28</td>
+                                    <td class="py-4"><span class="text-gray-400">Low</span></td>
+                                    <td class="py-4"><span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">Rating</span></td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-4 text-gray-400 font-bold">#5</td>
+                                    <td class="py-4">
+                                        <p class="font-medium text-white">Slice of Heaven</p>
+                                        <p class="text-xs text-gray-500">1.2 mi • East Side</p>
+                                    </td>
+                                    <td class="py-4"><span class="text-amber-400 font-bold">4.3</span> <i class="fas fa-star text-amber-400 text-xs"></i></td>
+                                    <td class="py-4">156</td>
+                                    <td class="py-4">19</td>
+                                    <td class="py-4"><span class="text-gray-400">Low</span></td>
+                                    <td class="py-4"><span class="text-xs bg-gray-500/20 text-gray-400 px-2 py-1 rounded">Price</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Competitive Insights -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-white mb-4">Sam's Competitive Insights</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
+                            <div class="flex items-center gap-2 text-green-400 mb-2">
+                                <i class="fas fa-trophy"></i>
+                                <span class="font-medium">Your Advantage</span>
+                            </div>
+                            <p class="text-sm text-gray-300">Your photo count (48) beats the market average by 50%. Keep uploading high-quality images weekly.</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                            <div class="flex items-center gap-2 text-amber-400 mb-2">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span class="font-medium">Watch Out</span>
+                            </div>
+                            <p class="text-sm text-gray-300">Tony's has 174 more reviews. Consider a review campaign to close this gap.</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                            <div class="flex items-center gap-2 text-blue-400 mb-2">
+                                <i class="fas fa-lightbulb"></i>
+                                <span class="font-medium">Opportunity</span>
+                            </div>
+                            <p class="text-sm text-gray-300">Mario's is inactive on GMB posts. This is your chance to dominate local updates.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KEYWORDS TAB -->
+            <div x-show="activeTab === 'keywords'" x-transition class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-card rounded-xl p-5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Keywords Tracked</p>
+                                <p class="text-3xl font-bold text-white mt-1">24</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                                <i class="fas fa-search text-violet-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-xl p-5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Top 3 Rankings</p>
+                                <p class="text-3xl font-bold text-white mt-1">18</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-lg bg-green-500/20 flex items-center justify-center">
+                                <i class="fas fa-medal text-green-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-xl p-5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-400 text-sm">Monthly Searches</p>
+                                <p class="text-3xl font-bold text-white mt-1">48.2K</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                <i class="fas fa-users text-blue-400 text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-semibold text-white">Keyword Rankings</h3>
+                        <button class="px-4 py-2 btn-primary rounded-lg text-sm text-white">
+                            <i class="fas fa-plus mr-2"></i>Add Keyword
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="text-left text-gray-400 text-sm border-b border-white/10">
+                                    <th class="pb-3 font-medium">Keyword</th>
+                                    <th class="pb-3 font-medium">Position</th>
+                                    <th class="pb-3 font-medium">Change</th>
+                                    <th class="pb-3 font-medium">Search Volume</th>
+                                    <th class="pb-3 font-medium">Difficulty</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 font-medium text-white">pizza near me</td>
+                                    <td class="py-3"><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded font-bold">#1</span></td>
+                                    <td class="py-3 text-green-400"><i class="fas fa-arrow-up"></i> 3</td>
+                                    <td class="py-3 text-gray-400">14,800/mo</td>
+                                    <td class="py-3"><span class="text-amber-400">High</span></td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 font-medium text-white">best pizza austin</td>
+                                    <td class="py-3"><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded font-bold">#1</span></td>
+                                    <td class="py-3 text-green-400"><i class="fas fa-arrow-up"></i> 2</td>
+                                    <td class="py-3 text-gray-400">8,200/mo</td>
+                                    <td class="py-3"><span class="text-red-400">Very High</span></td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 font-medium text-white">italian restaurant downtown</td>
+                                    <td class="py-3"><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded font-bold">#2</span></td>
+                                    <td class="py-3 text-green-400"><i class="fas fa-arrow-up"></i> 3</td>
+                                    <td class="py-3 text-gray-400">3,100/mo</td>
+                                    <td class="py-3"><span class="text-amber-400">Medium</span></td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 font-medium text-white">late night pizza</td>
+                                    <td class="py-3"><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded font-bold">#1</span></td>
+                                    <td class="py-3 text-gray-400"><i class="fas fa-minus"></i> 0</td>
+                                    <td class="py-3 text-gray-400">2,800/mo</td>
+                                    <td class="py-3"><span class="text-green-400">Low</span></td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 font-medium text-white">family pizza restaurant</td>
+                                    <td class="py-3"><span class="bg-amber-500/20 text-amber-400 px-2 py-1 rounded font-bold">#3</span></td>
+                                    <td class="py-3 text-green-400"><i class="fas fa-arrow-up"></i> 3</td>
+                                    <td class="py-3 text-gray-400">1,900/mo</td>
+                                    <td class="py-3"><span class="text-green-400">Low</span></td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 font-medium text-white">gluten free pizza austin</td>
+                                    <td class="py-3"><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded font-bold">#2</span></td>
+                                    <td class="py-3 text-green-400"><i class="fas fa-arrow-up"></i> 5</td>
+                                    <td class="py-3 text-gray-400">1,600/mo</td>
+                                    <td class="py-3"><span class="text-green-400">Medium</span></td>
+                                </tr>
+                                <tr class="border-b border-white/5">
+                                    <td class="py-3 font-medium text-white">wood fired pizza</td>
+                                    <td class="py-3"><span class="bg-green-500/20 text-green-400 px-2 py-1 rounded font-bold">#1</span></td>
+                                    <td class="py-3 text-green-400"><i class="fas fa-arrow-up"></i> 1</td>
+                                    <td class="py-3 text-gray-400">1,400/mo</td>
+                                    <td class="py-3"><span class="text-amber-400">Medium</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOT TRAFFIC TAB -->
+            <div x-show="activeTab === 'traffic'" x-transition class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="glass-card rounded-xl p-5">
+                        <p class="text-gray-400 text-sm">Monthly Visits</p>
+                        <p class="text-3xl font-bold text-white mt-1">487</p>
+                        <p class="text-green-400 text-sm mt-1"><i class="fas fa-arrow-up"></i> +89%</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5">
+                        <p class="text-gray-400 text-sm">Avg Visit Duration</p>
+                        <p class="text-3xl font-bold text-white mt-1">42m</p>
+                        <p class="text-green-400 text-sm mt-1"><i class="fas fa-arrow-up"></i> +12%</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5">
+                        <p class="text-gray-400 text-sm">Peak Day</p>
+                        <p class="text-3xl font-bold text-white mt-1">Saturday</p>
+                        <p class="text-gray-400 text-sm mt-1">7-9 PM busiest</p>
+                    </div>
+                    <div class="glass-card rounded-xl p-5">
+                        <p class="text-gray-400 text-sm">Repeat Rate</p>
+                        <p class="text-3xl font-bold text-white mt-1">34%</p>
+                        <p class="text-green-400 text-sm mt-1"><i class="fas fa-arrow-up"></i> +5%</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-white mb-4">Foot Traffic Trends</h3>
+                    <div class="chart-container" style="height: 300px;">
+                        <canvas id="trafficChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">Busiest Hours</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <span class="text-gray-400 w-16">7-9 PM</span>
+                                <div class="flex-1 h-6 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-violet-500 to-blue-500 rounded-full" style="width: 95%"></div>
+                                </div>
+                                <span class="text-white text-sm">95%</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-gray-400 w-16">12-2 PM</span>
+                                <div class="flex-1 h-6 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-violet-500 to-blue-500 rounded-full" style="width: 82%"></div>
+                                </div>
+                                <span class="text-white text-sm">82%</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-gray-400 w-16">6-7 PM</span>
+                                <div class="flex-1 h-6 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-violet-500 to-blue-500 rounded-full" style="width: 76%"></div>
+                                </div>
+                                <span class="text-white text-sm">76%</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-gray-400 w-16">2-4 PM</span>
+                                <div class="flex-1 h-6 bg-white/5 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-violet-500 to-blue-500 rounded-full" style="width: 45%"></div>
+                                </div>
+                                <span class="text-white text-sm">45%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">Traffic Sources</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                                        <i class="fab fa-google text-green-400"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-white">Google Maps</p>
+                                        <p class="text-xs text-gray-400">Organic search</p>
+                                    </div>
+                                </div>
+                                <span class="text-white font-bold">64%</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                        <i class="fas fa-search text-blue-400"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-white">Google Search</p>
+                                        <p class="text-xs text-gray-400">Web results</p>
+                                    </div>
+                                </div>
+                                <span class="text-white font-bold">23%</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center">
+                                        <i class="fas fa-link text-violet-400"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-white">Direct</p>
+                                        <p class="text-xs text-gray-400">Direct visits</p>
+                                    </div>
+                                </div>
+                                <span class="text-white font-bold">13%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TASKS TAB -->
+            <div x-show="activeTab === 'tasks'" x-transition class="space-y-6">
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-white">Action Items</h3>
+                            <p class="text-sm text-gray-400">Tasks generated by Sam based on your data</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-sm" x-text="tasks.filter(t => t.priority === 'high').length + ' High'">0</span>
+                            <span class="px-3 py-1 bg-amber-500/20 text-amber-400 rounded-full text-sm" x-text="tasks.filter(t => t.priority === 'medium').length + ' Medium'">0</span>
+                            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm" x-text="tasks.filter(t => t.priority === 'low').length + ' Low'">0</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <template x-for="task in tasks" :key="task.id">
+                            <div class="flex items-center gap-4 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all"
+                                 :class="task.completed ? 'opacity-50' : ''">
+                                <button @click="toggleTask(task)" 
+                                        class="w-6 h-6 rounded border-2 flex items-center justify-center transition-all"
+                                        :class="task.completed ? 'bg-green-500 border-green-500' : 'border-gray-500 hover:border-violet-400'">
+                                    <i x-show="task.completed" class="fas fa-check text-white text-xs"></i>
+                                </button>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span :class="task.priority === 'high' ? 'bg-red-500/20 text-red-400' : task.priority === 'medium' ? 'bg-amber-500/20 text-amber-400' : 'bg-green-500/20 text-green-400'" 
+                                              class="text-xs px-2 py-0.5 rounded-full" x-text="task.priority"></span>
+                                        <i :class="task.icon" class="text-gray-400 text-sm"></i>
+                                    </div>
+                                    <p class="font-medium text-white" :class="task.completed ? 'line-through text-gray-500' : ''" x-text="task.title"></p>
+                                    <p class="text-sm text-gray-400" x-text="task.description"></p>
+                                </div>
+                                <button @click="toggleTask(task)" class="text-gray-400 hover:text-white">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REPORTS TAB -->
+            <div x-show="activeTab === 'reports'" x-transition class="space-y-6">
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-white">Monthly Reports</h3>
+                            <p class="text-sm text-gray-400">Download PDF reports for your records</p>
+                        </div>
+                        <button @click="generatingReport = true; setTimeout(() => generatingReport = false, 2000)" 
+                                class="px-4 py-2 btn-primary rounded-lg text-sm text-white">
+                            <i class="fas fa-file-pdf mr-2"></i>
+                            <span x-show="!generatingReport">Generate New Report</span>
+                            <span x-show="generatingReport"><i class="fas fa-spinner fa-spin mr-1"></i> Generating...</span>
+                        </button>
+                    </div>
+
+                    <div class="space-y-3">
+                        <template x-for="report in reports" :key="report.id">
+                            <div class="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 rounded-lg bg-red-500/20 flex items-center justify-center">
+                                        <i class="fas fa-file-pdf text-red-400 text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-white" x-text="report.name"></p>
+                                        <p class="text-sm text-gray-400" x-text="report.date + ' • ' + report.size"></p>
+                                    </div>
+                                </div>
+                                <button class="px-4 py-2 bg-white/10 rounded-lg text-sm hover:bg-white/20 transition-all">
+                                    <i class="fas fa-download mr-2"></i>Download
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-white mb-4">Report Settings</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 rounded-lg bg-white/5">
+                            <div>
+                                <p class="font-medium text-white">Automatic Monthly Reports</p>
+                                <p class="text-sm text-gray-400">Receive reports via email on the 1st of each month</p>
+                            </div>
+                            <button @click="autoReports = !autoReports" 
+                                    :class="autoReports ? 'bg-green-500' : 'bg-gray-600'"
+                                    class="w-12 h-6 rounded-full relative transition-all">
+                                <span :class="autoReports ? 'translate-x-6' : 'translate-x-1'" class="absolute top-1 w-4 h-4 bg-white rounded-full transition-transform"></span>
+                            </button>
+                        </div>
+                        <div class="flex items-center justify-between p-4 rounded-lg bg-white/5">
+                            <div>
+                                <p class="font-medium text-white">Weekly Summaries</p>
+                                <p class="text-sm text-gray-400">Quick email summary every Monday</p>
+                            </div>
+                            <button @click="weeklyReports = !weeklyReports" 
+                                    :class="weeklyReports ? 'bg-green-500' : 'bg-gray-600'"
+                                    class="w-12 h-6 rounded-full relative transition-all">
+                                <span :class="weeklyReports ? 'translate-x-6' : 'translate-x-1'" class="absolute top-1 w-4 h-4 bg-white rounded-full transition-transform"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS TAB -->
+            <div x-show="activeTab === 'settings'" x-transition class="space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">Business Information</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Business Name</label>
+                                <input type="text" value="John's Artisan Pizza" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-violet-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Industry Category</label>
+                                <select class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-violet-400">
+                                    <option>Pizza Restaurant</option>
+                                    <option>Italian Restaurant</option>
+                                    <option>Fast Food</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Address</label>
+                                <input type="text" value="123 Main Street, Austin, TX 78701" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-violet-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Phone</label>
+                                <input type="text" value="(512) 555-0123" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-violet-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Website</label>
+                                <input type="text" value="https://johnsartisanpizza.com" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-violet-400">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-lg font-semibold text-white mb-4">Service Area</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Primary Service Area</label>
+                                <input type="text" value="Downtown Austin, TX" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-violet-400">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Service Radius</label>
+                                <select class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-violet-400">
+                                    <option>5 miles</option>
+                                    <option selected>10 miles</option>
+                                    <option>20 miles</option>
+                                    <option>50 miles</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Additional Areas</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-violet-500/20 text-violet-400 rounded-full text-sm flex items-center gap-2">
+                                        East Austin <i class="fas fa-times cursor-pointer hover:text-white"></i>
+                                    </span>
+                                    <span class="px-3 py-1 bg-violet-500/20 text-violet-400 rounded-full text-sm flex items-center gap-2">
+                                        West Lake Hills <i class="fas fa-times cursor-pointer hover:text-white"></i>
+                                    </span>
+                                    <button class="px-3 py-1 bg-white/10 text-gray-400 rounded-full text-sm hover:bg-white/20">+ Add Area</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-semibold text-white mb-4 mt-8">Notification Preferences</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-gray-300">New review notifications</span>
+                                <input type="checkbox" checked class="w-5 h-5 rounded border-gray-600 text-violet-500 focus:ring-violet-500 bg-white/5">
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-gray-300">Ranking changes</span>
+                                <input type="checkbox" checked class="w-5 h-5 rounded border-gray-600 text-violet-500 focus:ring-violet-500 bg-white/5">
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-gray-300">Weekly summaries</span>
+                                <input type="checkbox" checked class="w-5 h-5 rounded border-gray-600 text-violet-500 focus:ring-violet-500 bg-white/5">
+                            </label>
+                            <label class="flex items-center justify-between cursor-pointer">
+                                <span class="text-gray-300">Sam's recommendations</span>
+                                <input type="checkbox" checked class="w-5 h-5 rounded border-gray-600 text-violet-500 focus:ring-violet-500 bg-white/5">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-white mb-4">Account Settings</h3>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="font-medium text-white">Current Plan: Pro ($800/mo)</p>
+                            <p class="text-sm text-gray-400">Next billing date: March 1, 2026</p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button class="px-4 py-2 bg-white/10 rounded-lg text-sm hover:bg-white/20 transition-all">Upgrade</button>
+                            <button class="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg text-sm hover:bg-red-500/30 transition-all">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function samDashboard() {
+            return {
+                activeTab: 'dashboard',
+                mobileMenuOpen: false,
+                healthScore: 96,
+                newReviewCount: 3,
+                pendingTasks: 5,
+                generatingReport: false,
+                autoReports: true,
+                weeklyReports: true,
+                notifications: [1, 2, 3],
+                
+                get pageTitle() {
+                    const titles = {
+                        dashboard: 'Dashboard',
+                        rankings: 'Ranking Tracker',
+                        reviews: 'Review Management',
+                        optimization: 'Listing Optimization',
+                        competitors: 'Competitor Analysis',
+                        keywords: 'Keyword Rankings',
+                        traffic: 'Foot Traffic',
+                        tasks: 'Action Items',
+                        reports: 'Reports',
+                        settings: 'Settings'
+                    };
+                    return titles[this.activeTab] || 'Dashboard';
+                },
+                
+                get pageSubtitle() {
+                    const subtitles = {
+                        dashboard: "Overview of your local SEO performance",
+                        rankings: "Track your Google Maps positions",
+                        reviews: "Monitor and respond to customer reviews",
+                        optimization: "Optimize your GMB listing",
+                        competitors: "See who's ranking above you",
+                        keywords: "Track your keyword positions",
+                        traffic: "Analyze foot traffic patterns",
+                        tasks: "Complete tasks to improve rankings",
+                        reports: "Generate and download reports",
+                        settings: "Manage your business information"
+                    };
+                    return subtitles[this.activeTab] || '';
+                },
+                
+                recentReviews: [
+                    { id: 1, name: 'Sarah M.', initials: 'SM', rating: 5, text: 'Best pizza in Austin! The crust is amazing and service was quick.', time: '2 hours ago', replied: false },
+                    { id: 2, name: 'Mike T.', initials: 'MT', rating: 5, text: 'Love the new location. Great atmosphere and delicious food.', time: '5 hours ago', replied: true, replyText: 'Thanks Mike! So glad you enjoyed your visit. See you again soon!' },
+                    { id: 3, name: 'Lisa K.', initials: 'LK', rating: 4, text: 'Good food, a bit busy on weekends but worth the wait.', time: '1 day ago', replied: false }
+                ],
+                
+                allReviews: [
+                    { id: 1, name: 'Sarah M.', initials: 'SM', rating: 5, text: 'Best pizza in Austin! The crust is amazing and service was quick. We ordered the Margherita and it was perfection. Will definitely be back!', time: '2 hours ago', replied: false, showReply: false },
+                    { id: 2, name: 'Mike T.', initials: 'MT', rating: 5, text: 'Love the new location. Great atmosphere and delicious food. The garlic knots are a must-try!', time: '5 hours ago', replied: true, replyText: 'Thanks Mike! So glad you enjoyed your visit. Our garlic knots are a customer favorite!', showReply: false },
+                    { id: 3, name: 'Lisa K.', initials: 'LK', rating: 4, text: 'Good food, a bit busy on weekends but worth the wait. The waitstaff was friendly despite being swamped.', time: '1 day ago', replied: false, showReply: false },
+                    { id: 4, name: 'David R.', initials: 'DR', rating: 5, text: 'Incredible wood-fired pizza. You can taste the quality in every bite. Best date night spot in downtown.', time: '2 days ago', replied: true, replyText: 'Thank you David! Date nights are special and we\'re honored you chose us!', showReply: false },
+                    { id: 5, name: 'Jennifer L.', initials: 'JL', rating: 3, text: 'Pizza was good but took a while to arrive. Would come back on a less busy night.', time: '3 days ago', replied: false, showReply: false }
+                ],
+                
+                topCompetitors: [
+                    { name: "Tony's Pizzeria", rank: 2, distance: '0.3 mi', rating: 4.6, reviews: '521' },
+                    { name: 'Pasta Palace', rank: 3, distance: '0.5 mi', rating: 4.4, reviews: '198' },
+                    { name: "Mario's Italian", rank: 4, distance: '0.8 mi', rating: 4.7, reviews: '412' }
+                ],
+                
+                topTasks: [
+                    { id: 1, priority: 'high', icon: 'fas fa-reply text-blue-400', title: 'Reply to 3 new reviews', description: 'Quick response improves customer trust' },
+                    { id: 2, priority: 'medium', icon: 'fas fa-camera text-violet-400', title: 'Upload 5 new photos', description: 'Fresh photos boost engagement by 35%' },
+                    { id: 3, priority: 'low', icon: 'fas fa-pen text-green-400', title: 'Post weekend special', description: 'Weekly posts keep your listing active' }
+                ],
+                
+                tasks: [
+                    { id: 1, priority: 'high', icon: 'fas fa-reply', title: 'Reply to 3 new reviews', description: 'Sarah M., Lisa K., and Jennifer L. left reviews that need responses', completed: false },
+                    { id: 2, priority: 'high', icon: 'fas fa-camera', title: 'Upload 5 new photos', description: 'Add photos of your new menu items and interior updates', completed: false },
+                    { id: 3, priority: 'medium', icon: 'fas fa-pen', title: 'Post weekend special', description: 'Create a GMB post about your Valentine\'s Day special', completed: false },
+                    { id: 4, priority: 'medium', icon: 'fas fa-question-circle', title: 'Answer 2 new Q&A', description: 'Customers asked about gluten-free options and parking', completed: false },
+                    { id: 5, priority: 'low', icon: 'fas fa-edit', title: 'Update business hours', description: 'Verify holiday hours are up to date', completed: false }
+                ],
+                
+                optimizationCategories: [
+                    {
+                        name: 'Business Information',
+                        icon: 'fas fa-store text-blue-400',
+                        score: 100,
+                        items: [
+                            { name: 'Business name accurate', done: true },
+                            { name: 'Address verified', done: true },
+                            { name: 'Phone number correct', done: true },
+                            { name: 'Website linked', done: true },
+                            { name: 'Hours up to date', done: true }
+                        ]
+                    },
+                    {
+                        name: 'Visual Content',
+                        icon: 'fas fa-images text-violet-400',
+                        score: 95,
+                        items: [
+                            { name: 'Logo uploaded', done: true },
+                            { name: 'Cover photo set', done: true },
+                            { name: 'Interior photos (15+)', done: true },
+                            { name: 'Exterior photos (5+)', done: true },
+                            { name: 'Product photos (20+)', done: true },
+                            { name: 'Team photos', done: false }
+                        ]
+                    },
+                    {
+                        name: 'Engagement',
+                        icon: 'fas fa-comments text-green-400',
+                        score: 88,
+                        items: [
+                            { name: 'Review responses 90%+', done: true },
+                            { name: 'Weekly posts', done: true },
+                            { name: 'Q&A answered', done: true },
+                            { name: 'Products listed', done: true },
+                            { name: 'Services detailed', done: false }
+                        ]
+                    },
+                    {
+                        name: 'Attributes',
+                        icon: 'fas fa-tags text-amber-400',
+                        score: 100,
+                        items: [
+                            { name: 'Accessibility info', done: true },
+                            { name: 'Amenities listed', done: true },
+                            { name: 'Payment options', done: true },
+                            { name: 'Health & safety', done: true }
+                        ]
+                    }
+                ],
+                
+                reports: [
+                    { id: 1, name: 'January 2026 Report', date: 'Feb 1, 2026', size: '2.4 MB' },
+                    { id: 2, name: 'December 2025 Report', date: 'Jan 1, 2026', size: '2.1 MB' },
+                    { id: 3, name: 'November 2025 Report', date: 'Dec 1, 2025', size: '1.9 MB' },
+                    { id: 4, name: 'Q4 2025 Summary', date: 'Jan 5, 2026', size: '4.2 MB' }
+                ],
+                
+                toggleTask(task) {
+                    task.completed = !task.completed;
+                    this.pendingTasks = this.tasks.filter(t => !t.completed).length;
+                },
+                
+                submitReply(review) {
+                    review.replied = true;
+                    review.replyText = 'Thank you for your feedback! We appreciate your business.';
+                    review.showReply = false;
+                }
+            }
+        }
+
+        // Initialize charts after Alpine loads
+        document.addEventListener('alpine:initialized', () => {
+            // Ranking Chart
+            const rankingCtx = document.getElementById('rankingChart');
+            if (rankingCtx) {
+                new Chart(rankingCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan 1', 'Jan 8', 'Jan 15', 'Jan 22', 'Jan 29', 'Feb 5', 'Feb 11'],
+                        datasets: [{
+                            label: 'Ranking Position',
+                            data: [12, 9, 7, 5, 3, 2, 1],
+                            borderColor: '#22c55e',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#22c55e',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                reverse: true,
+                                min: 1,
+                                max: 15,
+                                ticks: {
+                                    color: 'rgba(255,255,255,0.5)',
+                                    font: { size: 11 }
+                                },
+                                grid: {
+                                    color: 'rgba(255,255,255,0.05)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: 'rgba(255,255,255,0.5)',
+                                    font: { size: 11 }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Traffic Chart
+            const trafficCtx = document.getElementById('trafficChart');
+            if (trafficCtx) {
+                new Chart(trafficCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'This Week',
+                            data: [45, 52, 48, 61, 78, 95, 82],
+                            backgroundColor: 'rgba(139, 92, 246, 0.8)',
+                            borderRadius: 6
+                        }, {
+                            label: 'Last Week',
+                            data: [38, 42, 40, 52, 65, 78, 70],
+                            backgroundColor: 'rgba(255,255,255,0.1)',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    color: 'rgba(255,255,255,0.7)'
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    color: 'rgba(255,255,255,0.5)',
+                                    font: { size: 11 }
+                                },
+                                grid: {
+                                    color: 'rgba(255,255,255,0.05)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: 'rgba(255,255,255,0.5)',
+                                    font: { size: 11 }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

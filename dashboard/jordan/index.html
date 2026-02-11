@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jordan — LinkedIn Growth Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: {
+                            900: '#0a0a0f',
+                            800: '#12121a',
+                            700: '#1a1a24',
+                            600: '#252532',
+                            500: '#323242',
+                        },
+                        accent: {
+                            blue: '#6366f1',
+                            cyan: '#22d3ee',
+                            purple: '#a855f7',
+                            green: '#22c55e',
+                            orange: '#f97316',
+                        }
+                    },
+                    backdropBlur: {
+                        xs: '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { scrollbar-width: thin; scrollbar-color: #323242 #12121a; }
+        *::-webkit-scrollbar { width: 6px; height: 6px; }
+        *::-webkit-scrollbar-track { background: #12121a; }
+        *::-webkit-scrollbar-thumb { background: #323242; border-radius: 3px; }
+        *::-webkit-scrollbar-thumb:hover { background: #4a4a5c; }
+        
+        .glass {
+            background: rgba(26, 26, 36, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-card {
+            background: linear-gradient(135deg, rgba(26, 26, 36, 0.9) 0%, rgba(18, 18, 26, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #22d3ee 50%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-border {
+            position: relative;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 1px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, #6366f1, #22d3ee, #a855f7);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        
+        .glow-blue { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+        .glow-cyan { box-shadow: 0 0 20px rgba(34, 211, 238, 0.3); }
+        .glow-purple { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
+        
+        .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .chart-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLine 2s ease-out forwards;
+        }
+        
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 40px rgba(99, 102, 241, 0.1);
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(168, 85, 247, 0.1) 100%);
+            border-left: 3px solid #6366f1;
+        }
+        
+        .typing-indicator span {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: #6366f1;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out both;
+            margin: 0 2px;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        .live-indicator {
+            animation: livePulse 2s ease-in-out infinite;
+        }
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .calendar-day:hover:not(.empty) {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+        
+        .post-card {
+            transition: all 0.3s ease;
+        }
+        .post-card:hover {
+            transform: translateX(4px);
+            border-left-color: #6366f1;
+        }
+        
+        input, textarea, select {
+            background: rgba(18, 18, 26, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-100 font-sans antialiased overflow-hidden">
+    <div x-data="jordanApp()" x-init="init()" class="flex h-screen">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 glass flex flex-col border-r border-white/5">
+            <div class="p-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center glow-blue">
+                        <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg tracking-tight">Jordan</h1>
+                        <p class="text-xs text-gray-400">LinkedIn Growth Agent</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="flex-1 px-3 space-y-1">
+                <template x-for="item in navigation" :key="item.id">
+                    <button 
+                        @click="activeTab = item.id"
+                        :class="{ 'active': activeTab === item.id }"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all">
+                        <i :data-lucide="item.icon" class="w-4 h-4"></i>
+                        <span x-text="item.label"></span>
+                        <span x-show="item.badge" x-text="item.badge" 
+                            class="ml-auto px-2 py-0.5 text-xs rounded-full bg-accent-blue/20 text-accent-blue"></span>
+                    </button>
+                </template>
+            </nav>
+            
+            <div class="p-4 border-t border-white/5">
+                <div class="glass-card rounded-xl p-4">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-2 h-2 rounded-full bg-accent-green live-indicator"></div>
+                        <span class="text-xs font-medium text-accent-green">Agent Active</span>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-2">Next action in <span x-text="nextActionTime" class="text-gray-300"></span></p>
+                    <div class="w-full bg-dark-600 rounded-full h-1.5">
+                        <div class="bg-gradient-to-r from-accent-blue to-accent-cyan h-1.5 rounded-full" style="width: 73%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 border-t border-white/5">
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=Alex+Chen&background=6366f1&color=fff" class="w-9 h-9 rounded-lg" alt="User">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium truncate">Alex Chen</p>
+                        <p class="text-xs text-gray-500">Pro Plan</p>
+                    </div>
+                    <button class="p-2 hover:bg-white/5 rounded-lg"><i data-lucide="settings" class="w-4 h-4 text-gray-400"></i></button>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="flex-1 overflow-hidden">
+            
+            <!-- Dashboard View -->
+            <div x-show="activeTab === 'dashboard'" x-cloak class="h-full overflow-y-auto p-8">
+                <header class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold">Dashboard</h2>
+                        <p class="text-gray-400 mt-1">Here's how Jordan is growing your authority today</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <button @click="showNewPost = true" class="px-4 py-2 bg-gradient-to-r from-accent-blue to-accent-purple rounded-lg font-medium text-sm hover:opacity-90 transition-opacity flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            New Post
+                        </button>
+                    </div>
+                </header>
+                
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card glass-card rounded-2xl p-6 transition-all">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="p-3 rounded-xl bg-accent-blue/10">
+                                <i data-lucide="eye" class="w-5 h-5 text-accent-blue"></i>
+                            </div>
+                            <span class="flex items-center gap-1 text-xs text-accent-green font-medium">
+                                <i data-lucide="trending-up" class="w-3 h-3"></i>
+                                +24.5%
+                            </span>
+                        </div>
+                        <p class="text-3xl font-bold mb-1">47.2K</p>
+                        <p class="text-sm text-gray-400">Impressions (30d)</p>
+                        <div class="mt-4 flex -space-x-2">
+                            <img class="w-6 h-6 rounded-full border-2 border-dark-700" src="https://ui-avatars.com/api/?name=User+1&background=random" alt="">
+                            <img class="w-6 h-6 rounded-full border-2 border-dark-700" src="https://ui-avatars.com/api/?name=User+2&background=random" alt="">
+                            <img class="w-6 h-6 rounded-full border-2 border-dark-700" src="https://ui-avatars.com/api/?name=User+3&background=random" alt="">
+                            <span class="w-6 h-6 rounded-full border-2 border-dark-700 bg-dark-600 flex items-center justify-center text-[10px] text-gray-400">+2.1k</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card glass-card rounded-2xl p-6 transition-all">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="p-3 rounded-xl bg-accent-purple/10">
+                                <i data-lucide="heart" class="w-5 h-5 text-accent-purple"></i>
+                            </div>
+                            <span class="flex items-center gap-1 text-xs text-accent-green font-medium">
+                                <i data-lucide="trending-up" class="w-3 h-3"></i>
+                                +18.2%
+                            </span>
+                        </div>
+                        <p class="text-3xl font-bold mb-1">4.8%</p>
+                        <p class="text-sm text-gray-400">Engagement Rate</p>
+                        <div class="mt-4 h-8 flex items-end gap-1">
+                            <div class="w-2 bg-accent-purple/30 rounded-t" style="height: 40%"></div>
+                            <div class="w-2 bg-accent-purple/40 rounded-t" style="height: 55%"></div>
+                            <div class="w-2 bg-accent-purple/50 rounded-t" style="height: 45%"></div>
+                            <div class="w-2 bg-accent-purple/60 rounded-t" style="height: 70%"></div>
+                            <div class="w-2 bg-accent-purple/70 rounded-t" style="height: 60%"></div>
+                            <div class="w-2 bg-accent-purple/80 rounded-t" style="height: 85%"></div>
+                            <div class="w-2 bg-accent-purple rounded-t" style="height: 100%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card glass-card rounded-2xl p-6 transition-all">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="p-3 rounded-xl bg-accent-cyan/10">
+                                <i data-lucide="message-square" class="w-5 h-5 text-accent-cyan"></i>
+                            </div>
+                            <span class="flex items-center gap-1 text-xs text-accent-green font-medium">
+                                <i data-lucide="trending-up" class="w-3 h-3"></i>
+                                +42.0%
+                            </span>
+                        </div>
+                        <p class="text-3xl font-bold mb-1">23</p>
+                        <p class="text-sm text-gray-400">Leads Generated</p>
+                        <div class="mt-4 flex items-center gap-2">
+                            <span class="px-2 py-1 rounded-md bg-accent-green/10 text-accent-green text-xs font-medium">12 qualified</span>
+                            <span class="px-2 py-1 rounded-md bg-accent-orange/10 text-accent-orange text-xs font-medium">8 warm</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card glass-card rounded-2xl p-6 transition-all">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="p-3 rounded-xl bg-accent-orange/10">
+                                <i data-lucide="users" class="w-5 h-5 text-accent-orange"></i>
+                            </div>
+                            <span class="flex items-center gap-1 text-xs text-accent-green font-medium">
+                                <i data-lucide="trending-up" class="w-3 h-3"></i>
+                                +156
+                            </span>
+                        </div>
+                        <p class="text-3xl font-bold mb-1">3,847</p>
+                        <p class="text-sm text-gray-400">Follower Growth</p>
+                        <div class="mt-4 flex items-center gap-2 text-xs text-gray-400">
+                            <i data-lucide="target" class="w-3 h-3"></i>
+                            <span>Target: 5K by March</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions & Recent Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Growth Chart -->
+                    <div class="lg:col-span-2 glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-semibold">Growth Trajectory</h3>
+                            <div class="flex items-center gap-2">
+                                <button class="px-3 py-1.5 text-xs rounded-lg bg-accent-blue/20 text-accent-blue font-medium">30 Days</button>
+                                <button class="px-3 py-1.5 text-xs rounded-lg text-gray-400 hover:bg-white/5">90 Days</button>
+                            </div>
+                        </div>
+                        <div class="h-64 relative">
+                            <svg viewBox="0 0 600 200" class="w-full h-full">
+                                <!-- Grid lines -->
+                                <line x1="0" y1="160" x2="600" y2="160" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+                                <line x1="0" y1="120" x2="600" y2="120" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+                                <line x1="0" y1="80" x2="600" y2="80" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+                                <line x1="0" y1="40" x2="600" y2="40" stroke="rgba(255,255,255,0.05)" stroke-dasharray="4"/>
+                                
+                                <!-- Area gradient -->
+                                <defs>
+                                    <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.3" />
+                                        <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0" />
+                                    </linearGradient>
+                                </defs>
+                                
+                                <!-- Area -->
+                                <path d="M0,180 Q50,170 100,160 T200,140 T300,100 T400,60 T500,40 T600,20 L600,180 L0,180 Z" 
+                                    fill="url(#areaGradient)" opacity="0.5"/>
+                                
+                                <!-- Main line -->
+                                <path d="M0,180 Q50,170 100,160 T200,140 T300,100 T400,60 T500,40 T600,20" 
+                                    fill="none" stroke="#6366f1" stroke-width="3" class="chart-line"/>
+                                
+                                <!-- Data points -->
+                                <circle cx="100" cy="160" r="4" fill="#6366f1" stroke="#0a0a0f" stroke-width="2"/>
+                                <circle cx="200" cy="140" r="4" fill="#6366f1" stroke="#0a0a0f" stroke-width="2"/>
+                                <circle cx="300" cy="100" r="4" fill="#6366f1" stroke="#0a0a0f" stroke-width="2"/>
+                                <circle cx="400" cy="60" r="4" fill="#6366f1" stroke="#0a0a0f" stroke-width="2"/>
+                                <circle cx="500" cy="40" r="4" fill="#22d3ee" stroke="#0a0a0f" stroke-width="2" class="animate-pulse"/>
+                            </svg>
+                        </div>
+                        <div class="flex justify-between mt-4 text-xs text-gray-500">
+                            <span>Jan 12</span>
+                            <span>Jan 19</span>
+                            <span>Jan 26</span>
+                            <span>Feb 2</span>
+                            <span>Feb 9</span>
+                            <span>Today</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Today's Schedule -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <h3 class="font-semibold mb-4">Today's Schedule</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent-green/5 border border-accent-green/10">
+                                <div class="w-2 h-2 rounded-full bg-accent-green mt-2"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">Post Published</p>
+                                    <p class="text-xs text-gray-400">9:00 AM • "The future of AI in sales..."</p>
+                                </div>
+                                <i data-lucide="check-circle" class="w-4 h-4 text-accent-green"></i>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent-blue/5 border border-accent-blue/10">
+                                <div class="w-2 h-2 rounded-full bg-accent-blue mt-2"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">Engagement Wave</p>
+                                    <p class="text-xs text-gray-400">2:00 PM • 25 comments scheduled</p>
+                                </div>
+                                <span class="text-xs text-gray-500">In 2h</span>
+                            </div>
+                            <div class="flex items-start gap-3 p-3 rounded-xl bg-accent-purple/5 border border-accent-purple/10">
+                                <div class="w-2 h-2 rounded-full bg-accent-purple mt-2"></div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">Content Draft</p>
+                                    <p class="text-xs text-gray-400">5:00 PM • Leadership story</p>
+                                </div>
+                                <span class="text-xs text-gray-500">In 5h</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 p-4 rounded-xl bg-gradient-to-br from-accent-blue/10 to-accent-purple/10 border border-white/5">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-accent-cyan"></i>
+                                <span class="text-sm font-medium">AI Insight</span>
+                            </div>
+                            <p class="text-xs text-gray-400">Your posts perform 43% better on Tuesdays. Consider scheduling your next thought leadership piece then.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Calendar View -->
+            <div x-show="activeTab === 'calendar'" x-cloak class="h-full overflow-y-auto p-8">
+                <header class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold">Content Calendar</h2>
+                        <p class="text-gray-400 mt-1">Plan and schedule your LinkedIn content</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button @click="prevMonth()" class="p-2 rounded-lg hover:bg-white/5"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                        <span class="text-lg font-medium min-w-[140px] text-center" x-text="currentMonthYear"></span>
+                        <button @click="nextMonth()" class="p-2 rounded-lg hover:bg-white/5"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button @click="showNewPost = true" class="ml-4 px-4 py-2 bg-gradient-to-r from-accent-blue to-accent-purple rounded-lg font-medium text-sm hover:opacity-90 flex items-center gap-2">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            Schedule Post
+                        </button>
+                    </div>
+                </header>
+                
+                <div class="glass-card rounded-2xl p-6">
+                    <div class="grid grid-cols-7 gap-2 mb-4">
+                        <template x-for="day in ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']">
+                            <div class="text-center text-xs font-medium text-gray-500 py-2" x-text="day"></div>
+                        </template>
+                    </div>
+                    <div class="grid grid-cols-7 gap-2">
+                        <template x-for="(day, index) in calendarDays" :key="index">
+                            <div 
+                                :class="{ 
+                                    'empty': !day.date,
+                                    'bg-accent-blue/20 border-accent-blue/30': day.hasPost,
+                                    'bg-dark-600/50': !day.hasPost && day.date
+                                }"
+                                class="calendar-day aspect-square rounded-xl border border-white/5 p-2 cursor-pointer transition-all">
+                                <template x-if="day.date">
+                                    <div class="h-full flex flex-col">
+                                        <span class="text-sm" :class="day.isToday ? 'font-bold text-accent-cyan' : 'text-gray-300'" x-text="day.date"></span>
+                                        <template x-if="day.hasPost">
+                                            <div class="mt-auto">
+                                                <div class="w-full h-1.5 rounded-full bg-gradient-to-r from-accent-blue to-accent-cyan mb-1"></div>
+                                                <p class="text-[10px] text-gray-400 truncate" x-text="day.postTitle"></p>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Posts List -->
+                <div class="mt-6 glass-card rounded-2xl p-6">
+                    <h3 class="font-semibold mb-4">Upcoming Content</h3>
+                    <div class="space-y-3">
+                        <template x-for="post in upcomingPosts" :key="post.id">
+                            <div class="post-card flex items-center gap-4 p-4 rounded-xl bg-dark-600/30 border-l-2 border-transparent cursor-pointer">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center"
+                                    :class="post.type === 'thought' ? 'from-accent-blue/20 to-accent-purple/20' : (post.type === 'story' ? 'from-accent-orange/20 to-accent-purple/20' : 'from-accent-green/20 to-accent-cyan/20')">
+                                    <i :data-lucide="post.icon" class="w-5 h-5" :class="post.type === 'thought' ? 'text-accent-blue' : (post.type === 'story' ? 'text-accent-orange' : 'text-accent-green')"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="font-medium text-sm" x-text="post.title"></h4>
+                                    <p class="text-xs text-gray-500 mt-0.5" x-text="post.scheduledFor"></p>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-1 rounded-md text-xs font-medium"
+                                        :class="post.status === 'scheduled' ? 'bg-accent-blue/10 text-accent-blue' : 'bg-accent-green/10 text-accent-green'"
+                                        x-text="post.status"></span>
+                                    <button class="p-2 hover:bg-white/5 rounded-lg"><i data-lucide="more-vertical" class="w-4 h-4 text-gray-400"></i></button>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Post Composer View -->
+            <div x-show="activeTab === 'composer' || showNewPost" x-cloak 
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                class="h-full overflow-y-auto p-8">
+                <header class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold">Post Composer</h2>
+                        <p class="text-gray-400 mt-1">Jordan will ghostwrite in your authentic voice</p>
+                    </div>
+                    <button @click="showNewPost = false; activeTab = 'dashboard'" class="p-2 hover:bg-white/5 rounded-lg">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </header>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Composer -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="glass-card rounded-2xl p-6">
+                            <div class="flex items-center gap-3 mb-6">
+                                <img src="https://ui-avatars.com/api/?name=Alex+Chen&background=6366f1&color=fff" class="w-10 h-10 rounded-xl" alt="">
+                                <div>
+                                    <p class="font-medium">Alex Chen</p>
+                                    <p class="text-xs text-gray-500">Product Lead at TechCorp</p>
+                                </div>
+                                <div class="ml-auto">
+                                    <select x-model="postType" class="px-3 py-2 rounded-lg text-sm">
+                                        <option value="thought">💭 Thought Leadership</option>
+                                        <option value="story">📖 Personal Story</option>
+                                        <option value="tips">💡 Quick Tips</option>
+                                        <option value="poll">📊 Poll</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <textarea 
+                                x-model="postContent"
+                                placeholder="What's on your mind? Or give Jordan a topic to write about..."
+                                class="w-full h-48 p-4 rounded-xl resize-none text-sm leading-relaxed"
+                            ></textarea>
+                            
+                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-white/5">
+                                <div class="flex items-center gap-2">
+                                    <button class="p-2 hover:bg-white/5 rounded-lg text-gray-400"><i data-lucide="image" class="w-4 h-4"></i></button>
+                                    <button class="p-2 hover:bg-white/5 rounded-lg text-gray-400"><i data-lucide="video" class="w-4 h-4"></i></button>
+                                    <button class="p-2 hover:bg-white/5 rounded-lg text-gray-400"><i data-lucide="bar-chart" class="w-4 h-4"></i></button>
+                                    <button class="p-2 hover:bg-white/5 rounded-lg text-gray-400"><i data-lucide="smile" class="w-4 h-4"></i></button>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xs text-gray-500" x-text="postContent.length + '/3000'"></span>
+                                    <button class="px-4 py-2 rounded-lg bg-dark-600 hover:bg-dark-500 text-sm font-medium">Save Draft</button>
+                                    <button 
+                                        @click="generateWithAI()"
+                                        :disabled="isGenerating"
+                                        class="px-4 py-2 rounded-lg bg-gradient-to-r from-accent-blue to-accent-purple text-sm font-medium hover:opacity-90 disabled:opacity-50 flex items-center gap-2">
+                                        <template x-if="isGenerating">
+                                            <div class="typing-indicator"><span></span><span></span><span></span></div>
+                                        </template>
+                                        <template x-if="!isGenerating">
+                                            <span><i data-lucide="sparkles" class="w-4 h-4 inline"></i> Write with Jordan</span>
+                                        </template>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI Generation Preview -->
+                        <div x-show="generatedContent" x-transition class="glass-card rounded-2xl p-6 border-accent-blue/20">
+                            <div class="flex items-center gap-2 mb-4">
+                                <div class="w-6 h-6 rounded-lg bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center">
+                                    <i data-lucide="zap" class="w-3 h-3 text-white"></i>
+                                </div>
+                                <span class="font-medium text-sm">Jordan's Draft</span>
+                                <span class="ml-auto px-2 py-0.5 rounded-full bg-accent-green/10 text-accent-green text-xs">98% voice match</span>
+                            </div>
+                            <div class="p-4 rounded-xl bg-dark-800/50 text-sm leading-relaxed text-gray-300" x-text="generatedContent"></div>
+                            <div class="flex items-center gap-2 mt-4">
+                                <button @click="acceptGenerated()" class="px-4 py-2 rounded-lg bg-accent-green/10 text-accent-green text-sm font-medium hover:bg-accent-green/20">Accept & Use</button>
+                                <button @click="regenerate()" class="px-4 py-2 rounded-lg hover:bg-white/5 text-sm text-gray-400">Regenerate</button>
+                                <button @click="tweakTone()" class="px-4 py-2 rounded-lg hover:bg-white/5 text-sm text-gray-400">Make it punchier</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sidebar Options -->
+                    <div class="space-y-6">
+                        <div class="glass-card rounded-2xl p-6">
+                            <h3 class="font-semibold mb-4">Publishing Options</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-xs text-gray-400 mb-2 block">Schedule For</label>
+                                    <input type="datetime-local" x-model="scheduleDate" class="w-full px-3 py-2 rounded-lg text-sm">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-gray-400 mb-2 block">Content Tone</label>
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <button class="px-3 py-2 rounded-lg text-xs bg-accent-blue/20 text-accent-blue border border-accent-blue/30">Professional</button>
+                                        <button class="px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-gray-400">Casual</button>
+                                        <button class="px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-gray-400">Inspiring</button>
+                                        <button class="px-3 py-2 rounded-lg text-xs hover:bg-white/5 text-gray-400">Controversial</button>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-between py-3 border-t border-white/5">
+                                    <span class="text-sm text-gray-400">Auto-engagement after post</span>
+                                    <button @click="autoEngage = !autoEngage" :class="autoEngage ? 'bg-accent-green' : 'bg-dark-500'" class="w-10 h-5 rounded-full transition-colors relative">
+                                        <span :class="autoEngage ? 'translate-x-5' : 'translate-x-1'" class="absolute top-1 w-3 h-3 bg-white rounded-full transition-transform"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card rounded-2xl p-6">
+                            <h3 class="font-semibold mb-4">Post Preview</h3>
+                            <div class="p-4 rounded-xl bg-dark-800/50">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <img src="https://ui-avatars.com/api/?name=Alex+Chen&background=6366f1&color=fff" class="w-8 h-8 rounded-lg" alt="">
+                                    <div>
+                                        <p class="text-sm font-medium">Alex Chen</p>
+                                        <p class="text-xs text-gray-500">2nd • 1d</p>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-gray-300 line-clamp-4" x-text="postContent || 'Your post will appear here...'"></p>
+                                <div class="flex items-center gap-4 mt-4 pt-3 border-t border-white/5 text-xs text-gray-500">
+                                    <span class="flex items-center gap-1"><i data-lucide="thumbs-up" class="w-3 h-3"></i> Like</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="message-circle" class="w-3 h-3"></i> Comment</span>
+                                    <span class="flex items-center gap-1"><i data-lucide="share-2" class="w-3 h-3"></i> Repost</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button @click="schedulePost()" class="w-full py-3 rounded-xl bg-gradient-to-r from-accent-blue to-accent-purple font-medium text-sm hover:opacity-90 transition-opacity">
+                            Schedule Post
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Engagement Queue View -->
+            <div x-show="activeTab === 'engagement'" x-cloak class="h-full overflow-y-auto p-8">
+                <header class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold">Engagement Queue</h2>
+                        <p class="text-gray-400 mt-1">Jordan's 24/7 networking activities</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="px-3 py-1.5 rounded-lg bg-accent-green/10 text-accent-green text-sm font-medium flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-accent-green live-indicator"></span>
+                            Active
+                        </span>
+                        <button class="p-2 hover:bg-white/5 rounded-lg"><i data-lucide="settings" class="w-5 h-5"></i></button>
+                    </div>
+                </header>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Queue Stats -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="glass-card rounded-xl p-4 text-center">
+                                <p class="text-2xl font-bold text-accent-blue">127</p>
+                                <p class="text-xs text-gray-400 mt-1">Comments Today</p>
+                            </div>
+                            <div class="glass-card rounded-xl p-4 text-center">
+                                <p class="text-2xl font-bold text-accent-purple">89</p>
+                                <p class="text-xs text-gray-400 mt-1">Likes Given</p>
+                            </div>
+                            <div class="glass-card rounded-xl p-4 text-center">
+                                <p class="text-2xl font-bold text-accent-cyan">34</p>
+                                <p class="text-xs text-gray-400 mt-1">Connections Sent</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Live Activity Feed -->
+                        <div class="glass-card rounded-2xl p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h3 class="font-semibold">Live Activity</h3>
+                                <div class="flex items-center gap-2 text-xs text-gray-500">
+                                    <span class="w-2 h-2 rounded-full bg-accent-green live-indicator"></span>
+                                    Real-time
+                                </div>
+                            </div>
+                            <div class="space-y-4 max-h-96 overflow-y-auto">
+                                <template x-for="activity in engagementQueue" :key="activity.id">
+                                    <div class="flex items-start gap-4 p-4 rounded-xl bg-dark-600/30 border border-white/5 hover:border-accent-blue/20 transition-all">
+                                        <img :src="activity.avatar" class="w-10 h-10 rounded-xl" alt="">
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-2 mb-1">
+                                                <span class="font-medium text-sm" x-text="activity.name"></span>
+                                                <span class="text-xs text-gray-500" x-text="activity.time"></span>
+                                            </div>
+                                            <p class="text-sm text-gray-400 mb-2" x-text="activity.postPreview"></p>
+                                            <div class="p-3 rounded-lg bg-dark-700/50 border-l-2 border-accent-blue">
+                                                <p class="text-sm" x-text="activity.comment"></p>
+                                            </div>
+                                            <div class="flex items-center gap-3 mt-2">
+                                                <span class="text-xs px-2 py-0.5 rounded-full" 
+                                                    :class="activity.status === 'sent' ? 'bg-accent-green/10 text-accent-green' : 'bg-accent-orange/10 text-accent-orange'"
+                                                    x-text="activity.status"></span>
+                                                <button class="text-xs text-gray-500 hover:text-white">Edit</button>
+                                                <button class="text-xs text-gray-500 hover:text-red-400">Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Targeting Settings -->
+                    <div class="space-y-6">
+                        <div class="glass-card rounded-2xl p-6">
+                            <h3 class="font-semibold mb-4">Engagement Targets</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between py-2">
+                                    <span class="text-sm">Industry Leaders</span>
+                                    <span class="text-xs text-accent-blue">Priority</span>
+                                </div>
+                                <div class="flex items-center justify-between py-2">
+                                    <span class="text-sm">Potential Clients</span>
+                                    <span class="text-xs text-accent-blue">Priority</span>
+                                </div>
+                                <div class="flex items-center justify-between py-2">
+                                    <span class="text-sm">Content Creators</span>
+                                    <span class="text-xs text-gray-500">Standard</span>
+                                </div>
+                                <div class="flex items-center justify-between py-2">
+                                    <span class="text-sm">Recruiters</span>
+                                    <span class="text-xs text-gray-500">Standard</span>
+                                </div>
+                            </div>
+                            <button class="w-full mt-4 py-2 rounded-lg border border-white/10 text-sm hover:bg-white/5">Edit Targets</button>
+                        </div>
+                        
+                        <div class="glass-card rounded-2xl p-6">
+                            <h3 class="font-semibold mb-4">Engagement Rules</h3>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-400">Max comments/hour</span>
+                                    <span class="text-sm font-medium">12</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-400">Response delay</span>
+                                    <span class="text-sm font-medium">2-5 min</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-400">Comment length</span>
+                                    <span class="text-sm font-medium">20-80 words</span>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm text-gray-400">AI personality</span>
+                                    <span class="text-sm font-medium">Thoughtful</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 rounded-xl bg-gradient-to-br from-accent-green/10 to-accent-blue/10 border border-accent-green/20">
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-accent-green mt-0.5"></i>
+                                <div>
+                                    <p class="font-medium text-sm">Safety First</p>
+                                    <p class="text-xs text-gray-400 mt-1">Jordan stays within LinkedIn's limits to protect your account. No spam, ever.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics View -->
+            <div x-show="activeTab === 'analytics'" x-cloak class="h-full overflow-y-auto p-8">
+                <header class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold">Analytics</h2>
+                        <p class="text-gray-400 mt-1">Deep insights into your LinkedIn growth</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button class="px-3 py-1.5 text-xs rounded-lg bg-accent-blue/20 text-accent-blue font-medium">7 Days</button>
+                        <button class="px-3 py-1.5 text-xs rounded-lg text-gray-400 hover:bg-white/5">30 Days</button>
+                        <button class="px-3 py-1.5 text-xs rounded-lg text-gray-400 hover:bg-white/5">90 Days</button>
+                    </div>
+                </header>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Impressions Chart -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-semibold">Impressions</h3>
+                            <div class="flex items-center gap-2 text-accent-green text-sm">
+                                <i data-lucide="trending-up" class="w-4 h-4"></i>
+                                +156%
+                            </div>
+                        </div>
+                        <div class="h-48">
+                            <svg viewBox="0 0 400 150" class="w-full h-full">
+                                <defs>
+                                    <linearGradient id="impressionsGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.4" />
+                                        <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M0,130 L50,120 L100,110 L150,90 L200,70 L250,50 L300,30 L350,20 L400,10 L400,150 L0,150 Z" 
+                                    fill="url(#impressionsGradient)"/>
+                                <path d="M0,130 L50,120 L100,110 L150,90 L200,70 L250,50 L300,30 L350,20 L400,10" 
+                                    fill="none" stroke="#6366f1" stroke-width="2"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Engagement Chart -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-semibold">Engagement Breakdown</h3>
+                            <div class="flex items-center gap-2 text-accent-cyan text-sm">
+                                <i data-lucide="trending-up" class="w-4 h-4"></i>
+                                +42%
+                            </div>
+                        </div>
+                        <div class="h-48 flex items-end justify-around">
+                            <div class="flex flex-col items-center gap-2">
+                                <div class="w-12 bg-accent-blue/60 rounded-t-lg" style="height: 80px"></div>
+                                <span class="text-xs text-gray-500">Likes</span>
+                                <span class="text-sm font-medium">1.2K</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2">
+                                <div class="w-12 bg-accent-purple/60 rounded-t-lg" style="height: 45px"></div>
+                                <span class="text-xs text-gray-500">Comments</span>
+                                <span class="text-sm font-medium">342</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2">
+                                <div class="w-12 bg-accent-cyan/60 rounded-t-lg" style="height: 60px"></div>
+                                <span class="text-xs text-gray-500">Shares</span>
+                                <span class="text-sm font-medium">189</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2">
+                                <div class="w-12 bg-accent-green/60 rounded-t-lg" style="height: 30px"></div>
+                                <span class="text-xs text-gray-500">Saves</span>
+                                <span class="text-sm font-medium">67</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Top Performing Posts -->
+                    <div class="lg:col-span-2 glass-card rounded-2xl p-6">
+                        <h3 class="font-semibold mb-6">Top Performing Content</h3>
+                        <div class="space-y-4">
+                            <template x-for="(post, index) in topPosts" :key="index">
+                                <div class="flex items-center gap-4 p-4 rounded-xl bg-dark-600/30">
+                                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-blue to-accent-purple flex items-center justify-center text-sm font-bold" x-text="index + 1"></div>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium line-clamp-1" x-text="post.title"></p>
+                                        <p class="text-xs text-gray-500" x-text="post.date"></p>
+                                    </div>
+                                    <div class="flex items-center gap-6">
+                                        <div class="text-center">
+                                            <p class="text-sm font-bold" x-text="post.impressions"></p>
+                                            <p class="text-xs text-gray-500">Impressions</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <p class="text-sm font-bold" x-text="post.engagement"></p>
+                                            <p class="text-xs text-gray-500">Engagement</p>
+                                        </div>
+                                        <div class="w-24 h-2 bg-dark-700 rounded-full overflow-hidden">
+                                            <div class="h-full rounded-full bg-gradient-to-r from-accent-blue to-accent-cyan" :style="`width: ${post.score}%`"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings View -->
+            <div x-show="activeTab === 'settings'" x-cloak class="h-full overflow-y-auto p-8">
+                <header class="mb-8">
+                    <h2 class="text-2xl font-bold">Settings</h2>
+                    <p class="text-gray-400 mt-1">Fine-tune Jordan to match your voice and goals</p>
+                </header>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Voice Tuning -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-2 rounded-xl bg-accent-blue/10">
+                                <i data-lucide="mic" class="w-5 h-5 text-accent-blue"></i>
+                            </div>
+                            <h3 class="font-semibold">Voice Tuning</h3>
+                        </div>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="text-sm text-gray-400 mb-3 block">Writing Style</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button class="p-3 rounded-xl border border-accent-blue/30 bg-accent-blue/5 text-left">
+                                        <p class="font-medium text-sm">Thought Leader</p>
+                                        <p class="text-xs text-gray-500 mt-1">Insightful, strategic, forward-thinking</p>
+                                    </button>
+                                    <button class="p-3 rounded-xl border border-white/10 hover:bg-white/5 text-left">
+                                        <p class="font-medium text-sm">Storyteller</p>
+                                        <p class="text-xs text-gray-500 mt-1">Personal, relatable, narrative-driven</p>
+                                    </button>
+                                    <button class="p-3 rounded-xl border border-white/10 hover:bg-white/5 text-left">
+                                        <p class="font-medium text-sm">Educator</p>
+                                        <p class="text-xs text-gray-500 mt-1">Clear, instructional, value-packed</p>
+                                    </button>
+                                    <button class="p-3 rounded-xl border border-white/10 hover:bg-white/5 text-left">
+                                        <p class="font-medium text-sm">Conversational</p>
+                                        <p class="text-xs text-gray-500 mt-1">Casual, friendly, approachable</p>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400 mb-3 block">Formality Level</label>
+                                <input type="range" min="0" max="100" value="65" class="w-full">
+                                <div class="flex justify-between text-xs text-gray-500 mt-2">
+                                    <span>Casual</span>
+                                    <span>Professional</span>
+                                    <span>Formal</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400 mb-3 block">Emoji Usage</label>
+                                <input type="range" min="0" max="100" value="30" class="w-full">
+                                <div class="flex justify-between text-xs text-gray-500 mt-2">
+                                    <span>Never</span>
+                                    <span>Sparingly</span>
+                                    <span>Often</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Targeting -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-2 rounded-xl bg-accent-purple/10">
+                                <i data-lucide="target" class="w-5 h-5 text-accent-purple"></i>
+                            </div>
+                            <h3 class="font-semibold">Audience Targeting</h3>
+                        </div>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="text-sm text-gray-400 mb-3 block">Target Industries</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1.5 rounded-full bg-accent-blue/20 text-accent-blue text-xs flex items-center gap-1">
+                                        Technology <i data-lucide="x" class="w-3 h-3 cursor-pointer"></i>
+                                    </span>
+                                    <span class="px-3 py-1.5 rounded-full bg-accent-purple/20 text-accent-purple text-xs flex items-center gap-1">
+                                        SaaS <i data-lucide="x" class="w-3 h-3 cursor-pointer"></i>
+                                    </span>
+                                    <span class="px-3 py-1.5 rounded-full bg-accent-cyan/20 text-accent-cyan text-xs flex items-center gap-1">
+                                        Finance <i data-lucide="x" class="w-3 h-3 cursor-pointer"></i>
+                                    </span>
+                                    <button class="px-3 py-1.5 rounded-full border border-dashed border-white/20 text-gray-500 text-xs hover:bg-white/5">+ Add</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400 mb-3 block">Job Titles</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1.5 rounded-full bg-dark-600 text-gray-300 text-xs">Founder</span>
+                                    <span class="px-3 py-1.5 rounded-full bg-dark-600 text-gray-300 text-xs">CEO</span>
+                                    <span class="px-3 py-1.5 rounded-full bg-dark-600 text-gray-300 text-xs">VP</span>
+                                    <span class="px-3 py-1.5 rounded-full bg-dark-600 text-gray-300 text-xs">Director</span>
+                                    <button class="px-3 py-1.5 rounded-full border border-dashed border-white/20 text-gray-500 text-xs hover:bg-white/5">+ Add</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-sm text-gray-400 mb-3 block">Geographic Focus</label>
+                                <select class="w-full px-3 py-2 rounded-lg text-sm">
+                                    <option>North America</option>
+                                    <option>Europe</option>
+                                    <option>Asia-Pacific</option>
+                                    <option>Global</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Content Preferences -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-2 rounded-xl bg-accent-cyan/10">
+                                <i data-lucide="file-text" class="w-5 h-5 text-accent-cyan"></i>
+                            </div>
+                            <h3 class="font-semibold">Content Preferences</h3>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-sm">Auto-post best time</span>
+                                <button class="w-10 h-5 rounded-full bg-accent-green relative">
+                                    <span class="absolute top-1 right-1 w-3 h-3 bg-white rounded-full"></span>
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-sm">Include hashtags</span>
+                                <button class="w-10 h-5 rounded-full bg-accent-green relative">
+                                    <span class="absolute top-1 right-1 w-3 h-3 bg-white rounded-full"></span>
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-sm">Tag relevant people</span>
+                                <button class="w-10 h-5 rounded-full bg-dark-500 relative">
+                                    <span class="absolute top-1 left-1 w-3 h-3 bg-white rounded-full"></span>
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-sm">Request approvals</span>
+                                <button class="w-10 h-5 rounded-full bg-accent-green relative">
+                                    <span class="absolute top-1 right-1 w-3 h-3 bg-white rounded-full"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account Settings -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-2 rounded-xl bg-accent-orange/10">
+                                <i data-lucide="shield" class="w-5 h-5 text-accent-orange"></i>
+                            </div>
+                            <h3 class="font-semibold">Account & Billing</h3>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="p-4 rounded-xl bg-gradient-to-r from-accent-blue/10 to-accent-purple/10 border border-accent-blue/20">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium">Pro Plan</p>
+                                        <p class="text-xs text-gray-400">$1,000/month • Renews Mar 15</p>
+                                    </div>
+                                    <span class="px-2 py-1 rounded-lg bg-accent-green/10 text-accent-green text-xs">Active</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-sm text-gray-400">LinkedIn Account</span>
+                                <span class="text-sm">@alexchen</span>
+                            </div>
+                            <div class="flex items-center justify-between py-2">
+                                <span class="text-sm text-gray-400">Connected</span>
+                                <span class="flex items-center gap-1 text-accent-green text-sm"><i data-lucide="check-circle" class="w-4 h-4"></i> Verified</span>
+                            </div>
+                            <button class="w-full py-2 rounded-lg border border-white/10 text-sm hover:bg-white/5 mt-4">Manage Subscription</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Lead Inbox View -->
+            <div x-show="activeTab === 'inbox'" x-cloak class="h-full overflow-y-auto p-8">
+                <header class="flex items-center justify-between mb-8">
+                    <div>
+                        <h2 class="text-2xl font-bold">Lead Inbox</h2>
+                        <p class="text-gray-400 mt-1">Inbound opportunities from your content</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1.5 rounded-lg bg-accent-blue/20 text-accent-blue text-sm font-medium">12 New</span>
+                        <button class="p-2 hover:bg-white/5 rounded-lg"><i data-lucide="filter" class="w-5 h-5"></i></button>
+                    </div>
+                </header>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
+                    <!-- Lead List -->
+                    <div class="glass-card rounded-2xl overflow-hidden">
+                        <div class="p-4 border-b border-white/5">
+                            <div class="flex items-center gap-2">
+                                <button class="flex-1 py-2 rounded-lg bg-accent-blue/20 text-accent-blue text-sm font-medium">All</button>
+                                <button class="flex-1 py-2 rounded-lg hover:bg-white/5 text-gray-400 text-sm">Qualified</button>
+                                <button class="flex-1 py-2 rounded-lg hover:bg-white/5 text-gray-400 text-sm">Replied</button>
+                            </div>
+                        </div>
+                        <div class="overflow-y-auto h-[calc(100%-60px)]">
+                            <template x-for="lead in leads" :key="lead.id">
+                                <div 
+                                    @click="selectedLead = lead"
+                                    :class="{ 'bg-accent-blue/10 border-l-2 border-accent-blue': selectedLead && selectedLead.id === lead.id }"
+                                    class="p-4 border-b border-white/5 hover:bg-white/5 cursor-pointer transition-all">
+                                    <div class="flex items-start gap-3">
+                                        <img :src="lead.avatar" class="w-10 h-10 rounded-xl" alt="">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="flex items-center justify-between">
+                                                <p class="font-medium text-sm truncate" x-text="lead.name"></p>
+                                                <span x-show="lead.unread" class="w-2 h-2 rounded-full bg-accent-blue"></span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 truncate" x-text="lead.title"></p>
+                                            <p class="text-xs text-gray-400 mt-1 line-clamp-2" x-text="lead.lastMessage"></p>
+                                            <div class="flex items-center gap-2 mt-2">
+                                                <span class="px-2 py-0.5 rounded-full text-[10px] font-medium"
+                                                    :class="lead.quality === 'hot' ? 'bg-accent-orange/10 text-accent-orange' : (lead.quality === 'warm' ? 'bg-accent-cyan/10 text-accent-cyan' : 'bg-gray-500/10 text-gray-400')"
+                                                    x-text="lead.quality"></span>
+                                                <span class="text-[10px] text-gray-500" x-text="lead.time"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Lead Detail -->
+                    <div class="lg:col-span-2 glass-card rounded-2xl overflow-hidden flex flex-col">
+                        <template x-if="selectedLead">
+                            <div class="h-full flex flex-col">
+                                <div class="p-6 border-b border-white/5">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex items-center gap-4">
+                                            <img :src="selectedLead.avatar" class="w-14 h-14 rounded-2xl" alt="">
+                                            <div>
+                                                <h3 class="font-semibold text-lg" x-text="selectedLead.name"></h3>
+                                                <p class="text-sm text-gray-400" x-text="selectedLead.title"></p>
+                                                <p class="text-xs text-gray-500" x-text="selectedLead.company"></p>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <button class="px-4 py-2 rounded-lg bg-accent-blue text-sm font-medium">Reply</button>
+                                            <button class="p-2 hover:bg-white/5 rounded-lg"><i data-lucide="more-vertical" class="w-5 h-5"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-4 mt-4">
+                                        <div class="flex items-center gap-1 text-xs text-gray-400">
+                                            <i data-lucide="linkedin" class="w-3 h-3"></i>
+                                            <span>Connected 2 days ago</span>
+                                        </div>
+                                        <div class="flex items-center gap-1 text-xs text-gray-400">
+                                            <i data-lucide="message-circle" class="w-3 h-3"></i>
+                                            <span>3 messages</span>
+                                        </div>
+                                        <div class="flex items-center gap-1 text-xs text-accent-green">
+                                            <i data-lucide="zap" class="w-3 h-3"></i>
+                                            <span>High Intent (92%)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-1 overflow-y-auto p-6 space-y-4">
+                                    <div class="flex gap-3">
+                                        <img :src="selectedLead.avatar" class="w-8 h-8 rounded-lg" alt="">
+                                        <div class="flex-1">
+                                            <div class="p-4 rounded-2xl rounded-tl-none bg-dark-600/50">
+                                                <p class="text-sm" x-text="selectedLead.lastMessage"></p>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1 ml-1" x-text="selectedLead.time"></p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-3 justify-end">
+                                        <div class="flex-1 max-w-md">
+                                            <div class="p-4 rounded-2xl rounded-tr-none bg-accent-blue/20 border border-accent-blue/20">
+                                                <p class="text-sm">Thanks for reaching out! I'd love to learn more about what you're working on. Are you free for a quick call next week?</p>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1 mr-1 text-right">Yesterday</p>
+                                        </div>
+                                        <img src="https://ui-avatars.com/api/?name=Alex+Chen&background=6366f1&color=fff" class="w-8 h-8 rounded-lg" alt="">
+                                    </div>
+                                </div>
+                                <div class="p-4 border-t border-white/5">
+                                    <div class="flex items-center gap-3">
+                                        <input type="text" placeholder="Type your reply..." class="flex-1 px-4 py-3 rounded-xl text-sm">
+                                        <button class="p-3 rounded-xl bg-accent-blue hover:bg-accent-blue/80">
+                                            <i data-lucide="send" class="w-5 h-5"></i>
+                                        </button>
+                                    </div>
+                                    <div class="flex items-center gap-2 mt-3">
+                                        <button class="px-3 py-1.5 rounded-lg bg-dark-600/50 text-xs hover:bg-dark-500">Schedule meeting</button>
+                                        <button class="px-3 py-1.5 rounded-lg bg-dark-600/50 text-xs hover:bg-dark-500">Send Calendly</button>
+                                        <button class="px-3 py-1.5 rounded-lg bg-dark-600/50 text-xs hover:bg-dark-500">Mark as qualified</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <template x-if="!selectedLead">
+                            <div class="h-full flex flex-col items-center justify-center text-gray-500">
+                                <i data-lucide="inbox" class="w-16 h-16 mb-4 opacity-50"></i>
+                                <p>Select a lead to view details</p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+        
+    </div>
+    
+    <script>
+        function jordanApp() {
+            return {
+                activeTab: 'dashboard',
+                showNewPost: false,
+                isGenerating: false,
+                postContent: '',
+                generatedContent: '',
+                postType: 'thought',
+                autoEngage: true,
+                scheduleDate: new Date().toISOString().slice(0, 16),
+                selectedLead: null,
+                nextActionTime: '14m',
+                
+                navigation: [
+                    { id: 'dashboard', icon: 'layout-dashboard', label: 'Dashboard' },
+                    { id: 'calendar', icon: 'calendar', label: 'Content Calendar' },
+                    { id: 'composer', icon: 'pen-tool', label: 'Post Composer' },
+                    { id: 'engagement', icon: 'message-circle', label: 'Engagement Queue' },
+                    { id: 'analytics', icon: 'bar-chart-3', label: 'Analytics' },
+                    { id: 'inbox', icon: 'inbox', label: 'Lead Inbox', badge: '3' },
+                    { id: 'settings', icon: 'settings', label: 'Settings' },
+                ],
+                
+                // Calendar data
+                currentDate: new Date(),
+                calendarDays: [],
+                currentMonthYear: '',
+                
+                // Upcoming posts
+                upcomingPosts: [
+                    { id: 1, title: 'Why I stopped chasing promotions', type: 'story', scheduledFor: 'Tomorrow, 9:00 AM', status: 'scheduled', icon: 'book-open' },
+                    { id: 2, title: '3 AI tools that changed my workflow', type: 'tips', scheduledFor: 'Thu, 2:00 PM', status: 'draft', icon: 'lightbulb' },
+                    { id: 3, title: 'The real cost of bad hires', type: 'thought', scheduledFor: 'Fri, 9:00 AM', status: 'scheduled', icon: 'brain' },
+                ],
+                
+                // Engagement queue
+                engagementQueue: [
+                    { id: 1, name: 'Sarah Mitchell', avatar: 'https://ui-avatars.com/api/?name=Sarah+Mitchell&background=random', postPreview: 'Just published my thoughts on remote work...', comment: 'Really insightful perspective, Sarah. The shift to async communication has been game-changing for our team productivity.', time: '2 min ago', status: 'sent' },
+                    { id: 2, name: 'David Park', avatar: 'https://ui-avatars.com/api/?name=David+Park&background=random', postPreview: '10 years in tech, here\'s what I learned...', comment: 'The point about failing fast resonates deeply. My biggest growth came from the projects that didn\'t work out.', time: '5 min ago', status: 'pending' },
+                    { id: 3, name: 'Emma Watson', avatar: 'https://ui-avatars.com/api/?name=Emma+Watson&background=random', postPreview: 'Hiring tip: Look for curiosity...', comment: 'Couldn\'t agree more. We\'ve started testing for learning agility in our interviews and it\'s transformed our hiring.', time: '8 min ago', status: 'sent' },
+                ],
+                
+                // Top posts
+                topPosts: [
+                    { title: 'I interviewed 50 founders. Here\'s what they all had in common...', date: 'Feb 5, 2026', impressions: '12.4K', engagement: '847', score: 95 },
+                    { title: 'The 4-hour workday experiment (results)', date: 'Jan 28, 2026', impressions: '9.8K', engagement: '623', score: 78 },
+                    { title: 'Stop asking for permission', date: 'Jan 20, 2026', impressions: '8.2K', engagement: '512', score: 65 },
+                ],
+                
+                // Leads
+                leads: [
+                    { id: 1, name: 'Michael Roberts', title: 'VP of Engineering', company: 'TechScale Inc.', avatar: 'https://ui-avatars.com/api/?name=Michael+Roberts&background=random', lastMessage: 'Your post about team scaling really hit home. We\'re facing similar challenges...', time: '10 min ago', quality: 'hot', unread: true },
+                    { id: 2, name: 'Jennifer Liu', title: 'Founder & CEO', company: 'GrowthPath', avatar: 'https://ui-avatars.com/api/?name=Jennifer+Liu&background=random', lastMessage: 'Would love to connect and learn more about your approach to product-led growth.', time: '1 hour ago', quality: 'warm', unread: true },
+                    { id: 3, name: 'Marcus Johnson', title: 'Director of Sales', company: 'CloudFirst', avatar: 'https://ui-avatars.com/api/?name=Marcus+Johnson&background=random', lastMessage: 'Thanks for the connection! I\'d be interested in discussing potential partnership...', time: '3 hours ago', quality: 'warm', unread: false },
+                    { id: 4, name: 'Amanda Chen', title: 'Product Manager', company: 'InnovateCo', avatar: 'https://ui-avatars.com/api/?name=Amanda+Chen&background=random', lastMessage: 'Great insights on the AI post. Do you have any book recommendations?', time: '5 hours ago', quality: 'cold', unread: false },
+                ],
+                
+                init() {
+                    this.generateCalendar();
+                    this.$nextTick(() => {
+                        lucide.createIcons();
+                    });
+                    
+                    // Simulate countdown
+                    setInterval(() => {
+                        const mins = parseInt(this.nextActionTime);
+                        if (mins > 0) {
+                            this.nextActionTime = (mins - 1) + 'm';
+                        } else {
+                            this.nextActionTime = 'now';
+                        }
+                    }, 60000);
+                },
+                
+                generateCalendar() {
+                    const year = this.currentDate.getFullYear();
+                    const month = this.currentDate.getMonth();
+                    this.currentMonthYear = new Date(year, month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                    
+                    const firstDay = new Date(year, month, 1).getDay();
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+                    
+                    this.calendarDays = [];
+                    
+                    // Empty slots
+                    for (let i = 0; i < firstDay; i++) {
+                        this.calendarDays.push({ date: null });
+                    }
+                    
+                    // Days with sample posts
+                    const postDays = [3, 5, 8, 12, 15, 18, 22, 25, 28];
+                    for (let i = 1; i <= daysInMonth; i++) {
+                        const hasPost = postDays.includes(i);
+                        this.calendarDays.push({
+                            date: i,
+                            isToday: i === new Date().getDate() && month === new Date().getMonth(),
+                            hasPost: hasPost,
+                            postTitle: hasPost ? 'Scheduled post' : null
+                        });
+                    }
+                },
+                
+                prevMonth() {
+                    this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+                    this.generateCalendar();
+                },
+                
+                nextMonth() {
+                    this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+                    this.generateCalendar();
+                },
+                
+                generateWithAI() {
+                    this.isGenerating = true;
+                    setTimeout(() => {
+                        this.generatedContent = "After 15 years in product, I've learned that the best features aren't the ones users ask for—they're the ones they didn't know they needed.\\n\\nThe most successful product teams I've worked with spend 80% of their time understanding the problem and only 20% building the solution.\\n\\nWhat's your ratio?";
+                        this.isGenerating = false;
+                    }, 2000);
+                },
+                
+                acceptGenerated() {
+                    this.postContent = this.generatedContent;
+                    this.generatedContent = '';
+                },
+                
+                regenerate() {
+                    this.generateWithAI();
+                },
+                
+                tweakTone() {
+                    this.isGenerating = true;
+                    setTimeout(() => {
+                        this.generatedContent = "Here's the brutal truth: most product teams are building the wrong things.\\n\\nThey chase feature requests like dogs chase cars. Meanwhile, the real wins come from solving problems customers can't even articulate yet.\\n\\nI've seen teams 10x their impact by flipping their ratio: 80% deep research, 20% execution.\\n\\nStop building faster. Start understanding deeper.";
+                        this.isGenerating = false;
+                    }, 1500);
+                },
+                
+                schedulePost() {
+                    alert('Post scheduled successfully!');
+                    this.showNewPost = false;
+                    this.activeTab = 'dashboard';
+                    this.postContent = '';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

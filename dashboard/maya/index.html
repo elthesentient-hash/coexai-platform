@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maya — Content Repurposing Agent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        maya: {
+                            purple: '#8B5CF6',
+                            violet: '#7C3AED',
+                            cyan: '#06B6D4',
+                            pink: '#EC4899',
+                            dark: '#0F0F1A',
+                            darker: '#050508',
+                            glass: 'rgba(255, 255, 255, 0.05)',
+                            glassBorder: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['SF Pro Display', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'spin-slow': 'spin 3s linear infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% 0' },
+                            '100%': { backgroundPosition: '200% 0' }
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)' },
+                            '100%': { boxShadow: '0 0 40px rgba(139, 92, 246, 0.6), 0 0 60px rgba(236, 72, 153, 0.3)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #050508 0%, #0a0a14 25%, #0f0f1a 50%, #1a0f2e 75%, #0f0f1a 100%);
+            min-height: 100vh;
+        }
+        
+        .galaxy-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .nebula {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            animation: nebula-float 20s ease-in-out infinite;
+        }
+        
+        @keyframes nebula-float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-card-hover:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 50%, #06B6D4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-border {
+            position: relative;
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(236, 72, 153, 0.5), rgba(6, 182, 212, 0.5));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        
+        .magical-button {
+            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 50%, #EC4899 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .magical-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .magical-button:hover::before {
+            left: 100%;
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.5s ease-in-out;
+        }
+        
+        .upload-zone {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+            border: 2px dashed rgba(139, 92, 246, 0.3);
+        }
+        
+        .upload-zone.dragover {
+            border-color: #8B5CF6;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .template-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+        }
+        
+        .processing-pulse {
+            animation: processing-glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes processing-glow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.3), inset 0 0 20px rgba(139, 92, 246, 0.1);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(139, 92, 246, 0.5), 0 0 60px rgba(236, 72, 153, 0.3), inset 0 0 30px rgba(139, 92, 246, 0.2);
+            }
+        }
+        
+        .sidebar-item {
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar-item:hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2) 0%, transparent 100%);
+            border-left: 3px solid #8B5CF6;
+        }
+        
+        .output-item {
+            transition: all 0.3s ease;
+        }
+        
+        .output-item:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="text-white antialiased" x-data="mayaApp()">
+    <!-- Galaxy Background -->
+    <div class="galaxy-bg">
+        <div class="nebula w-96 h-96 bg-purple-600 top-0 left-0"></div>
+        <div class="nebula w-80 h-80 bg-pink-600 top-1/4 right-0"></div>
+        <div class="nebula w-72 h-72 bg-cyan-600 bottom-0 left-1/3"></div>
+        <div id="stars-container"></div>
+    </div>
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 glass-card flex flex-col fixed h-full z-20">
+            <div class="p-6 border-b border-white/5">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl magical-button flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-xl tracking-tight">Maya</h1>
+                        <p class="text-xs text-gray-400">Content Agent</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="flex-1 py-6 px-3 space-y-1">
+                <button @click="activeTab = 'dashboard'" 
+                        :class="{'active': activeTab === 'dashboard'}"
+                        class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                    <span class="text-sm font-medium">Dashboard</span>
+                </button>
+                
+                <button @click="activeTab = 'upload'" 
+                        :class="{'active': activeTab === 'upload'}"
+                        class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                    </svg>
+                    <span class="text-sm font-medium">Upload</span>
+                </button>
+                
+                <button @click="activeTab = 'gallery'" 
+                        :class="{'active': activeTab === 'gallery'}"
+                        class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <span class="text-sm font-medium">Output Gallery</span>
+                    <span x-show="outputs.length > 0" x-text="outputs.length" class="ml-auto bg-purple-600 text-xs px-2 py-0.5 rounded-full"></span>
+                </button>
+                
+                <button @click="activeTab = 'templates'" 
+                        :class="{'active': activeTab === 'templates'}"
+                        class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                    <span class="text-sm font-medium">Templates</span>
+                </button>
+                
+                <button @click="activeTab = 'stats'" 
+                        :class="{'active': activeTab === 'stats'}"
+                        class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    <span class="text-sm font-medium">Usage Stats</span>
+                </button>
+                
+                <button @click="activeTab = 'settings'" 
+                        :class="{'active': activeTab === 'settings'}"
+                        class="sidebar-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span class="text-sm font-medium">Settings</span>
+                </button>
+            </nav>
+            
+            <div class="p-4 border-t border-white/5">
+                <div class="glass-card rounded-xl p-4">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                        <span class="text-xs text-gray-400">Local Mac Online</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm font-semibold">
+                            JD
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">John Doe</p>
+                            <p class="text-xs text-gray-400">Pro Plan</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 ml-64 p-8">
+            <!-- Dashboard Tab -->
+            <div x-show="activeTab === 'dashboard'" x-transition.opacity.duration.300ms>
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold mb-2">Dashboard</h2>
+                    <p class="text-gray-400">Transform your content into multiple formats with AI magic</p>
+                </header>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="glass-card glass-card-hover rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                </svg>
+                            </div>
+                            <span class="text-green-400 text-sm font-medium">+12%</span>
+                        </div>
+                        <p class="text-3xl font-bold" x-text="stats.videosProcessed">247</p>
+                        <p class="text-gray-400 text-sm">Videos Processed</p>
+                    </div>
+                    
+                    <div class="glass-card glass-card-hover rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <span class="text-green-400 text-sm font-medium">+8%</span>
+                        </div>
+                        <p class="text-3xl font-bold" x-text="stats.assetsGenerated">1,842</p>
+                        <p class="text-gray-400 text-sm">Assets Generated</p>
+                    </div>
+                    
+                    <div class="glass-card glass-card-hover rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-pink-500/20 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <span class="text-green-400 text-sm font-medium">+23%</span>
+                        </div>
+                        <p class="text-3xl font-bold" x-text="stats.hoursSaved">96h</p>
+                        <p class="text-gray-400 text-sm">Time Saved</p>
+                    </div>
+                    
+                    <div class="glass-card glass-card-hover rounded-2xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                                <svg class="w-6 h-6 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <span class="text-gray-400 text-sm font-medium">Credits</span>
+                        </div>
+                        <p class="text-3xl font-bold" x-text="stats.creditsLeft">847</p>
+                        <p class="text-gray-400 text-sm">Credits Left</p>
+                    </div>
+                </div>
+
+                <!-- Quick Upload -->
+                <div class="glass-card rounded-2xl p-8 mb-8">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold mb-2 gradient-text">Ready to Create Magic?</h3>
+                        <p class="text-gray-400">Drop a video or paste a YouTube URL to get started</p>
+                    </div>
+                    
+                    <div @dragover.prevent="dragOver = true" 
+                         @dragleave.prevent="dragOver = false"
+                         @drop.prevent="handleDrop($event)"
+                         :class="{'dragover': dragOver}"
+                         class="upload-zone rounded-2xl p-12 text-center cursor-pointer transition-all duration-300"
+                         @click="$refs.fileInput.click()">
+                        <input type="file" x-ref="fileInput" class="hidden" accept="video/*" @change="handleFileSelect($event)">
+                        <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-500/20 to-cyan-500/20 flex items-center justify-center animate-float">
+                            <svg class="w-10 h-10 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                        </div>
+                        <p class="text-lg font-medium mb-2">Drop your video here</p>
+                        <p class="text-gray-400 text-sm mb-4">or click to browse files</p>
+                        <div class="flex items-center justify-center gap-4">
+                            <span class="text-xs text-gray-500">Supports MP4, MOV, MKV up to 2GB</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex items-center gap-4">
+                        <div class="flex-1 h-px bg-white/10"></div>
+                        <span class="text-gray-500 text-sm">or paste a YouTube URL</span>
+                        <div class="flex-1 h-px bg-white/10"></div>
+                    </div>
+                    
+                    <div class="mt-6 flex gap-4">
+                        <input type="text" 
+                               x-model="youtubeUrl" 
+                               placeholder="https://youtube.com/watch?v=..." 
+                               class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500/50 focus:bg-white/10 transition-all">
+                        <button @click="processYouTube()" 
+                                :disabled="!youtubeUrl"
+                                class="magical-button px-6 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed">
+                            Process
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Outputs -->
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold">Recent Creations</h3>
+                        <button @click="activeTab = 'gallery'" class="text-purple-400 hover:text-purple-300 text-sm font-medium">View All →</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <template x-for="output in outputs.slice(0, 3)" :key="output.id">
+                            <div class="glass-card glass-card-hover rounded-2xl overflow-hidden output-item cursor-pointer" @click="viewOutput(output)">
+                                <div class="aspect-video relative overflow-hidden">
+                                    <img :src="output.thumbnail" class="w-full h-full object-cover" :alt="output.title">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                    <div class="absolute bottom-3 left-3 right-3">
+                                        <span class="text-xs bg-purple-600 px-2 py-1 rounded" x-text="output.type"></span>
+                                        <p class="font-medium mt-1 truncate" x-text="output.title"></p>
+                                    </div>
+                                    <div class="absolute top-3 right-3">
+                                        <span class="text-xs bg-black/50 px-2 py-1 rounded backdrop-blur-sm" x-text="output.duration"></span>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex items-center justify-between text-sm text-gray-400">
+                                        <span x-text="output.createdAt"></span>
+                                        <span x-text="output.size"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Tab -->
+            <div x-show="activeTab === 'upload'" x-transition.opacity.duration.300ms>
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold mb-2">Upload Content</h2>
+                    <p class="text-gray-400">Upload or import your content for repurposing</p>
+                </header>
+
+                <!-- Upload Area -->
+                <div class="glass-card rounded-2xl p-8 mb-8">
+                    <div @dragover.prevent="dragOver = true" 
+                         @dragleave.prevent="dragOver = false"
+                         @drop.prevent="handleDrop($event)"
+                         :class="{'dragover': dragOver, 'processing-pulse': isUploading}"
+                         class="upload-zone rounded-2xl p-16 text-center cursor-pointer transition-all duration-300 border-2 border-dashed"
+                         @click="$refs.fileInput.click()">
+                        <input type="file" x-ref="fileInput" class="hidden" accept="video/*,audio/*" @change="handleFileSelect($event)">
+                        
+                        <template x-if="!isUploading">
+                            <div>
+                                <div class="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-500/20 to-cyan-500/20 flex items-center justify-center animate-float">
+                                    <svg class="w-12 h-12 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                    </svg>
+                                </div>
+                                <p class="text-2xl font-semibold mb-2">Drop your content here</p>
+                                <p class="text-gray-400 mb-6">or click to browse files</p>
+                                <div class="flex items-center justify-center gap-6 text-sm text-gray-500">
+                                    <span class="flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        Video (MP4, MOV)
+                                    </span>
+                                    <span class="flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                                        </svg>
+                                        Audio (MP3, WAV)
+                                    </span>
+                                </div>
+                            </div>
+                        </template>
+                        
+                        <template x-if="isUploading">
+                            <div>
+                                <div class="w-24 h-24 mx-auto mb-6 relative">
+                                    <svg class="progress-ring w-24 h-24" viewBox="0 0 100 100">
+                                        <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(139, 92, 246, 0.2)" stroke-width="6"/>
+                                        <circle cx="50" cy="50" r="45" fill="none" stroke="#8B5CF6" stroke-width="6" 
+                                                stroke-dasharray="283" stroke-dashoffset="283" 
+                                                stroke-linecap="round"
+                                                class="progress-ring-circle"
+                                                :style="`stroke-dashoffset: ${283 - (283 * uploadProgress / 100)}`"/>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-2xl font-bold" x-text="Math.round(uploadProgress) + '%'"></span>
+                                    </div>
+                                </div>
+                                <p class="text-xl font-medium mb-2" x-text="uploadStatus"></p>
+                                <p class="text-gray-400 text-sm" x-text="uploadFileName"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- YouTube Import -->
+                <div class="glass-card rounded-2xl p-8 mb-8">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-red-400" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold">YouTube Import</h3>
+                            <p class="text-gray-400 text-sm">Paste a YouTube URL to import and process</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <input type="text" 
+                               x-model="youtubeUrl" 
+                               placeholder="https://youtube.com/watch?v=... or https://youtu.be/..." 
+                               class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500/50 focus:bg-white/10 transition-all">
+                        <button @click="processYouTube()" 
+                                :disabled="!youtubeUrl"
+                                class="magical-button px-6 py-3 rounded-xl font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                            </svg>
+                            Import
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Processing Options -->
+                <div class="glass-card rounded-2xl p-8">
+                    <h3 class="text-lg font-semibold mb-6">Processing Options</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <label class="template-card rounded-xl p-5 cursor-pointer border border-transparent hover:border-purple-500/30 transition-all"
+                               :class="{'border-purple-500 bg-purple-500/10': selectedFormats.includes('shorts')}">
+                            <div class="flex items-start gap-4">
+                                <input type="checkbox" x-model="selectedFormats" value="shorts" class="mt-1 w-5 h-5 rounded border-gray-600 text-purple-600 focus:ring-purple-500 bg-white/10">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <svg class="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                        </svg>
+                                        <span class="font-medium">Shorts/Reels</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400">Auto-generate vertical 9:16 clips with captions</p>
+                                </div>
+                            </div>
+                        </label>
+                        
+                        <label class="template-card rounded-xl p-5 cursor-pointer border border-transparent hover:border-purple-500/30 transition-all"
+                               :class="{'border-purple-500 bg-purple-500/10': selectedFormats.includes('carousel')}">
+                            <div class="flex items-start gap-4">
+                                <input type="checkbox" x-model="selectedFormats" value="carousel" class="mt-1 w-5 h-5 rounded border-gray-600 text-purple-600 focus:ring-purple-500 bg-white/10">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                                        </svg>
+                                        <span class="font-medium">Carousel Posts</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400">Create Instagram/LinkedIn carousel images</p>
+                                </div>
+                            </div>
+                        </label>
+                        
+                        <label class="template-card rounded-xl p-5 cursor-pointer border border-transparent hover:border-purple-500/30 transition-all"
+                               :class="{'border-purple-500 bg-purple-500/10': selectedFormats.includes('blog')}">
+                            <div class="flex items-start gap-4">
+                                <input type="checkbox" x-model="selectedFormats" value="blog" class="mt-1 w-5 h-5 rounded border-gray-600 text-purple-600 focus:ring-purple-500 bg-white/10">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                        </svg>
+                                        <span class="font-medium">Blog Post</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400">Generate SEO-optimized blog articles</p>
+                                </div>
+                            </div>
+                        </label>
+                        
+                        <label class="template-card rounded-xl p-5 cursor-pointer border border-transparent hover:border-purple-500/30 transition-all"
+                               :class="{'border-purple-500 bg-purple-500/10': selectedFormats.includes('thread')}">
+                            <div class="flex items-start gap-4">
+                                <input type="checkbox" x-model="selectedFormats" value="thread" class="mt-1 w-5 h-5 rounded border-gray-600 text-purple-600 focus:ring-purple-500 bg-white/10">
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                        </svg>
+                                        <span class="font-medium">Social Threads</span>
+                                    </div>
+                                    <p class="text-sm text-gray-400">Create Twitter/X threads and captions</p>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="mt-8 flex justify-end">
+                        <button @click="startProcessing()" 
+                                :disabled="selectedFormats.length === 0 || (!currentFile && !youtubeUrl)"
+                                class="magical-button px-8 py-4 rounded-xl font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                            Start Magic ✨
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Processing Status Tab -->
+            <div x-show="activeTab === 'processing'" x-transition.opacity.duration.300ms>
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold mb-2">Processing</h2>
+                    <p class="text-gray-400">Maya is working her magic on your content</p>
+                </header>
+
+                <div class="glass-card rounded-2xl p-8 mb-8">
+                    <div class="flex items-center gap-6 mb-8">
+                        <div class="w-32 h-24 rounded-xl overflow-hidden bg-gray-800">
+                            <img :src="currentProcessing.thumbnail" class="w-full h-full object-cover" alt="Processing">
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-semibold mb-1" x-text="currentProcessing.title"></h3>
+                            <p class="text-gray-400 text-sm" x-text="currentProcessing.source"></p>
+                            <div class="flex items-center gap-4 mt-3">
+                                <span class="text-sm text-gray-400">
+                                    <span x-text="selectedFormats.length"></span> formats selected
+                                </span>
+                                <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                <span class="text-sm text-gray-400" x-text="currentProcessing.duration"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bars -->
+                    <div class="space-y-6">
+                        <template x-for="(step, index) in processingSteps" :key="index">
+                            <div class="relative">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-3">
+                                        <div :class="{
+                                            'bg-green-500': step.status === 'complete',
+                                            'bg-purple-500 animate-pulse': step.status === 'processing',
+                                            'bg-gray-600': step.status === 'pending'
+                                        }" class="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500">
+                                            <template x-if="step.status === 'complete'">
+                                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                                                </svg>
+                                            </template>
+                                            <template x-if="step.status === 'processing'">
+                                                <svg class="w-4 h-4 text-white animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                                </svg>
+                                            </template>
+                                            <template x-if="step.status === 'pending'">
+                                                <span class="text-xs text-white" x-text="index + 1"></span>
+                                            </template>
+                                        </div>
+                                        <span class="font-medium" :class="{'text-gray-400': step.status === 'pending'}" x-text="step.name"></span>
+                                    </div>
+                                    <span class="text-sm" :class="{
+                                        'text-green-400': step.status === 'complete',
+                                        'text-purple-400': step.status === 'processing',
+                                        'text-gray-500': step.status === 'pending'
+                                    }" x-text="step.progress + '%'"></span>
+                                </div>
+                                <div class="h-2 bg-white/5 rounded-full overflow-hidden ml-11">
+                                    <div :class="{
+                                        'bg-green-500': step.status === 'complete',
+                                        'bg-gradient-to-r from-purple-500 to-pink-500': step.status === 'processing',
+                                        'bg-gray-600': step.status === 'pending'
+                                    }" 
+                                         class="h-full rounded-full transition-all duration-500"
+                                         :style="`width: ${step.progress}%`"></div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Live Log -->
+                    <div class="mt-8 p-4 bg-black/30 rounded-xl font-mono text-xs text-gray-400 h-48 overflow-y-auto scrollbar-hide" x-ref="logContainer">
+                        <template x-for="log in processingLogs" :key="log.id">
+                            <div class="mb-1" :class="{
+                                'text-green-400': log.type === 'success',
+                                'text-purple-400': log.type === 'info',
+                                'text-yellow-400': log.type === 'warning'
+                            }">
+                                <span class="text-gray-600" x-text="log.time"></span>
+                                <span x-text="log.message"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Estimated Time -->
+                <div class="glass-card rounded-2xl p-6 flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-400">Estimated time remaining</p>
+                            <p class="text-xl font-semibold" x-text="estimatedTime"></p>
+                        </div>
+                    </div>
+                    <button @click="cancelProcessing()" class="px-4 py-2 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-all text-sm font-medium">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Output Gallery Tab -->
+            <div x-show="activeTab === 'gallery'" x-transition.opacity.duration.300ms>
+                <header class="mb-8">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-3xl font-bold mb-2">Output Gallery</h2>
+                            <p class="text-gray-400">All your generated content in one place</p>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <select x-model="galleryFilter" class="bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-purple-500/50">
+                                <option value="all">All Types</option>
+                                <option value="shorts">Shorts</option>
+                                <option value="carousel">Carousels</option>
+                                <option value="blog">Blogs</option>
+                                <option value="thread">Threads</option>
+                            </select>
+                            <button @click="downloadAll()" class="glass-card px-4 py-2 rounded-xl text-sm font-medium hover:bg-white/10 transition-all flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Download All
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="output in filteredOutputs" :key="output.id">
+                        <div class="glass-card glass-card-hover rounded-2xl overflow-hidden output-item group">
+                            <div class="aspect-video relative overflow-hidden">
+                                <img :src="output.thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" :alt="output.title">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                
+                                <!-- Type Badge -->
+                                <div class="absolute top-3 left-3">
+                                    <span class="text-xs px-2 py-1 rounded font-medium" 
+                                          :class="{
+                                              'bg-purple-600': output.type === 'Short',
+                                              'bg-cyan-600': output.type === 'Carousel',
+                                              'bg-amber-600': output.type === 'Blog',
+                                              'bg-green-600': output.type === 'Thread'
+                                          }" 
+                                          x-text="output.type"></span>
+                                </div>
+                                
+                                <!-- Duration -->
+                                <div class="absolute top-3 right-3">
+                                    <span class="text-xs bg-black/50 px-2 py-1 rounded backdrop-blur-sm" x-text="output.duration"></span>
+                                </div>
+                                
+                                <!-- Hover Actions -->
+                                <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                                    <button @click="previewOutput(output)" class="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/30 transition-all">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
+                                    <button @click="downloadOutput(output)" class="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center hover:bg-purple-500 transition-all">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                
+                                <div class="absolute bottom-3 left-3 right-3">
+                                    <p class="font-medium truncate" x-text="output.title"></p>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center justify-between text-sm text-gray-400">
+                                    <div class="flex items-center gap-2">
+                                        <img :src="output.sourceIcon" class="w-4 h-4 rounded" alt="">
+                                        <span x-text="output.source"></span>
+                                    </div>
+                                    <span x-text="output.size"></span>
+                                </div>
+                                <div class="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+                                    <span class="text-xs text-gray-500" x-text="output.createdAt"></span>
+                                    <div class="flex items-center gap-2">
+                                        <button @click="shareOutput(output)" class="p-2 rounded-lg hover:bg-white/10 transition-all text-gray-400 hover:text-white">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                                            </svg>
+                                        </button>
+                                        <button @click="deleteOutput(output)" class="p-2 rounded-lg hover:bg-red-500/20 transition-all text-gray-400 hover:text-red-400">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Templates Tab -->
+            <div x-show="activeTab === 'templates'" x-transition.opacity.duration.300ms>
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold mb-2">Templates Library</h2>
+                    <p class="text-gray-400">Choose from our curated collection of styles</p>
+                </header>
+
+                <!-- Template Categories -->
+                <div class="flex gap-4 mb-8 overflow-x-auto scrollbar-hide pb-2">
+                    <button @click="templateCategory = 'all'" 
+                            :class="{'magical-button': templateCategory === 'all', 'glass-card': templateCategory !== 'all'}"
+                            class="px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap">
+                        All Templates
+                    </button>
+                    <button @click="templateCategory = 'shorts'" 
+                            :class="{'magical-button': templateCategory === 'shorts', 'glass-card': templateCategory !== 'shorts'}"
+                            class="px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap">
+                        Shorts
+                    </button>
+                    <button @click="templateCategory = 'carousel'" 
+                            :class="{'magical-button': templateCategory === 'carousel', 'glass-card': templateCategory !== 'carousel'}"
+                            class="px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap">
+                        Carousels
+                    </button>
+                    <button @click="templateCategory = 'captions'" 
+                            :class="{'magical-button': templateCategory === 'captions', 'glass-card': templateCategory !== 'captions'}"
+                            class="px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap">
+                        Captions
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="template in filteredTemplates" :key="template.id">
+                        <div class="glass-card glass-card-hover rounded-2xl overflow-hidden group cursor-pointer"
+                             :class="{'ring-2 ring-purple-500': selectedTemplate === template.id}"
+                             @click="selectTemplate(template)">
+                            <div class="aspect-video relative overflow-hidden">
+                                <img :src="template.preview" class="w-full h-full object-cover" :alt="template.name">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                                
+                                <div class="absolute top-3 right-3">
+                                    <span class="text-xs bg-black/50 px-2 py-1 rounded backdrop-blur-sm" x-text="template.type"></span>
+                                </div>
+                                
+                                <div class="absolute bottom-3 left-3 right-3">
+                                    <h4 class="font-semibold" x-text="template.name"></h4>
+                                    <p class="text-sm text-gray-400" x-text="template.description"></p>
+                                </div>
+                                
+                                <div class="absolute inset-0 bg-purple-600/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                                     x-show="selectedTemplate === template.id">
+                                    <div class="w-12 h-12 rounded-full bg-purple-600 flex items-center justify-center">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center gap-4 text-sm text-gray-400">
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        <span x-text="template.duration"></span>
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
+                                        </svg>
+                                        <span x-text="template.formats.join(', ')"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Stats Tab -->
+            <div x-show="activeTab === 'stats'" x-transition.opacity.duration.300ms>
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold mb-2">Usage Statistics</h2>
+                    <p class="text-gray-400">Track your content repurposing performance</p>
+                </header>
+
+                <!-- Big Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="glass-card rounded-2xl p-6 text-center">
+                        <p class="text-5xl font-bold gradient-text mb-2" x-text="stats.videosProcessed">247</p>
+                        <p class="text-gray-400">Videos Processed</p>
+                    </div>
+                    <div class="glass-card rounded-2xl p-6 text-center">
+                        <p class="text-5xl font-bold gradient-text mb-2" x-text="stats.assetsGenerated">1,842</p>
+                        <p class="text-gray-400">Assets Created</p>
+                    </div>
+                    <div class="glass-card rounded-2xl p-6 text-center">
+                        <p class="text-5xl font-bold gradient-text mb-2" x-text="stats.hoursSaved">96h</p>
+                        <p class="text-gray-400">Time Saved</p>
+                    </div>
+                    <div class="glass-card rounded-2xl p-6 text-center">
+                        <p class="text-5xl font-bold gradient-text mb-2">$4,320</p>
+                        <p class="text-gray-400">Value Generated</p>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div class="glass-card rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold mb-6">Content Output by Type</h3>
+                        <div class="space-y-4">
+                            <template x-for="item in contentByType" :key="item.type">
+                                <div>
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm" x-text="item.type"></span>
+                                        <span class="text-sm font-medium" x-text="item.count + ' (' + item.percentage + '%)'"></span>
+                                    </div>
+                                    <div class="h-3 bg-white/5 rounded-full overflow-hidden">
+                                        <div class="h-full rounded-full transition-all duration-1000" 
+                                             :class="item.color"
+                                             :style="`width: ${item.percentage}%`"></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold mb-6">Weekly Activity</h3>
+                        <div class="flex items-end justify-between h-48 gap-2">
+                            <template x-for="day in weeklyActivity" :key="day.day">
+                                <div class="flex-1 flex flex-col items-center gap-2">
+                                    <div class="w-full bg-gradient-to-t from-purple-600 to-cyan-500 rounded-t-lg transition-all duration-500 hover:opacity-80"
+                                         :style="`height: ${day.value * 2}px`"></div>
+                                    <span class="text-xs text-gray-400" x-text="day.day"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="glass-card rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-6">Recent Activity</h3>
+                    <div class="space-y-4">
+                        <template x-for="activity in recentActivity" :key="activity.id">
+                            <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
+                                <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                                     :class="{
+                                         'bg-purple-500/20 text-purple-400': activity.type === 'process',
+                                         'bg-green-500/20 text-green-400': activity.type === 'download',
+                                         'bg-cyan-500/20 text-cyan-400': activity.type === 'create'
+                                     }">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              :d="activity.icon"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium" x-text="activity.title"></p>
+                                    <p class="text-sm text-gray-400" x-text="activity.description"></p>
+                                </div>
+                                <span class="text-sm text-gray-500" x-text="activity.time"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div x-show="activeTab === 'settings'" x-transition.opacity.duration.300ms>
+                <header class="mb-8">
+                    <h2 class="text-3xl font-bold mb-2">Settings</h2>
+                    <p class="text-gray-400">Configure your Maya experience</p>
+                </header>
+
+                <div class="space-y-6">
+                    <!-- Output Formats -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold mb-4">Default Output Formats</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center justify-between p-4 bg-white/5 rounded-xl cursor-pointer hover:bg-white/10 transition-all">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Shorts/Reels</p>
+                                        <p class="text-sm text-gray-400">9:16 vertical format</p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" x-model="settings.defaultShorts" class="w-5 h-5 rounded border-gray-600 text-purple-600 bg-white/10">
+                            </label>
+                            
+                            <label class="flex items-center justify-between p-4 bg-white/5 rounded-xl cursor-pointer hover:bg-white/10 transition-all">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Carousel Posts</p>
+                                        <p class="text-sm text-gray-400">1:1 Instagram/LinkedIn format</p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" x-model="settings.defaultCarousel" class="w-5 h-5 rounded border-gray-600 text-purple-600 bg-white/10">
+                            </label>
+                            
+                            <label class="flex items-center justify-between p-4 bg-white/5 rounded-xl cursor-pointer hover:bg-white/10 transition-all">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium">Blog Posts</p>
+                                        <p class="text-sm text-gray-400">Markdown format</p>
+                                    </div>
+                                </div>
+                                <input type="checkbox" x-model="settings.defaultBlog" class="w-5 h-5 rounded border-gray-600 text-purple-600 bg-white/10">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Branding -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold mb-4">Branding</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Brand Name</label>
+                                <input type="text" x-model="settings.brandName" placeholder="Your Brand" 
+                                       class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-purple-500/50">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">Accent Color</label>
+                                <div class="flex gap-3">
+                                    <button @click="settings.accentColor = 'purple'" 
+                                            :class="{'ring-2 ring-white': settings.accentColor === 'purple'}"
+                                            class="w-10 h-10 rounded-full bg-purple-500"></button>
+                                    <button @click="settings.accentColor = 'cyan'" 
+                                            :class="{'ring-2 ring-white': settings.accentColor === 'cyan'}"
+                                            class="w-10 h-10 rounded-full bg-cyan-500"></button>
+                                    <button @click="settings.accentColor = 'pink'" 
+                                            :class="{'ring-2 ring-white': settings.accentColor === 'pink'}"
+                                            class="w-10 h-10 rounded-full bg-pink-500"></button>
+                                    <button @click="settings.accentColor = 'amber'" 
+                                            :class="{'ring-2 ring-white': settings.accentColor === 'amber'}"
+                                            class="w-10 h-10 rounded-full bg-amber-500"></button>
+                                </div>
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm text-gray-400 mb-2">Logo</label>
+                                <div class="flex items-center gap-4">
+                                    <div class="w-16 h-16 rounded-xl bg-white/10 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                    <button class="px-4 py-2 rounded-lg glass-card hover:bg-white/10 transition-all text-sm font-medium">
+                                        Upload Logo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Processing Settings -->
+                    <div class="glass-card rounded-2xl p-6">
+                        <h3 class="text-lg font-semibold mb-4">Processing</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                <div>
+                                    <p class="font-medium">Auto-caption Videos</p>
+                                    <p class="text-sm text-gray-400">Generate captions automatically</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" x-model="settings.autoCaption" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                <div>
+                                    <p class="font-medium">Smart Thumbnails</p>
+                                    <p class="text-sm text-gray-400">AI-generated thumbnails for shorts</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" x-model="settings.smartThumbnails" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                                </label>
+                            </div>
+                            
+                            <div class="flex items-center justify-between p-4 bg-white/5 rounded-xl">
+                                <div>
+                                    <p class="font-medium">Local Processing Only</p>
+                                    <p class="text-sm text-gray-400">Keep all processing on your Mac</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" x-model="settings.localOnly" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-4">
+                        <button class="px-6 py-3 rounded-xl glass-card hover:bg-white/10 transition-all font-medium">
+                            Reset to Defaults
+                        </button>
+                        <button class="magical-button px-6 py-3 rounded-xl font-medium">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Preview Modal -->
+    <div x-show="showPreviewModal" x-transition.opacity.duration.300ms class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" @click.self="showPreviewModal = false">
+        <div class="glass-card rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden" @click.stop>
+            <div class="flex items-center justify-between p-6 border-b border-white/10">
+                <h3 class="text-xl font-semibold" x-text="previewItem?.title || 'Preview'"></h3>
+                <button @click="showPreviewModal = false" class="p-2 rounded-lg hover:bg-white/10 transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="aspect-video bg-gray-900 rounded-xl overflow-hidden mb-6">
+                    <img :src="previewItem?.thumbnail" class="w-full h-full object-cover" alt="Preview">
+                </div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-400 text-sm">Type</p>
+                        <p class="font-medium" x-text="previewItem?.type"></p>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-sm">Created</p>
+                        <p class="font-medium" x-text="previewItem?.createdAt"></p>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-sm">Size</p>
+                        <p class="font-medium" x-text="previewItem?.size"></p>
+                    </div>
+                    <button @click="downloadOutput(previewItem)" class="magical-button px-6 py-3 rounded-xl font-medium flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function mayaApp() {
+            return {
+                activeTab: 'dashboard',
+                dragOver: false,
+                isUploading: false,
+                uploadProgress: 0,
+                uploadStatus: '',
+                uploadFileName: '',
+                youtubeUrl: '',
+                currentFile: null,
+                selectedFormats: ['shorts', 'carousel'],
+                galleryFilter: 'all',
+                templateCategory: 'all',
+                selectedTemplate: null,
+                showPreviewModal: false,
+                previewItem: null,
+                estimatedTime: '2 minutes',
+                
+                stats: {
+                    videosProcessed: 247,
+                    assetsGenerated: 1842,
+                    hoursSaved: '96h',
+                    creditsLeft: 847
+                },
+                
+                settings: {
+                    defaultShorts: true,
+                    defaultCarousel: true,
+                    defaultBlog: false,
+                    defaultThread: false,
+                    brandName: '',
+                    accentColor: 'purple',
+                    autoCaption: true,
+                    smartThumbnails: true,
+                    localOnly: true
+                },
+                
+                currentProcessing: {
+                    title: 'The Future of AI Content Creation',
+                    source: 'YouTube Import',
+                    thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=300&fit=crop',
+                    duration: '24:35'
+                },
+                
+                processingSteps: [
+                    { name: 'Downloading source video', progress: 100, status: 'complete' },
+                    { name: 'Transcribing audio', progress: 100, status: 'complete' },
+                    { name: 'Analyzing content structure', progress: 75, status: 'processing' },
+                    { name: 'Generating shorts', progress: 30, status: 'processing' },
+                    { name: 'Creating carousel images', progress: 0, status: 'pending' },
+                    { name: 'Writing blog post', progress: 0, status: 'pending' }
+                ],
+                
+                processingLogs: [
+                    { id: 1, time: '14:32:05', message: 'Starting content analysis...', type: 'info' },
+                    { id: 2, time: '14:32:08', message: 'Transcription complete (24:35)', type: 'success' },
+                    { id: 3, time: '14:32:12', message: 'Identified 8 key moments', type: 'info' },
+                    { id: 4, time: '14:32:15', message: 'Generating clip 1 of 8...', type: 'info' },
+                    { id: 5, time: '14:33:02', message: 'Clip 1 rendered successfully', type: 'success' },
+                    { id: 6, time: '14:33:05', message: 'Generating clip 2 of 8...', type: 'info' }
+                ],
+                
+                outputs: [
+                    { id: 1, title: 'AI Revolution - Short #1', type: 'Short', thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=300&fit=crop', duration: '0:59', size: '12.4 MB', createdAt: '2 hours ago', source: 'The Future of AI', sourceIcon: 'https://www.youtube.com/favicon.ico' },
+                    { id: 2, title: 'Content Strategy Tips', type: 'Carousel', thumbnail: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400&h=300&fit=crop', duration: '5 slides', size: '3.2 MB', createdAt: '5 hours ago', source: 'Marketing Masterclass', sourceIcon: 'https://www.youtube.com/favicon.ico' },
+                    { id: 3, title: 'How to Scale Your Content', type: 'Blog', thumbnail: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=400&h=300&fit=crop', duration: '5 min read', size: '45 KB', createdAt: '1 day ago', source: 'Podcast Episode #42', sourceIcon: 'https://www.youtube.com/favicon.ico' },
+                    { id: 4, title: 'Viral Hook Strategies', type: 'Short', thumbnail: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=300&fit=crop', duration: '0:47', size: '8.9 MB', createdAt: '2 days ago', source: 'Growth Hacking', sourceIcon: 'https://www.youtube.com/favicon.ico' },
+                    { id: 5, title: 'Twitter Thread - AI Tools', type: 'Thread', thumbnail: 'https://images.unsplash.com/photo-1611605698335-8b1569810432?w=400&h=300&fit=crop', duration: '12 tweets', size: '2.1 KB', createdAt: '3 days ago', source: 'Tech Talk', sourceIcon: 'https://www.youtube.com/favicon.ico' },
+                    { id: 6, title: 'LinkedIn Carousel - Tips', type: 'Carousel', thumbnail: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=300&fit=crop', duration: '7 slides', size: '4.5 MB', createdAt: '4 days ago', source: 'Business Growth', sourceIcon: 'https://www.youtube.com/favicon.ico' }
+                ],
+                
+                templates: [
+                    { id: 1, name: 'Viral Shorts', type: 'Shorts', description: 'High-energy captions with emoji overlays', preview: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=400&h=300&fit=crop', duration: '15-60s', formats: ['9:16', '4:5'] },
+                    { id: 2, name: 'Professional', type: 'Shorts', description: 'Clean, minimal captions for B2B', preview: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=400&h=300&fit=crop', duration: '30-90s', formats: ['9:16', '1:1'] },
+                    { id: 3, name: 'Educational', type: 'Carousel', description: 'Step-by-step learning format', preview: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=300&fit=crop', duration: '5-10 slides', formats: ['1:1', '4:5'] },
+                    { id: 4, name: 'Story-Driven', type: 'Carousel', description: 'Narrative-focused carousel style', preview: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop', duration: '7-12 slides', formats: ['1:1'] },
+                    { id: 5, name: 'Bold & Punchy', type: 'Captions', description: 'Large text, minimal design', preview: 'https://images.unsplash.com/photo-1542435503-956c469947f6?w=400&h=300&fit=crop', duration: 'N/A', formats: ['All'] },
+                    { id: 6, name: 'Subtle & Elegant', type: 'Captions', description: 'Sophisticated typography', preview: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop', duration: 'N/A', formats: ['All'] }
+                ],
+                
+                contentByType: [
+                    { type: 'Shorts/Reels', count: 156, percentage: 45, color: 'bg-purple-500' },
+                    { type: 'Carousels', count: 89, percentage: 25, color: 'bg-cyan-500' },
+                    { type: 'Blog Posts', count: 67, percentage: 19, color: 'bg-amber-500' },
+                    { type: 'Threads', count: 38, percentage: 11, color: 'bg-green-500' }
+                ],
+                
+                weeklyActivity: [
+                    { day: 'Mon', value: 45 },
+                    { day: 'Tue', value: 62 },
+                    { day: 'Wed', value: 38 },
+                    { day: 'Thu', value: 75 },
+                    { day: 'Fri', value: 58 },
+                    { day: 'Sat', value: 82 },
+                    { day: 'Sun', value: 67 }
+                ],
+                
+                recentActivity: [
+                    { id: 1, type: 'create', title: 'Generated 8 new shorts', description: 'From "AI Content Creation" video', time: '2 hours ago', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
+                    { id: 2, type: 'download', title: 'Downloaded carousel pack', description: '12 images from marketing webinar', time: '5 hours ago', icon: 'M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4' },
+                    { id: 3, type: 'process', title: 'Processed YouTube video', description: '"Future of Remote Work" (34:12)', time: '1 day ago', icon: 'M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z' },
+                    { id: 4, type: 'create', title: 'Blog post published', description: 'SEO-optimized from podcast', time: '2 days ago', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' }
+                ],
+                
+                get filteredOutputs() {
+                    if (this.galleryFilter === 'all') return this.outputs;
+                    return this.outputs.filter(o => o.type.toLowerCase() === this.galleryFilter);
+                },
+                
+                get filteredTemplates() {
+                    if (this.templateCategory === 'all') return this.templates;
+                    return this.templates.filter(t => t.type.toLowerCase() === this.templateCategory);
+                },
+                
+                init() {
+                    this.generateStars();
+                    this.startProcessingSimulation();
+                },
+                
+                generateStars() {
+                    const container = document.getElementById('stars-container');
+                    for (let i = 0; i < 100; i++) {
+                        const star = document.createElement('div');
+                        star.className = 'star';
+                        star.style.left = Math.random() * 100 + '%';
+                        star.style.top = Math.random() * 100 + '%';
+                        star.style.animationDelay = Math.random() * 3 + 's';
+                        container.appendChild(star);
+                    }
+                },
+                
+                handleDrop(e) {
+                    this.dragOver = false;
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        this.handleFile(files[0]);
+                    }
+                },
+                
+                handleFileSelect(e) {
+                    if (e.target.files.length > 0) {
+                        this.handleFile(e.target.files[0]);
+                    }
+                },
+                
+                handleFile(file) {
+                    this.currentFile = file;
+                    this.uploadFileName = file.name;
+                    this.isUploading = true;
+                    this.uploadStatus = 'Uploading...';
+                    
+                    // Simulate upload progress
+                    let progress = 0;
+                    const interval = setInterval(() => {
+                        progress += Math.random() * 15;
+                        if (progress >= 100) {
+                            progress = 100;
+                            clearInterval(interval);
+                            this.uploadStatus = 'Upload complete!';
+                            setTimeout(() => {
+                                this.isUploading = false;
+                                this.uploadProgress = 0;
+                            }, 500);
+                        }
+                        this.uploadProgress = progress;
+                    }, 200);
+                },
+                
+                processYouTube() {
+                    if (!this.youtubeUrl) return;
+                    this.isUploading = true;
+                    this.uploadStatus = 'Importing from YouTube...';
+                    this.uploadFileName = this.youtubeUrl;
+                    
+                    // Simulate import progress
+                    let progress = 0;
+                    const interval = setInterval(() => {
+                        progress += Math.random() * 10;
+                        if (progress >= 100) {
+                            progress = 100;
+                            clearInterval(interval);
+                            this.uploadStatus = 'Import complete!';
+                            setTimeout(() => {
+                                this.isUploading = false;
+                                this.uploadProgress = 0;
+                            }, 500);
+                        }
+                        this.uploadProgress = progress;
+                    }, 300);
+                },
+                
+                startProcessing() {
+                    this.activeTab = 'processing';
+                    this.simulateProcessing();
+                },
+                
+                simulateProcessing() {
+                    // Already handled by startProcessingSimulation
+                },
+                
+                startProcessingSimulation() {
+                    // Simulate live log updates
+                    setInterval(() => {
+                        if (this.activeTab === 'processing' && Math.random() > 0.7) {
+                            const messages = [
+                                'Analyzing video segment...',
+                                'Applying caption style...',
+                                'Rendering frame buffer...',
+                                'Optimizing for mobile...',
+                                'Exporting final video...'
+                            ];
+                            const newLog = {
+                                id: Date.now(),
+                                time: new Date().toLocaleTimeString('en-US', { hour12: false }),
+                                message: messages[Math.floor(Math.random() * messages.length)],
+                                type: 'info'
+                            };
+                            this.processingLogs.push(newLog);
+                            if (this.processingLogs.length > 20) {
+                                this.processingLogs.shift();
+                            }
+                            this.$nextTick(() => {
+                                const container = this.$refs.logContainer;
+                                if (container) {
+                                    container.scrollTop = container.scrollHeight;
+                                }
+                            });
+                        }
+                    }, 2000);
+                },
+                
+                cancelProcessing() {
+                    this.activeTab = 'upload';
+                },
+                
+                viewOutput(output) {
+                    this.previewItem = output;
+                    this.showPreviewModal = true;
+                },
+                
+                previewOutput(output) {
+                    this.viewOutput(output);
+                },
+                
+                downloadOutput(output) {
+                    alert(`Downloading ${output.title}...`);
+                },
+                
+                downloadAll() {
+                    alert('Downloading all outputs as ZIP...');
+                },
+                
+                shareOutput(output) {
+                    alert(`Sharing ${output.title}...`);
+                },
+                
+                deleteOutput(output) {
+                    if (confirm(`Delete "${output.title}"?`)) {
+                        this.outputs = this.outputs.filter(o => o.id !== output.id);
+                    }
+                },
+                
+                selectTemplate(template) {
+                    this.selectedTemplate = template.id;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
