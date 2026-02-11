@@ -2,28 +2,12 @@
   "version": 2,
   "routes": [
     {
-      "src": "/",
-      "dest": "/landing-page/index.html"
-    },
-    {
       "src": "/dashboard",
       "dest": "/dashboard/index.html"
     },
     {
-      "src": "/dashboard/maya",
-      "dest": "/dashboard/maya/index.html"
-    },
-    {
-      "src": "/dashboard/jordan",
-      "dest": "/dashboard/jordan/index.html"
-    },
-    {
-      "src": "/dashboard/sam",
-      "dest": "/dashboard/sam/index.html"
-    },
-    {
-      "src": "/dashboard/taylor",
-      "dest": "/dashboard/taylor/index.html"
+      "src": "/dashboard/(.*)",
+      "dest": "/dashboard/index.html"
     },
     {
       "src": "/pricing",
@@ -36,6 +20,10 @@
     {
       "src": "/success",
       "dest": "/checkout/success.html"
+    },
+    {
+      "src": "/",
+      "dest": "/landing-page/index.html"
     },
     {
       "src": "/(.*)",

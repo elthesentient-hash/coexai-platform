@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoExAI Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: 'Inter', system-ui, sans-serif; }
+        body { background: #000; color: #fafafa; }
+        .sidebar { background: rgba(10,10,10,0.95); border-right: 1px solid rgba(255,255,255,0.05); }
+        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; }
+        .card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+        .btn-primary { background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%); border: 1px solid rgba(255,255,255,0.1); }
+        .btn-primary:hover { box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .status-active { background: #10b981; box-shadow: 0 0 8px #10b981; }
+        .status-paused { background: #f59e0b; }
+        .status-inactive { background: #6b7280; }
+        .agent-alex { border-left: 3px solid #ef4444; }
+        .agent-maya { border-left: 3px solid #8b5cf6; }
+        .agent-jordan { border-left: 3px solid #3b82f6; }
+        .agent-sam { border-left: 3px solid #10b981; }
+        .agent-taylor { border-left: 3px solid #f59e0b; }
+        .nav-item { transition: all 0.2s; }
+        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); }
+        .progress-bar { background: linear-gradient(90deg, #3b82f6, #8b5cf6); }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="min-h-screen" x-data="dashboard()">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 bottom-0 w-64 sidebar z-50">
+        <div class="p-6 border-b border-white/5">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                    <i data-lucide="cpu" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="font-bold text-lg">CoExAI</span>
+            </div>
+        </div>
+
+        <nav class="p-4 space-y-1">
+            <button @click="view = 'dashboard'" 
+                    :class="{ 'active': view === 'dashboard' }"
+                    class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <span>Dashboard</span>
+            </button>
+
+            <div class="pt-4 pb-2 px-4 text-xs font-medium text-gray-500 uppercase">AI Agents</div>
+
+            <template x-for="agent in agents" :key="agent.id">
+                <button @click="selectAgent(agent.id)"
+                        :class="{ 'active': selectedAgent === agent.id, [`agent-${agent.id}`]: true }"
+                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                         :class="agent.bgColor">
+                        <i :data-lucide="agent.icon" class="w-4 h-4" :class="agent.textColor"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-medium" x-text="agent.name"></div>
+                        <div class="text-xs text-gray-500" x-text="agent.status"></div>
+                    </div>
+                    <div class="status-dot" :class="`status-${agent.status}`"></div>
+                </button>
+            </template>
+
+            <div class="pt-4 pb-2 px-4 text-xs font-medium text-gray-500 uppercase">Settings</div>
+
+            <button @click="view = 'billing'" :class="{ 'active': view === 'billing' }"
+                    class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left">
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                <span>Billing</span>
+            </button>
+
+            <button @click="view = 'settings'" :class="{ 'active': view === 'settings' }"
+                    class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                <span>Settings</span>
+            </button>
+        </nav>
+
+        <!-- User Profile -->
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/5">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold">
+                    EL
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-medium truncate">Elijah</div>
+                    <div class="text-xs text-gray-500">5 agents active</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64">
+        <!-- Header -->
+        <header class="sticky top-0 z-40 bg-black/80 backdrop-blur-xl border-b border-white/5">
+            <div class="flex items-center justify-between px-8 py-4">
+                <h1 class="text-2xl font-semibold" x-text="pageTitle"></h1>
+
+                <div class="flex items-center gap-4">
+                    <button class="relative p-2 hover:bg-white/5 rounded-lg">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </button>
+
+                    <button class="btn-primary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+                            @click="showAddAgent = true">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Add Agent
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-8">
+            <!-- Overview Stats -->
+            <div class="grid grid-cols-4 gap-6 mb-8">
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-sm text-gray-500">Active Agents</div>
+                        <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                            <i data-lucide="bot" class="w-5 h-5 text-blue-400"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold">5</div>
+                    <div class="text-sm text-green-400 mt-1">All operational</div>
+                </div>
+
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-sm text-gray-500">Tasks Completed</div>
+                        <div class="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold">12,847</div>
+                    <div class="text-sm text-green-400 mt-1">+23% this week</div>
+                </div>
+
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-sm text-gray-500">Time Saved</div>
+                        <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                            <i data-lucide="clock" class="w-5 h-5 text-purple-400"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold">1,240 hrs</div>
+                    <div class="text-sm text-gray-500 mt-1">This month</div>
+                </div>
+
+                <div class="card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-sm text-gray-500">Monthly Cost</div>
+                        <div class="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                            <i data-lucide="dollar-sign" class="w-5 h-5 text-orange-400"></i>
+                        </div>
+                    </div>
+                    <div class="text-3xl font-bold">$5,794</div>
+                    <div class="text-sm text-gray-500 mt-1">5 active agents</div>
+                </div>
+            </div>
+
+            <!-- Agent Cards -->
+            <div class="mb-6 flex items-center justify-between">
+                <h2 class="text-xl font-semibold">Your AI Agents</h2>
+                <button class="text-sm text-blue-400 hover:text-blue-300">View All</button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                <template x-for="agent in agents" :key="agent.id">
+                    <div class="card p-6 cursor-pointer" @click="selectAgent(agent.id)"
+                         :class="`agent-${agent.id}`">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center"
+                                     :class="agent.bgColor">
+                                    <i :data-lucide="agent.icon" class="w-6 h-6" :class="agent.textColor"></i>
+                                </div>
+                                
+                                <div>
+                                    <div class="font-semibold text-lg" x-text="agent.name"></div>
+                                    <div class="text-sm text-gray-500" x-text="agent.tagline"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <div class="status-dot" :class="`status-${agent.status}`"></div>
+                                <span class="text-sm capitalize" x-text="agent.status"></span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <div class="text-2xl font-bold" x-text="agent.stats.primary"></div>
+                                <div class="text-xs text-gray-500" x-text="agent.stats.primaryLabel"></div>
+                            </div>
+                            
+                            <div>
+                                <div class="text-2xl font-bold" x-text="agent.stats.secondary"></div>
+                                <div class="text-xs text-gray-500" x-text="agent.stats.secondaryLabel"></div>
+                            </div>
+                            
+                            <div>
+                                <div class="text-2xl font-bold" x-text="agent.stats.tertiary"></div>
+                                <div class="text-xs text-gray-500" x-text="agent.stats.tertiaryLabel"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-white/5">
+                            <div class="text-sm text-gray-500">
+                                <span x-text="agent.price"></span>/month
+                            </div>
+                            
+                            <button class="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1"
+                                    @click.stop="selectAgent(agent.id)">
+                                Manage
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="mt-8">
+                <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
+                
+                <div class="card overflow-hidden">
+                    <template x-for="activity in recentActivity" :key="activity.id">
+                        <div class="flex items-center gap-4 p-4 border-b border-white/5 last:border-0 hover:bg-white/5"
+003e
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center"
+                                 :class="activity.bgColor">
+                                <i :data-lucide="activity.icon" class="w-5 h-5" :class="activity.textColor"></i>
+                            </div>
+                            
+                            <div class="flex-1">
+                                <div class="font-medium" x-text="activity.title"></div>
+                                <div class="text-sm text-gray-500" x-text="activity.description"></div>
+                            </div>
+                            
+                            <div class="text-sm text-gray-500" x-text="activity.time"></div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function dashboard() {
+            return {
+                view: 'dashboard',
+                selectedAgent: null,
+                showAddAgent: false,
+                
+                get pageTitle() {
+                    if (this.selectedAgent) {
+                        const agent = this.agents.find(a => a.id === this.selectedAgent);
+                        return agent ? agent.name : 'Dashboard';
+                    }
+                    return 'Dashboard';
+                },
+
+                agents: [
+                    {
+                        id: 'alex',
+                        name: 'Alex',
+                        tagline: 'AI Appointment Setter',
+                        icon: 'phone',
+                        bgColor: 'bg-red-500/10',
+                        textColor: 'text-red-400',
+                        status: 'active',
+                        price: '$2,000',
+                        stats: {
+                            primary: '127',
+                            primaryLabel: 'Calls Made Today',
+                            secondary: '18',
+                            secondaryLabel: 'Meetings Booked',
+                            tertiary: '94%',
+                            tertiaryLabel: 'Connection Rate'
+                        }
+                    },
+                    {
+                        id: 'maya',
+                        name: 'Maya',
+                        tagline: 'AI Content Creator',
+                        icon: 'video',
+                        bgColor: 'bg-purple-500/10',
+                        textColor: 'text-purple-400',
+                        status: 'active',
+                        price: '$1,500',
+                        stats: {
+                            primary: '47',
+                            primaryLabel: 'Videos Processed',
+                            secondary: '940',
+                            secondaryLabel: 'Pieces Created',
+                            tertiary: '2.4M',
+                            tertiaryLabel: 'Total Views'
+                        }
+                    },
+                    {
+                        id: 'jordan',
+                        name: 'Jordan',
+                        tagline: 'LinkedIn Growth',
+                        icon: 'linkedin',
+                        bgColor: 'bg-blue-500/10',
+                        textColor: 'text-blue-400',
+                        status: 'active',
+                        price: '$1,000',
+                        stats: {
+                            primary: '8.2K',
+                            primaryLabel: 'Avg Impressions',
+                            secondary: '156',
+                            secondaryLabel: 'New Followers',
+                            tertiary: '23',
+                            tertiaryLabel: 'Inbound Leads'
+                        }
+                    },
+                    {
+                        id: 'sam',
+                        name: 'Sam',
+                        tagline: 'Local SEO',
+                        icon: 'map-pin',
+                        bgColor: 'bg-green-500/10',
+                        textColor: 'text-green-400',
+                        status: 'active',
+                        price: '$800',
+                        stats: {
+                            primary: '#1',
+                            primaryLabel: 'Maps Ranking',
+                            secondary: '42',
+                            secondaryLabel: 'New Reviews',
+                            tertiary: '+67%',
+                            tertiaryLabel: 'Traffic Increase'
+                        }
+                    },
+                    {
+                        id: 'taylor',
+                        name: 'Taylor',
+                        tagline: 'Document Processor',
+                        icon: 'file-text',
+                        bgColor: 'bg-orange-500/10',
+                        textColor: 'text-orange-400',
+                        status: 'active',
+                        price: '$497',
+                        stats: {
+                            primary: '1,247',
+                            primaryLabel: 'Docs Processed',
+                            secondary: '99.7%',
+                            secondaryLabel: 'Accuracy',
+                            tertiary: '420 hrs',
+                            tertiaryLabel: 'Time Saved'
+                        }
+                    }
+                ],
+
+                recentActivity: [
+                    {
+                        id: 1,
+                        icon: 'phone-call',
+                        bgColor: 'bg-red-500/10',
+                        textColor: 'text-red-400',
+                        title: 'Alex booked a meeting',
+                        description: 'With Sarah Chen at TechFlow',
+                        time: '2 min ago'
+                    },
+                    {
+                        id: 2,
+                        icon: 'video',
+                        bgColor: 'bg-purple-500/10',
+                        textColor: 'text-purple-400',
+                        title: 'Maya processed a video',
+                        description: 'Generated 18 content pieces',
+                        time: '15 min ago'
+                    },
+                    {
+                        id: 3,
+                        icon: 'linkedin',
+                        bgColor: 'bg-blue-500/10',
+                        textColor: 'text-blue-400',
+                        title: 'Jordan posted on LinkedIn',
+                        description: '12.4K impressions in 1 hour',
+                        time: '1 hour ago'
+                    },
+                    {
+                        id: 4,
+                        icon: 'star',
+                        bgColor: 'bg-green-500/10',
+                        textColor: 'text-green-400',
+                        title: 'Sam got a 5-star review',
+                        description: 'Auto-responded with thank you',
+                        time: '3 hours ago'
+                    },
+                    {
+                        id: 5,
+                        icon: 'file-check',
+                        bgColor: 'bg-orange-500/10',
+                        textColor: 'text-orange-400',
+                        title: 'Taylor processed invoices',
+                        description: '47 invoices extracted',
+                        time: '5 hours ago'
+                    }
+                ],
+
+                selectAgent(id) {
+                    this.selectedAgent = id;
+                    this.view = 'agent';
+                    window.location.href = `/dashboard/${id}`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
