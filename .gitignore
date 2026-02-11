@@ -9,3 +9,6 @@ clips/
 *.wav
 el-phone-agent/
 el-phone-agent-twilio/
+TOOLS.md
+.env*
+*.key
