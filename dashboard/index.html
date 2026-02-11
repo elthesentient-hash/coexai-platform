@@ -9,109 +9,169 @@
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-family: 'Inter', system-ui, sans-serif; }
-        body { background: #000; color: #fafafa; }
-        .sidebar { background: rgba(10,10,10,0.95); border-right: 1px solid rgba(255,255,255,0.05); }
-        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; }
-        .card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
-        .btn-primary { background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%); border: 1px solid rgba(255,255,255,0.1); }
-        .btn-primary:hover { box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .status-active { background: #10b981; box-shadow: 0 0 8px #10b981; }
-        .status-paused { background: #f59e0b; }
-        .status-inactive { background: #6b7280; }
-        .agent-alex { border-left: 3px solid #ef4444; }
-        .agent-maya { border-left: 3px solid #8b5cf6; }
-        .agent-jordan { border-left: 3px solid #3b82f6; }
-        .agent-sam { border-left: 3px solid #10b981; }
-        .agent-taylor { border-left: 3px solid #f59e0b; }
-        .nav-item { transition: all 0.2s; }
-        .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.05); }
-        .progress-bar { background: linear-gradient(90deg, #3b82f6, #8b5cf6); }
+        * { 
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale; 
+            font-family: 'Inter', system-ui, sans-serif; 
+        }
+        body { 
+            background: #000; 
+            color: #fafafa; 
+        }
+        .sidebar { 
+            background: rgba(10,10,10,0.95); 
+            border-right: 1px solid rgba(255,255,255,0.05); 
+        }
+        .card { 
+            background: rgba(255,255,255,0.03); 
+            border: 1px solid rgba(255,255,255,0.06); 
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card:hover { 
+            background: rgba(255,255,255,0.05); 
+            border-color: rgba(255,255,255,0.12);
+            transform: translateY(-2px);
+        }
+        .btn-primary { 
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%); 
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1);
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover { 
+            box-shadow: 0 4px 12px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+        }
+        .status-dot { 
+            width: 8px; 
+            height: 8px; 
+            border-radius: 50%; 
+        }
+        .status-active { 
+            background: #10b981; 
+            box-shadow: 0 0 0 2px rgba(16,185,129,0.2), 0 0 8px #10b981; 
+        }
+        .status-paused { 
+            background: #f59e0b; 
+            box-shadow: 0 0 0 2px rgba(245,158,11,0.2);
+        }
+        .nav-item { 
+            transition: all 0.2s ease;
+            border-radius: 12px;
+        }
+        .nav-item:hover, .nav-item.active { 
+            background: rgba(255,255,255,0.06);
+        }
+        .agent-card {
+            border-left: 3px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .agent-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .agent-alex { border-left-color: #ef4444; }
+        .agent-maya { border-left-color: #8b5cf6; }
+        .agent-jordan { border-left-color: #3b82f6; }
+        .agent-sam { border-left-color: #10b981; }
+        .agent-taylor { border-left-color: #f59e0b; }
+        .stat-value {
+            font-variant-numeric: tabular-nums;
+        }
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body class="min-h-screen" x-data="dashboard()">
+<body class="min-h-screen antialiased" x-data="dashboard()">
     <!-- Sidebar -->
-    <div class="fixed left-0 top-0 bottom-0 w-64 sidebar z-50">
-        <div class="p-6 border-b border-white/5">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+    <aside class="fixed left-0 top-0 bottom-0 w-64 sidebar z-50 flex flex-col">
+        <!-- Logo -->
+        <div class="p-5 border-b border-white/5">
+            <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
                     <i data-lucide="cpu" class="w-5 h-5 text-white"></i>
                 </div>
-                <span class="font-bold text-lg">CoExAI</span>
-            </div>
+                <span class="font-bold text-xl tracking-tight">CoExAI</span>
+            </a>
         </div>
 
-        <nav class="p-4 space-y-1">
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
             <button @click="view = 'dashboard'" 
                     :class="{ 'active': view === 'dashboard' }"
-                    class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left">
-                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white">
+                <i data-lucide="layout-dashboard" class="w-[18px] h-[18px]"></i>
                 <span>Dashboard</span>
             </button>
 
-            <div class="pt-4 pb-2 px-4 text-xs font-medium text-gray-500 uppercase">AI Agents</div>
+            <div class="pt-5 pb-2 px-4">
+                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">AI Agents</span>
+            </div>
 
             <template x-for="agent in agents" :key="agent.id">
                 <button @click="selectAgent(agent.id)"
-                        :class="{ 'active': selectedAgent === agent.id, [`agent-${agent.id}`]: true }"
-                        class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                        :class="{ 'active': selectedAgent === agent.id }"
+                        class="nav-item w-full flex items-center gap-3 px-3 py-2.5 text-sm group">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
                          :class="agent.bgColor">
                         <i :data-lucide="agent.icon" class="w-4 h-4" :class="agent.textColor"></i>
                     </div>
-                    <div class="flex-1">
-                        <div class="font-medium" x-text="agent.name"></div>
-                        <div class="text-xs text-gray-500" x-text="agent.status"></div>
+                    <div class="flex-1 min-w-0 text-left">
+                        <div class="font-medium text-gray-200 truncate" x-text="agent.name"></div>
+                        <div class="text-[11px] text-gray-500 capitalize" x-text="agent.status"></div>
                     </div>
-                    <div class="status-dot" :class="`status-${agent.status}`"></div>
+                    <div class="status-dot shrink-0" :class="`status-${agent.status}`"></div>
                 </button>
             </template>
 
-            <div class="pt-4 pb-2 px-4 text-xs font-medium text-gray-500 uppercase">Settings</div>
+            <div class="pt-5 pb-2 px-4">
+                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Settings</span>
+            </div>
 
             <button @click="view = 'billing'" :class="{ 'active': view === 'billing' }"
-                    class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left">
-                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white">
+                <i data-lucide="credit-card" class="w-[18px] h-[18px]"></i>
                 <span>Billing</span>
             </button>
 
             <button @click="view = 'settings'" :class="{ 'active': view === 'settings' }"
-                    class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left">
-                <i data-lucide="settings" class="w-5 h-5"></i>
+                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white">
+                <i data-lucide="settings" class="w-[18px] h-[18px]"></i>
                 <span>Settings</span>
             </button>
         </nav>
 
         <!-- User Profile -->
-        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/5">
+        <div class="p-4 border-t border-white/5">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-semibold text-sm shadow-lg">
                     EL
                 </div>
                 <div class="flex-1 min-w-0">
-                    <div class="font-medium truncate">Elijah</div>
+                    <div class="font-medium text-sm truncate">Elijah</div>
                     <div class="text-xs text-gray-500">5 agents active</div>
                 </div>
             </div>
         </div>
-    </div>
+    </aside>
 
     <!-- Main Content -->
-    <div class="ml-64">
+    <div class="ml-64 min-h-screen flex flex-col">
         <!-- Header -->
-        <header class="sticky top-0 z-40 bg-black/80 backdrop-blur-xl border-b border-white/5">
-            <div class="flex items-center justify-between px-8 py-4">
-                <h1 class="text-2xl font-semibold" x-text="pageTitle"></h1>
+        <header class="sticky top-0 z-40 bg-black/90 backdrop-blur-xl border-b border-white/5">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div>
+                    <h1 class="text-xl font-semibold tracking-tight" x-text="pageTitle"></h1>
+                    <p class="text-sm text-gray-500 mt-0.5" x-show="view === 'dashboard'">Manage your AI workforce</p>
+                </div>
 
-                <div class="flex items-center gap-4">
-                    <button class="relative p-2 hover:bg-white/5 rounded-lg">
-                        <i data-lucide="bell" class="w-5 h-5"></i>
-                        <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                <div class="flex items-center gap-3">
+                    <button class="relative p-2.5 hover:bg-white/5 rounded-xl transition-colors">
+                        <i data-lucide="bell" class="w-5 h-5 text-gray-400"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-black"></span>
                     </button>
 
-                    <button class="btn-primary px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"
+                    <button class="btn-primary px-4 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2"
                             @click="showAddAgent = true">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                         Add Agent
@@ -121,134 +181,155 @@
         </header>
 
         <!-- Dashboard Content -->
-        <main class="p-8">
+        <main class="flex-1 p-6">
             <!-- Overview Stats -->
-            <div class="grid grid-cols-4 gap-6 mb-8">
-                <div class="card p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="text-sm text-gray-500">Active Agents</div>
-                        <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="card p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">Active Agents</div>
+                            <div class="text-2xl font-bold stat-value">5</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
                             <i data-lucide="bot" class="w-5 h-5 text-blue-400"></i>
                         </div>
                     </div>
-                    <div class="text-3xl font-bold">5</div>
-                    <div class="text-sm text-green-400 mt-1">All operational</div>
+                    <div class="flex items-center gap-1.5 text-xs">
+                        <span class="text-green-400 font-medium">&#10003; All operational</span>
+                    </div>
                 </div>
 
-                <div class="card p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="text-sm text-gray-500">Tasks Completed</div>
-                        <div class="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
+                <div class="card p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">Tasks Completed</div>
+                            <div class="text-2xl font-bold stat-value">12,847</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
                             <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
                         </div>
                     </div>
-                    <div class="text-3xl font-bold">12,847</div>
-                    <div class="text-sm text-green-400 mt-1">+23% this week</div>
+                    <div class="flex items-center gap-1.5 text-xs">
+                        <i data-lucide="trending-up" class="w-3.5 h-3.5 text-green-400"></i>
+                        <span class="text-green-400 font-medium">+23%</span>
+                        <span class="text-gray-500">this week</span>
+                    </div>
                 </div>
 
-                <div class="card p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="text-sm text-gray-500">Time Saved</div>
-                        <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                <div class="card p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">Time Saved</div>
+                            <div class="text-2xl font-bold stat-value">1,240</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
                             <i data-lucide="clock" class="w-5 h-5 text-purple-400"></i>
                         </div>
                     </div>
-                    <div class="text-3xl font-bold">1,240 hrs</div>
-                    <div class="text-sm text-gray-500 mt-1">This month</div>
+                    <div class="text-xs text-gray-500">hours this month</div>
                 </div>
 
-                <div class="card p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="text-sm text-gray-500">Monthly Cost</div>
-                        <div class="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                            <i data-lucide="dollar-sign" class="w-5 h-5 text-orange-400"></i>
+                <div class="card p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <div class="text-sm text-gray-500 mb-1">Monthly Cost</div>
+                            <div class="text-2xl font-bold stat-value">$5,794</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
+                            <i data-lucide="credit-card" class="w-5 h-5 text-orange-400"></i>
                         </div>
                     </div>
-                    <div class="text-3xl font-bold">$5,794</div>
-                    <div class="text-sm text-gray-500 mt-1">5 active agents</div>
+                    <div class="text-xs text-gray-500">5 active agents</div>
                 </div>
             </div>
 
             <!-- Agent Cards -->
-            <div class="mb-6 flex items-center justify-between">
-                <h2 class="text-xl font-semibold">Your AI Agents</h2>
-                <button class="text-sm text-blue-400 hover:text-blue-300">View All</button>
-            </div>
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-lg font-semibold">Your AI Agents</h2>
+                    <button class="text-sm text-blue-400 hover:text-blue-300 transition-colors">View All</button>
+                </div>
 
-            <div class="grid grid-cols-2 gap-6">
-                <template x-for="agent in agents" :key="agent.id">
-                    <div class="card p-6 cursor-pointer" @click="selectAgent(agent.id)"
-                         :class="`agent-${agent.id}`">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-xl flex items-center justify-center"
-                                     :class="agent.bgColor">
-                                    <i :data-lucide="agent.icon" class="w-6 h-6" :class="agent.textColor"></i>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <template x-for="agent in agents" :key="agent.id">
+                        <div class="card agent-card p-5 cursor-pointer agent p-"
+                             :class="`agent-${agent.id}`"
+                             @click="selectAgent(agent.id)">
+                            
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                                         :class="agent.bgColor">
+                                        <i :data-lucide="agent.icon" class="w-5 h-5" :class="agent.textColor"></i>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="font-semibold" x-text="agent.name"></div>
+                                        <div class="text-sm text-gray-500" x-text="agent.tagline"></div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/5">
+                                    <div class="status-dot" :class="`status-${agent.status}`"></div>
+                                    <span class="text-xs capitalize" x-text="agent.status"></span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-4 mb-4 py-3 border-y border-white/5">
+                                <div>
+                                    <div class="text-xl font-bold stat-value" x-text="agent.stats.primary"></div>
+                                    <div class="text-[11px] text-gray-500 mt-0.5" x-text="agent.stats.primaryLabel"></div>
                                 </div>
                                 
                                 <div>
-                                    <div class="font-semibold text-lg" x-text="agent.name"></div>
-                                    <div class="text-sm text-gray-500" x-text="agent.tagline"></div>
+                                    <div class="text-xl font-bold stat-value" x-text="agent.stats.secondary"></div>
+                                    <div class="text-[11px] text-gray-500 mt-0.5" x-text="agent.stats.secondaryLabel"></div>
+                                </div>
+                                
+                                <div>
+                                    <div class="text-xl font-bold stat-value" x-text="agent.stats.tertiary"></div>
+                                    <div class="text-[11px] text-gray-500 mt-0.5" x-text="agent.stats.tertiaryLabel"></div>
                                 </div>
                             </div>
 
-                            <div class="flex items-center gap-2">
-                                <div class="status-dot" :class="`status-${agent.status}`"></div>
-                                <span class="text-sm capitalize" x-text="agent.status"></span>
+                            <div class="flex items-center justify-between">
+                                <div class="text-sm text-gray-400">
+                                    <span class="text-white font-semibold" x-text="agent.price"></span>
+                                    <span class="text-gray-500">/month</span>
+                                </div>
+                                
+                                <button class="text-sm text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1 transition-colors"
+                                        @click.stop="selectAgent(agent.id)">
+                                    Manage
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </button>
                             </div>
                         </div>
-
-                        <div class="grid grid-cols-3 gap-4 mb-4">
-                            <div>
-                                <div class="text-2xl font-bold" x-text="agent.stats.primary"></div>
-                                <div class="text-xs text-gray-500" x-text="agent.stats.primaryLabel"></div>
-                            </div>
-                            
-                            <div>
-                                <div class="text-2xl font-bold" x-text="agent.stats.secondary"></div>
-                                <div class="text-xs text-gray-500" x-text="agent.stats.secondaryLabel"></div>
-                            </div>
-                            
-                            <div>
-                                <div class="text-2xl font-bold" x-text="agent.stats.tertiary"></div>
-                                <div class="text-xs text-gray-500" x-text="agent.stats.tertiaryLabel"></div>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between pt-4 border-t border-white/5">
-                            <div class="text-sm text-gray-500">
-                                <span x-text="agent.price"></span>/month
-                            </div>
-                            
-                            <button class="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1"
-                                    @click.stop="selectAgent(agent.id)">
-                                Manage
-                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                </template>
+                    </template>
+                </div>
             </div>
 
             <!-- Recent Activity -->
             <div class="mt-8">
-                <h2 class="text-xl font-semibold mb-4">Recent Activity</h2>
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-lg font-semibold">Recent Activity</h2>
+                    <button class="text-sm text-blue-400 hover:text-blue-300 transition-colors">View All</button>
+                </div>
                 
-                <div class="card overflow-hidden">
+                <div class="card divide-y divide-white/5">
                     <template x-for="activity in recentActivity" :key="activity.id">
-                        <div class="flex items-center gap-4 p-4 border-b border-white/5 last:border-0 hover:bg-white/5"
-003e
-                            <div class="w-10 h-10 rounded-lg flex items-center justify-center"
+                        <div class="flex items-center gap-4 p-4 hover:bg-white/[0.02] transition-colors cursor-pointer">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                                  :class="activity.bgColor">
                                 <i :data-lucide="activity.icon" class="w-5 h-5" :class="activity.textColor"></i>
                             </div>
                             
-                            <div class="flex-1">
-                                <div class="font-medium" x-text="activity.title"></div>
-                                <div class="text-sm text-gray-500" x-text="activity.description"></div>
+                            <div class="flex-1 min-w-0">
+                                <div class="font-medium text-sm truncate" x-text="activity.title"></div>
+                                <div class="text-sm text-gray-500 truncate" x-text="activity.description"></div>
                             </div>
                             
-                            <div class="text-sm text-gray-500" x-text="activity.time"></div>
+                            <div class="text-xs text-gray-500 shrink-0" x-text="activity.time"></div>
                         </div>
                     </template>
                 </div>
@@ -257,7 +338,9 @@
     </div>
 
     <script>
-        lucide.createIcons();
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
 
         function dashboard() {
             return {
@@ -266,11 +349,9 @@
                 showAddAgent: false,
                 
                 get pageTitle() {
-                    if (this.selectedAgent) {
-                        const agent = this.agents.find(a => a.id === this.selectedAgent);
-                        return agent ? agent.name : 'Dashboard';
-                    }
-                    return 'Dashboard';
+                    return this.selectedAgent 
+                        ? (this.agents.find(a => a.id === this.selectedAgent)?.name || 'Dashboard')
+                        : 'Dashboard';
                 },
 
                 agents: [
@@ -285,11 +366,11 @@
                         price: '$2,000',
                         stats: {
                             primary: '127',
-                            primaryLabel: 'Calls Made Today',
+                            primaryLabel: 'Calls Today',
                             secondary: '18',
-                            secondaryLabel: 'Meetings Booked',
+                            secondaryLabel: 'Meetings',
                             tertiary: '94%',
-                            tertiaryLabel: 'Connection Rate'
+                            tertiaryLabel: 'Connection'
                         }
                     },
                     {
@@ -303,11 +384,11 @@
                         price: '$1,500',
                         stats: {
                             primary: '47',
-                            primaryLabel: 'Videos Processed',
+                            primaryLabel: 'Videos',
                             secondary: '940',
-                            secondaryLabel: 'Pieces Created',
+                            secondaryLabel: 'Pieces',
                             tertiary: '2.4M',
-                            tertiaryLabel: 'Total Views'
+                            tertiaryLabel: 'Views'
                         }
                     },
                     {
@@ -321,11 +402,11 @@
                         price: '$1,000',
                         stats: {
                             primary: '8.2K',
-                            primaryLabel: 'Avg Impressions',
+                            primaryLabel: 'Impressions',
                             secondary: '156',
-                            secondaryLabel: 'New Followers',
+                            secondaryLabel: 'Followers',
                             tertiary: '23',
-                            tertiaryLabel: 'Inbound Leads'
+                            tertiaryLabel: 'Leads'
                         }
                     },
                     {
@@ -339,11 +420,11 @@
                         price: '$800',
                         stats: {
                             primary: '#1',
-                            primaryLabel: 'Maps Ranking',
+                            primaryLabel: 'Ranking',
                             secondary: '42',
-                            secondaryLabel: 'New Reviews',
+                            secondaryLabel: 'Reviews',
                             tertiary: '+67%',
-                            tertiaryLabel: 'Traffic Increase'
+                            tertiaryLabel: 'Traffic'
                         }
                     },
                     {
@@ -357,11 +438,11 @@
                         price: '$497',
                         stats: {
                             primary: '1,247',
-                            primaryLabel: 'Docs Processed',
+                            primaryLabel: 'Docs',
                             secondary: '99.7%',
                             secondaryLabel: 'Accuracy',
-                            tertiary: '420 hrs',
-                            tertiaryLabel: 'Time Saved'
+                            tertiary: '420',
+                            tertiaryLabel: 'Hours Saved'
                         }
                     }
                 ],
@@ -381,7 +462,7 @@
                         icon: 'video',
                         bgColor: 'bg-purple-500/10',
                         textColor: 'text-purple-400',
-                        title: 'Maya processed a video',
+                        title: 'Maya processed video',
                         description: 'Generated 18 content pieces',
                         time: '15 min ago'
                     },
@@ -399,7 +480,7 @@
                         icon: 'star',
                         bgColor: 'bg-green-500/10',
                         textColor: 'text-green-400',
-                        title: 'Sam got a 5-star review',
+                        title: 'Sam got 5-star review',
                         description: 'Auto-responded with thank you',
                         time: '3 hours ago'
                     },
@@ -416,7 +497,6 @@
 
                 selectAgent(id) {
                     this.selectedAgent = id;
-                    this.view = 'agent';
                     window.location.href = `/dashboard/${id}`;
                 }
             }
@@ -424,4 +504,3 @@
     </script>
 </body>
 </html>
-<!-- Build: 1770837641 -->
