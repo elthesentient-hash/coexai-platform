@@ -1,44 +1,17 @@
 {
   "version": 2,
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
-    }
-  ],
+  "buildCommand": null,
+  "devCommand": null,
+  "installCommand": null,
+  "framework": null,
+  "outputDirectory": ".",
   "routes": [
-    {
-      "src": "/dashboard",
-      "dest": "/dashboard/index.html"
-    },
-    {
-      "src": "/dashboard/(.*)",
-      "dest": "/dashboard/index.html"
-    },
-    {
-      "src": "/pricing",
-      "dest": "/checkout/pricing.html"
-    },
-    {
-      "src": "/checkout",
-      "dest": "/checkout/checkout.html"
-    },
-    {
-      "src": "/success",
-      "dest": "/checkout/success.html"
-    },
-    {
-      "src": "/",
-      "dest": "/landing-page/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/landing-page/index.html"
-    }
+    { "src": "/dashboard", "dest": "/dashboard/index.html" },
+    { "src": "/dashboard/(.*)", "dest": "/dashboard/index.html" },
+    { "src": "/pricing", "dest": "/checkout/pricing.html" },
+    { "src": "/checkout", "dest": "/checkout/checkout.html" },
+    { "src": "/success", "dest": "/checkout/success.html" },
+    { "src": "/", "dest": "/landing-page/index.html" },
+    { "src": "/(.*)", "dest": "/landing-page/index.html" }
   ]
 }
