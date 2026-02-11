@@ -1,0 +1,27 @@
+{
+  "name": "coexai-creator-suite",
+  "version": "1.0.0",
+  "description": "AI Agent Workforce for Content Creators",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "openai": "^4.28.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "node-cron": "^3.0.3"
+  },
+  "keywords": [
+    "ai-agents",
+    "content-creators",
+    "youtube",
+    "tiktok",
+    "instagram",
+    "automation"
+  ],
+  "author": "CoExAI",
+  "license": "MIT"
+}
