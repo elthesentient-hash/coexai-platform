@@ -17,19 +17,6 @@
                         sans: ['Inter', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        dark: {
-                            50: '#fafafa',
-                            100: '#f5f5f5',
-                            200: '#e5e5e5',
-                            300: '#d4d4d4',
-                            400: '#a3a3a3',
-                            500: '#737373',
-                            600: '#525252',
-                            700: '#404040',
-                            800: '#262626',
-                            900: '#171717',
-                            950: '#0a0a0a',
-                        },
                         brand: {
                             purple: '#8b5cf6',
                             blue: '#3b82f6',
@@ -38,9 +25,9 @@
                         }
                     },
                     animation: {
-                        'fade-in': 'fadeIn 1s ease-out',
-                        'slide-up': 'slideUp 0.8s ease-out',
-                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'scale-in': 'scaleIn 0.3s ease-out',
                     },
                     keyframes: {
                         fadeIn: {
@@ -48,12 +35,12 @@
                             '100%': { opacity: '1' },
                         },
                         slideUp: {
-                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
                             '100%': { opacity: '1', transform: 'translateY(0)' },
                         },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
+                        scaleIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.95)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
                         },
                     }
                 }
@@ -71,7 +58,6 @@
             color: #fafafa;
         }
         
-        /* Subtle gradient background */
         .bg-gradient-radial {
             background: 
                 radial-gradient(ellipse 80% 50% at 50% -20%, rgba(120, 119, 198, 0.15), transparent),
@@ -80,7 +66,6 @@
                 #000;
         }
         
-        /* Apple-style cards */
         .apple-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
@@ -94,7 +79,6 @@
             transform: translateY(-4px);
         }
         
-        /* Premium buttons */
         .btn-primary {
             background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -125,14 +109,12 @@
             border-color: rgba(255, 255, 255, 0.2);
         }
         
-        /* Navigation blur */
         .nav-blur {
             background: rgba(0, 0, 0, 0.65);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
         }
         
-        /* Gradient text */
         .text-gradient {
             background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #f472b6 100%);
             -webkit-background-clip: text;
@@ -140,54 +122,119 @@
             background-clip: text;
         }
         
-        /* Section divider */
-        .section-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        }
-        
-        /* Agent card specific */
-        .agent-card {
+        .nav-link {
             position: relative;
-            overflow: hidden;
         }
         
-        .agent-card::before {
+        .nav-link::after {
             content: '';
             position: absolute;
-            top: 0;
+            bottom: -4px;
             left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        }
-        
-        /* Feature list */
-        .feature-list li {
-            position: relative;
-            padding-left: 1.5rem;
-        }
-        
-        .feature-list li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0.6rem;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
+            width: 0;
+            height: 2px;
             background: #3b82f6;
+            transition: width 0.3s ease;
         }
         
-        /* Pricing card highlight */
-        .pricing-highlight {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
-            border: 1px solid rgba(59, 130, 246, 0.3);
+        .nav-link:hover::after {
+            width: 100%;
         }
         
-        /* FAQ accordion */
-        .faq-item {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            z-index: 101;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-content.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+        }
+        
+        /* Feature bullets */
+        .feature-bullet::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .feature-bullet.purple::before { background: #8b5cf6; }
+        .feature-bullet.blue::before { background: #3b82f6; }
+        .feature-bullet.green::before { background: #10b981; }
+        .feature-bullet.orange::before { background: #f59e0b; }
+        
+        /* Process steps */
+        .process-line {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            right: 2rem;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6, #10b981);
+            opacity: 0.3;
+        }
+        
+        @media (max-width: 768px) {
+            .process-line {
+                display: none;
+            }
         }
         
         /* Smooth scroll */
@@ -195,11 +242,43 @@
             scroll-behavior: smooth;
         }
         
-        /* Focus states */
-        button:focus-visible,
-        a:focus-visible {
-            outline: 2px solid #3b82f6;
-            outline-offset: 2px;
+        /* Custom scrollbar for modal */
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+        
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Pricing highlight */
+        .pricing-highlight {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Testimonial card */
+        .testimonial-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+        }
+        
+        /* Stats counter animation */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stat-number {
+            animation: countUp 0.8s ease-out forwards;
         }
     </style>
 </head>
@@ -208,7 +287,7 @@
     <nav class="fixed top-0 left-0 right-0 z-50 nav-blur border-b border-white/5">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="flex items-center justify-between h-14">
-                <a href="#" class="flex items-center gap-2">
+                <a href="#" class="flex items-center gap-2" onclick="window.scrollTo(0,0); return false;">
                     <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                         <i data-lucide="cpu" class="w-4 h-4 text-white"></i>
                     </div>
@@ -216,14 +295,16 @@
                 </a>
                 
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="#agents" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Agents</a>
-                    <a href="#how-it-works" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">How it Works</a>
-                    <a href="#pricing" class="text-sm text-gray-400 hover:text-white transition-colors duration-200">Pricing</a>
+                    <a href="#agents" class="nav-link text-sm text-gray-400 hover:text-white transition-colors duration-200">Agents</a>
+                    <a href="#how-it-works" class="nav-link text-sm text-gray-400 hover:text-white transition-colors duration-200">How it Works</a>
+                    <a href="#testimonials" class="nav-link text-sm text-gray-400 hover:text-white transition-colors duration-200">Stories</a>
+                    <a href="#pricing" class="nav-link text-sm text-gray-400 hover:text-white transition-colors duration-200">Pricing</a>
+                    <a href="#faq" class="nav-link text-sm text-gray-400 hover:text-white transition-colors duration-200">FAQ</a>
                 </div>
                 
                 <div class="flex items-center gap-3">
-                    <a href="#" class="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors duration-200">Sign In</a>
-                    <a href="#pricing" class="btn-primary px-4 py-1.5 rounded-full text-sm font-medium text-white">Get Started</a>
+                    <button onclick="showSignIn()" class="hidden sm:block text-sm text-gray-400 hover:text-white transition-colors duration-200">Sign In</button>
+                    <button onclick="scrollToPricing()" class="btn-primary px-4 py-1.5 rounded-full text-sm font-medium text-white">Get Started</button>
                 </div>
             </div>
         </div>
@@ -233,32 +314,32 @@
     <section class="relative pt-32 pb-20 lg:pt-40 lg:pb-32">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="text-center max-w-4xl mx-auto">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-8">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in">
                     <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
                     <span class="text-xs text-gray-400">Now with Maya, Jordan, Sam & Taylor</span>
                 </div>
                 
-                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight mb-6 leading-[1.1]">
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight mb-6 leading-[1.1] animate-slide-up">
                     Meet Your
                     <span class="text-gradient">AI Workforce</span>
                 </h1>
                 
-                <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-slide-up" style="animation-delay: 0.1s">
                     Four autonomous AI agents working 24/7 to grow your business. 
                     From content creation to lead generation, they handle it all.
                 </p>
                 
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="#pricing" class="btn-primary px-8 py-3.5 rounded-full text-base font-medium text-white w-full sm:w-auto">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style="animation-delay: 0.2s">
+                    <button onclick="scrollToPricing()" class="btn-primary px-8 py-3.5 rounded-full text-base font-medium text-white w-full sm:w-auto">
                         Start Free Trial
-                    </a>
-                    <a href="#agents" class="btn-secondary px-8 py-3.5 rounded-full text-base font-medium text-white w-full sm:w-auto flex items-center justify-center gap-2">
+                    </button>
+                    <button onclick="showVideoDemo()" class="btn-secondary px-8 py-3.5 rounded-full text-base font-medium text-white w-full sm:w-auto flex items-center justify-center gap-2">
                         <i data-lucide="play-circle" class="w-5 h-5"></i>
-                        See How It Works
-                    </a>
+                        Watch Demo
+                    </button>
                 </div>
                 
-                <p class="mt-6 text-sm text-gray-500">No credit card required. 7-day free trial.</p>
+                <p class="mt-6 text-sm text-gray-500 animate-fade-in" style="animation-delay: 0.3s">No credit card required. 7-day free trial.</p>
             </div>
         </div>
     </section>
@@ -268,19 +349,19 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div class="text-center">
-                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1">4</div>
+                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1 stat-number">4</div>
                     <div class="text-sm text-gray-500">AI Agents</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1">10,000+</div>
+                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1 stat-number" style="animation-delay: 0.1s">10,000+</div>
                     <div class="text-sm text-gray-500">Hours Saved</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1">99.7%</div>
+                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1 stat-number" style="animation-delay: 0.2s">99.7%</div>
                     <div class="text-sm text-gray-500">Accuracy Rate</div>
                 </div>
                 <div class="text-center">
-                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1">24/7</div>
+                    <div class="text-3xl sm:text-4xl font-semibold text-white mb-1 stat-number" style="animation-delay: 0.3s">24/7</div>
                     <div class="text-sm text-gray-500">Always On</div>
                 </div>
             </div>
@@ -301,7 +382,7 @@
             
             <div class="grid md:grid-cols-2 gap-6">
                 <!-- Maya Card -->
-                <div class="apple-card agent-card p-8">
+                <div class="apple-card agent-card p-8 cursor-pointer" onclick="showAgentModal('maya')">
                     <div class="flex items-start justify-between mb-6">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
                             <i data-lucide="video" class="w-7 h-7 text-purple-400"></i>
@@ -315,11 +396,11 @@
                         Automatically creates shorts, carousels, threads, and blog posts.
                     </p>
                     
-                    <ul class="feature-list space-y-3 text-sm text-gray-300 mb-8">
-                        <li>Auto-generates TikToks, Reels & Shorts</li>
-                        <li>Creates LinkedIn carousels</li>
-                        <li>Writes Twitter/X threads</li>
-                        <li>Produces SEO-optimized blog posts</li>
+                    <ul class="space-y-3 text-sm text-gray-300 mb-8">
+                        <li class="feature-bullet purple relative pl-6">Auto-generates TikToks, Reels & Shorts</li>
+                        <li class="feature-bullet purple relative pl-6">Creates LinkedIn carousels</li>
+                        <li class="feature-bullet purple relative pl-6">Writes Twitter/X threads</li>
+                        <li class="feature-bullet purple relative pl-6">Produces SEO-optimized blog posts</li>
                     </ul>
                     
                     <div class="flex items-center justify-between pt-6 border-t border-white/5">
@@ -327,14 +408,15 @@
                             <span class="text-2xl font-semibold">$297</span>
                             <span class="text-gray-500">/mo</span>
                         </div>
-                        <button class="btn-secondary px-5 py-2 rounded-full text-sm font-medium">
+                        <button class="btn-secondary px-5 py-2 rounded-full text-sm font-medium flex items-center gap-2">
                             Learn More
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
 
                 <!-- Jordan Card -->
-                <div class="apple-card agent-card p-8">
+                <div class="apple-card agent-card p-8 cursor-pointer" onclick="showAgentModal('jordan')">
                     <div class="flex items-start justify-between mb-6">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
                             <i data-lucide="linkedin" class="w-7 h-7 text-blue-400"></i>
@@ -348,11 +430,11 @@
                         engages with your network, and builds authority that drives inbound leads.
                     </p>
                     
-                    <ul class="feature-list space-y-3 text-sm text-gray-300 mb-8">
-                        <li>Ghostwrites posts in your voice</li>
-                        <li>Auto-engages with target audience</li>
-                        <li>5-10K impressions per post</li>
-                        <li>Generates qualified inbound leads</li>
+                    <ul class="space-y-3 text-sm text-gray-300 mb-8">
+                        <li class="feature-bullet blue relative pl-6">Ghostwrites posts in your voice</li>
+                        <li class="feature-bullet blue relative pl-6">Auto-engages with target audience</li>
+                        <li class="feature-bullet blue relative pl-6">5-10K impressions per post</li>
+                        <li class="feature-bullet blue relative pl-6">Generates qualified inbound leads</li>
                     </ul>
                     
                     <div class="flex items-center justify-between pt-6 border-t border-white/5">
@@ -360,14 +442,15 @@
                             <span class="text-2xl font-semibold">$1,000</span>
                             <span class="text-gray-500">/mo</span>
                         </div>
-                        <button class="btn-primary px-5 py-2 rounded-full text-sm font-medium">
+                        <button class="btn-primary px-5 py-2 rounded-full text-sm font-medium flex items-center gap-2">
                             Get Started
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
 
                 <!-- Sam Card -->
-                <div class="apple-card agent-card p-8">
+                <div class="apple-card agent-card p-8 cursor-pointer" onclick="showAgentModal('sam')">
                     <div class="flex items-start justify-between mb-6">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center">
                             <i data-lucide="map-pin" class="w-7 h-7 text-green-400"></i>
@@ -381,11 +464,11 @@
                         optimizes listings, and drives foot traffic to your door.
                     </p>
                     
-                    <ul class="feature-list space-y-3 text-sm text-gray-300 mb-8">
-                        <li>Achieves #1 Google Maps ranking</li>
-                        <li>Automated review management</li>
-                        <li>Competitor tracking & analysis</li>
-                        <li>Local citation building</li>
+                    <ul class="space-y-3 text-sm text-gray-300 mb-8">
+                        <li class="feature-bullet green relative pl-6">Achieves #1 Google Maps ranking</li>
+                        <li class="feature-bullet green relative pl-6">Automated review management</li>
+                        <li class="feature-bullet green relative pl-6">Competitor tracking & analysis</li>
+                        <li class="feature-bullet green relative pl-6">Local citation building</li>
                     </ul>
                     
                     <div class="flex items-center justify-between pt-6 border-t border-white/5">
@@ -393,14 +476,15 @@
                             <span class="text-2xl font-semibold">$800</span>
                             <span class="text-gray-500">/mo</span>
                         </div>
-                        <button class="btn-secondary px-5 py-2 rounded-full text-sm font-medium">
+                        <button class="btn-secondary px-5 py-2 rounded-full text-sm font-medium flex items-center gap-2">
                             Learn More
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
 
                 <!-- Taylor Card -->
-                <div class="apple-card agent-card p-8">
+                <div class="apple-card agent-card p-8 cursor-pointer" onclick="showAgentModal('taylor')">
                     <div class="flex items-start justify-between mb-6">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 flex items-center justify-center">
                             <i data-lucide="file-text" class="w-7 h-7 text-orange-400"></i>
@@ -414,11 +498,11 @@
                         and integrates with your existing systems.
                     </p>
                     
-                    <ul class="feature-list space-y-3 text-sm text-gray-300 mb-8">
-                        <li>99.7% data extraction accuracy</li>
-                        <li>Processes 1000s of documents</li>
-                        <li>Integrates with any CRM/system</li>
-                        <li>Automated workflow triggers</li>
+                    <ul class="space-y-3 text-sm text-gray-300 mb-8">
+                        <li class="feature-bullet orange relative pl-6">99.7% data extraction accuracy</li>
+                        <li class="feature-bullet orange relative pl-6">Processes 1000s of documents</li>
+                        <li class="feature-bullet orange relative pl-6">Integrates with any CRM/system</li>
+                        <li class="feature-bullet orange relative pl-6">Automated workflow triggers</li>
                     </ul>
                     
                     <div class="flex items-center justify-between pt-6 border-t border-white/5">
@@ -426,8 +510,9 @@
                             <span class="text-2xl font-semibold">$497</span>
                             <span class="text-gray-500">/mo</span>
                         </div>
-                        <button class="btn-secondary px-5 py-2 rounded-full text-sm font-medium">
+                        <button class="btn-secondary px-5 py-2 rounded-full text-sm font-medium flex items-center gap-2">
                             Learn More
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
@@ -447,36 +532,149 @@
                 </p>
             </div>
             
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
-                        <span class="text-2xl font-semibold text-blue-400">1</span>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-3">Choose Your Agent</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Select the agent that matches your biggest need. Start with one or deploy all four.
-                    </p>
-                </div>
+            <div class="relative">
+                <div class="process-line"></div>
                 
-                <div class="text-center">
-                    <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
-                        <span class="text-2xl font-semibold text-purple-400">2</span>
+                <div class="grid md:grid-cols-3 gap-8 relative z-10">
+                    <div class="text-center">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-500/20">
+                            <span class="text-2xl font-bold text-white">1</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Choose Your Agent</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Select the agent that matches your biggest need. Start with one or deploy all four.
+                        </p>
+                        <button onclick="scrollToPricing()" class="mt-4 text-blue-400 hover:text-blue-300 text-sm font-medium flex items-center gap-1 mx-auto">
+                            Browse agents
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3">Connect & Configure</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Link your accounts and set preferences. Our agents learn your voice and style.
-                    </p>
-                </div>
-                
-                <div class="text-center">
-                    <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
-                        <span class="text-2xl font-semibold text-green-400">3</span>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/20">
+                            <span class="text-2xl font-bold text-white">2</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Connect & Configure</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Link your accounts and set preferences. Our agents learn your voice and style.
+                        </p>
+                        <button onclick="showSetupDemo()" class="mt-4 text-purple-400 hover:text-purple-300 text-sm font-medium flex items-center gap-1 mx-auto">
+                            See how it works
+                            <i data-lucide="play" class="w-4 h-4"></i>
+                        </button>
                     </div>
-                    <h3 class="text-xl font-semibold mb-3">Watch Them Work</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Your agents start immediately. Monitor progress and results in real-time.
-                    </p>
+                    
+                    <div class="text-center">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-500/20">
+                            <span class="text-2xl font-bold text-white">3</span>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">Watch Them Work</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Your agents start immediately. Monitor progress and results in real-time.
+                        </p>
+                        <button onclick="showDashboardPreview()" class="mt-4 text-green-400 hover:text-green-300 text-sm font-medium flex items-center gap-1 mx-auto">
+                            Preview dashboard
+                            <i data-lucide="layout" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-24 lg:py-32 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-4">
+                    Loved by teams worldwide
+                </h2>
+                <p class="text-lg text-gray-400">
+                    See how businesses are transforming with AI agents.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card apple-card p-6">
+                    <div class="flex items-center gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        "Jordan transformed our CEO's LinkedIn presence. We went from 500 views per post to 8,000+ consistently. The inbound leads started flowing within two weeks."
+                    </p>
+                    
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold">
+                            SC
+                        </div>
+                        <div>
+                            <div class="font-medium">Sarah Chen</div>
+                            <div class="text-sm text-gray-500">Marketing Director, TechFlow</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card apple-card p-6">
+                    <div class="flex items-center gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        "Maya is like having a full content team. I record one podcast episode, and she creates 20+ pieces of content. My audience has grown 300% in three months."
+                    </p>
+                    
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold">
+                            MJ
+                        </div>
+                        <div>
+                            <div class="font-medium">Marcus Johnson</div>
+                            <div class="text-sm text-gray-500">Podcast Host, Growth Daily</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card apple-card p-6">
+                    <div class="flex items-center gap-1 mb-4">
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                        <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+                    </div>
+                    
+                    <p class="text-gray-300 mb-6 leading-relaxed">
+                        "Sam got us to #1 on Google Maps for 'dentist near me' in our city. Our appointment bookings increased 40% in the first month. The ROI is incredible."
+                    </p>
+                    
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-semibold">
+                            ER
+                        </div>
+                        <div>
+                            <div class="font-medium">Dr. Emily Rodriguez</div>
+                            <div class="text-sm text-gray-500">Smile Bright Dental</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button onclick="showAllTestimonials()" class="btn-secondary px-6 py-2.5 rounded-full text-sm font-medium">
+                    Read All Stories
+                </button>
             </div>
         </div>
     </section>
@@ -495,95 +693,156 @@
             
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                 <!-- Maya Pricing -->
-                <div class="apple-card p-6 flex flex-col">
+                <div class="apple-card p-6 flex flex-col hover:border-purple-500/30 transition-colors cursor-pointer" onclick="showPricingDetails('maya')">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
                             <i data-lucide="video" class="w-5 h-5 text-purple-400"></i>
                         </div>
                         <span class="font-medium">Maya</span>
                     </div>
+                    
                     <div class="mb-4">
                         <span class="text-3xl font-semibold">$297</span>
                         <span class="text-gray-500">/mo</span>
                     </div>
+                    
                     <ul class="space-y-2 text-sm text-gray-400 mb-6 flex-grow">
-                        <li>Unlimited content repurposing</li>
-                        <li>All social platforms</li>
-                        <li>Custom branding</li>
-                        <li>Priority processing</li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Unlimited repurposing
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            All social platforms
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Custom branding
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Priority processing
+                        </li>
                     </ul>
+                    
                     <button class="btn-secondary w-full py-2.5 rounded-full text-sm font-medium">
                         Start Trial
                     </button>
                 </div>
 
                 <!-- Jordan Pricing -->
-                <div class="apple-card pricing-highlight p-6 flex flex-col relative">
+                <div class="apple-card pricing-highlight p-6 flex flex-col relative cursor-pointer" onclick="showPricingDetails('jordan')">
                     <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <span class="px-3 py-1 bg-blue-500 text-white text-xs font-medium rounded-full">Popular</span>
+                        <span class="px-3 py-1 bg-blue-500 text-white text-xs font-medium rounded-full">Most Popular</span>
                     </div>
+                    
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center">
                             <i data-lucide="linkedin" class="w-5 h-5 text-blue-400"></i>
                         </div>
                         <span class="font-medium">Jordan</span>
                     </div>
+                    
                     <div class="mb-4">
                         <span class="text-3xl font-semibold">$1,000</span>
                         <span class="text-gray-500">/mo</span>
                     </div>
+                    
                     <ul class="space-y-2 text-sm text-gray-400 mb-6 flex-grow">
-                        <li>Unlimited LinkedIn posts</li>
-                        <li>Auto-engagement</li>
-                        <li>Lead tracking</li>
-                        <li>Analytics dashboard</li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Unlimited LinkedIn posts
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Auto-engagement
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Lead tracking
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Analytics dashboard
+                        </li>
                     </ul>
+                    
                     <button class="btn-primary w-full py-2.5 rounded-full text-sm font-medium">
                         Start Trial
                     </button>
                 </div>
 
                 <!-- Sam Pricing -->
-                <div class="apple-card p-6 flex flex-col">
+                <div class="apple-card p-6 flex flex-col hover:border-green-500/30 transition-colors cursor-pointer" onclick="showPricingDetails('sam')">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
                             <i data-lucide="map-pin" class="w-5 h-5 text-green-400"></i>
                         </div>
                         <span class="font-medium">Sam</span>
                     </div>
+                    
                     <div class="mb-4">
                         <span class="text-3xl font-semibold">$800</span>
                         <span class="text-gray-500">/mo</span>
                     </div>
+                    
                     <ul class="space-y-2 text-sm text-gray-400 mb-6 flex-grow">
-                        <li>Unlimited locations</li>
-                        <li>Review management</li>
-                        <li>Competitor tracking</li>
-                        <li>Monthly SEO reports</li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Unlimited locations
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Review management
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Competitor tracking
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Monthly SEO reports
+                        </li>
                     </ul>
+                    
                     <button class="btn-secondary w-full py-2.5 rounded-full text-sm font-medium">
                         Start Trial
                     </button>
                 </div>
 
                 <!-- Taylor Pricing -->
-                <div class="apple-card p-6 flex flex-col">
+                <div class="apple-card p-6 flex flex-col hover:border-orange-500/30 transition-colors cursor-pointer" onclick="showPricingDetails('taylor')">
                     <div class="flex items-center gap-3 mb-4">
                         <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
                             <i data-lucide="file-text" class="w-5 h-5 text-orange-400"></i>
                         </div>
                         <span class="font-medium">Taylor</span>
                     </div>
+                    
                     <div class="mb-4">
                         <span class="text-3xl font-semibold">$497</span>
                         <span class="text-gray-500">/mo</span>
                     </div>
+                    
                     <ul class="space-y-2 text-sm text-gray-400 mb-6 flex-grow">
-                        <li>1,000 docs/month</li>
-                        <li>99.7% accuracy</li>
-                        <li>API access</li>
-                        <li>Custom workflows</li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            1,000 docs/month
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            99.7% accuracy
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            API access
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                            Custom workflows
+                        </li>
                     </ul>
+                    
                     <button class="btn-secondary w-full py-2.5 rounded-full text-sm font-medium">
                         Start Trial
                     </button>
@@ -596,7 +855,7 @@
                 <p class="text-gray-400 mb-6">
                     Enterprise plans with dedicated support, custom integrations, and volume pricing.
                 </p>
-                <button class="btn-secondary px-6 py-2.5 rounded-full text-sm font-medium">
+                <button onclick="showContactSales()" class="btn-secondary px-6 py-2.5 rounded-full text-sm font-medium">
                     Contact Sales
                 </button>
             </div>
@@ -613,40 +872,72 @@
             </div>
             
             <div class="space-y-0">
-                <div class="faq-item py-6">
-                    <h3 class="text-lg font-medium mb-2">How quickly can I get started?</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        You can deploy any agent in under 5 minutes. Most users see their first results within 24-48 hours.
-                    </p>
+                <div class="border-b border-white/5">
+                    <button onclick="toggleFaq(this)" class="w-full py-6 flex items-center justify-between text-left">
+                        <span class="text-lg font-medium pr-4">How quickly can I get started?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden pb-6">
+                        <p class="text-gray-400 leading-relaxed">
+                            You can deploy any agent in under 5 minutes. Most users see their first results within 24-48 hours. Simply choose your agent, connect your accounts, and configure your preferences.
+                        </p>
+                    </div>
                 </div>
                 
-                <div class="faq-item py-6">
-                    <h3 class="text-lg font-medium mb-2">Do I need technical skills?</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        Not at all. Each agent has a simple dashboard where you set preferences and review outputs. We handle all the technical complexity.
-                    </p>
+                <div class="border-b border-white/5">
+                    <button onclick="toggleFaq(this)" class="w-full py-6 flex items-center justify-between text-left">
+                        <span class="text-lg font-medium pr-4">Do I need technical skills?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden pb-6">
+                        <p class="text-gray-400 leading-relaxed">
+                            Not at all. Each agent has a simple dashboard where you set preferences and review outputs. We handle all the technical complexity. If you can use social media, you can use CoExAI.
+                        </p>
+                    </div>
                 </div>
                 
-                <div class="faq-item py-6">
-                    <h3 class="text-lg font-medium mb-2">Can I customize the agents to match my brand?</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        Absolutely. All agents learn your voice, style, and preferences. The more you use them, the better they get at matching your brand.
-                    </p>
+                <div class="border-b border-white/5">
+                    <button onclick="toggleFaq(this)" class="w-full py-6 flex items-center justify-between text-left">
+                        <span class="text-lg font-medium pr-4">Can I customize the agents to match my brand?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden pb-6">
+                        <p class="text-gray-400 leading-relaxed">
+                            Absolutely. All agents learn your voice, style, and preferences. The more you use them, the better they get at matching your brand. You can provide examples, give feedback, and fine-tune outputs.
+                        </p>
+                    </div>
                 </div>
                 
-                <div class="faq-item py-6">
-                    <h3 class="text-lg font-medium mb-2">What if I'm not satisfied?</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        We offer a 30-day money-back guarantee. If you're not happy with the results, we'll refund 100% of your payment.
-                    </p>
+                <div class="border-b border-white/5">
+                    <button onclick="toggleFaq(this)" class="w-full py-6 flex items-center justify-between text-left">
+                        <span class="text-lg font-medium pr-4">What if I'm not satisfied?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden pb-6">
+                        <p class="text-gray-400 leading-relaxed">
+                            We offer a 30-day money-back guarantee. If you're not happy with the results, we'll refund 100% of your payment. No questions asked.
+                        </p>
+                    </div>
                 </div>
                 
-                <div class="faq-item py-6">
-                    <h3 class="text-lg font-medium mb-2">Can I use multiple agents together?</h3>
-                    <p class="text-gray-400 leading-relaxed">
-                        Yes, many customers use all four agents as their complete AI workforce. We offer bundle discounts for multi-agent deployments.
-                    </p>
+                <div class="border-b border-white/5">
+                    <button onclick="toggleFaq(this)" class="w-full py-6 flex items-center justify-between text-left">
+                        <span class="text-lg font-medium pr-4">Can I use multiple agents together?</span>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 flex-shrink-0 transition-transform"></i>
+                    </button>
+                    <div class="faq-answer hidden pb-6">
+                        <p class="text-gray-400 leading-relaxed">
+                            Yes, many customers use all four agents as their complete AI workforce. We offer bundle discounts for multi-agent deployments. The agents can even work together—for example, Maya can create content that Jordan posts to LinkedIn.
+                        </p>
+                    </div>
                 </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <p class="text-gray-400">
+                    Still have questions?{}
+                    <button onclick="showContactModal()" class="text-blue-400 hover:text-blue-300 font-medium">Contact our team</button>
+                </p>
             </div>
         </div>
     </section>
@@ -657,19 +948,24 @@
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight mb-6">
                 Ready to meet your AI workforce?
             </h2>
+            
             <p class="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
                 Join thousands of businesses already scaling with AI agents. 
                 Start your free trial today.
             </p>
+            
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#pricing" class="btn-primary px-8 py-4 rounded-full text-base font-medium text-white w-full sm:w-auto">
+                <button onclick="scrollToPricing()" class="btn-primary px-8 py-4 rounded-full text-base font-medium text-white w-full sm:w-auto flex items-center justify-center gap-2">
                     Start Free Trial
-                </a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2">
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+                
+                <button onclick="showContactModal()" class="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2">
                     <i data-lucide="message-circle" class="w-5 h-5"></i>
                     Talk to Sales
-                </a>
+                </button>
             </div>
+            
             <p class="mt-6 text-sm text-gray-500">No credit card required. Cancel anytime.</p>
         </div>
     </section>
@@ -685,6 +981,7 @@
                         </div>
                         <span class="font-semibold">CoExAI</span>
                     </div>
+                    
                     <p class="text-sm text-gray-500">
                         AI agents that work for you. 24/7. Automatically.
                     </p>
@@ -692,31 +989,34 @@
                 
                 <div>
                     <h4 class="font-medium mb-4 text-sm">Product</h4>
+                    
                     <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">Maya</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Jordan</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Sam</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Taylor</a></li>
+                        <li><a href="#" onclick="showAgentModal('maya'); return false;" class="hover:text-white transition-colors">Maya</a></li>
+                        <li><a href="#" onclick="showAgentModal('jordan'); return false;" class="hover:text-white transition-colors">Jordan</a></li>
+                        <li><a href="#" onclick="showAgentModal('sam'); return false;" class="hover:text-white transition-colors">Sam</a></li>
+                        <li><a href="#" onclick="showAgentModal('taylor'); return false;" class="hover:text-white transition-colors">Taylor</a></li>
                         <li><a href="#pricing" class="hover:text-white transition-colors">Pricing</a></li>
                     </ul>
                 </div>
                 
                 <div>
                     <h4 class="font-medium mb-4 text-sm">Company</h4>
+                    
                     <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">About</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                        <li><a href="#" onclick="showAboutModal(); return false;" class="hover:text-white transition-colors">About</a></li>
+                        <li><a href="#" onclick="showBlogModal(); return false;" class="hover:text-white transition-colors">Blog</a></li>
+                        <li><a href="#" onclick="showCareersModal(); return false;" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" onclick="showContactModal(); return false;" class="hover:text-white transition-colors">Contact</a></li>
                     </ul>
                 </div>
                 
                 <div>
                     <h4 class="font-medium mb-4 text-sm">Legal</h4>
+                    
                     <ul class="space-y-2 text-sm text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">Privacy</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Terms</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Security</a></li>
+                        <li><a href="#" onclick="showPrivacyModal(); return false;" class="hover:text-white transition-colors">Privacy</a></li>
+                        <li><a href="#" onclick="showTermsModal(); return false;" class="hover:text-white transition-colors">Terms</a></li>
+                        <li><a href="#" onclick="showSecurityModal(); return false;" class="hover:text-white transition-colors">Security</a></li>
                     </ul>
                 </div>
             </div>
@@ -725,14 +1025,15 @@
                 <p class="text-sm text-gray-500">
                     © 2026 CoExAI. All rights reserved.
                 </p>
+                
                 <div class="flex items-center gap-4">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                    <a href="https://twitter.com/coexai" target="_blank" class="text-gray-400 hover:text-white transition-colors">
                         <i data-lucide="twitter" class="w-5 h-5"></i>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                    <a href="https://linkedin.com/company/coexai" target="_blank" class="text-gray-400 hover:text-white transition-colors">
                         <i data-lucide="linkedin" class="w-5 h-5"></i>
                     </a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                    <a href="https://github.com/coexai" target="_blank" class="text-gray-400 hover:text-white transition-colors">
                         <i data-lucide="github" class="w-5 h-5"></i>
                     </a>
                 </div>
@@ -740,9 +1041,324 @@
         </div>
     </footer>
 
+    <!-- Modal Overlay -->
+    <div id="modalOverlay" class="modal-overlay" onclick="closeModal()"></div>
+
+    <!-- Agent Modal Container -->
+    <div id="agentModal" class="modal-content">
+        <button class="modal-close" onclick="closeModal()">
+            <i data-lucide="x" class="w-5 h-5 text-gray-400"></i>
+        </button>
+        <div id="modalBody">
+            <!-- Content injected by JavaScript -->
+        </div>
+    </div>
+
     <script>
         // Initialize Lucide icons
         lucide.createIcons();
+
+        // Agent data
+        const agentData = {
+            maya: {
+                name: 'Maya',
+                tagline: 'Content Repurposing Agent',
+                color: 'purple',
+                icon: 'video',
+                price: '$297',
+                description: 'Transform one piece of content into dozens. Maya automatically repurposes your podcasts, videos, and long-form content into TikToks, LinkedIn carousels, Twitter threads, and blog posts—maintaining your voice and brand across every platform.',
+                features: [
+                    'Transform one video into 20+ pieces of content',
+                    'Auto-generates TikToks, Reels, and Shorts',
+                    'Creates LinkedIn carousel posts',
+                    'Writes engaging Twitter/X threads',
+                    'Produces SEO-optimized blog posts',
+                    'Generates custom thumbnails and captions',
+                    'Schedules posts across all platforms',
+                    'Maintains consistent brand voice',
+                    'Local processing (content stays private)',
+                    'Analytics and performance tracking'
+                ],
+                idealFor: ['Podcasters', 'YouTubers', 'Content creators', 'Marketing teams', 'Agencies'],
+                stats: { timeSaved: '20+ hours/week', outputMultiplier: '10x', accuracy: '98%' }
+            },
+            jordan: {
+                name: 'Jordan',
+                tagline: 'LinkedIn Growth Agent',
+                color: 'blue',
+                icon: 'linkedin',
+                price: '$1,000',
+                description: 'The $1,000/mo LinkedIn ghostwriter you never have to manage. Jordan writes authentic content in your voice, engages with your network 24/7, and builds authority that generates inbound leads—delivering 5,000-10,000 impressions per post.',
+                features: [
+                    'Ghostwrites posts that sound exactly like you',
+                    'Auto-engages with your target audience',
+                    'Builds thought leadership organically',
+                    'Delivers 5-10K impressions per post',
+                    'Brings qualified leads to your inbox',
+                    'Voice training from your existing content',
+                    'Content calendar management',
+                    'Lead tracking and analytics',
+                    'A/B testing for optimal performance',
+                    'Competitor content analysis'
+                ],
+                idealFor: ['Founders', 'CEOs', 'Consultants', 'Sales professionals', 'Executives'],
+                stats: { impressions: '5-10K/post', leads: '15+/month', growth: '300%' }
+            },
+            sam: {
+                name: 'Sam',
+                tagline: 'Local SEO Agent',
+                color: 'green',
+                icon: 'map-pin',
+                price: '$800',
+                description: 'Dominate Google Maps and local search without hiring an SEO agency. Sam optimizes your Google Business Profile, manages reviews, tracks rankings, and implements local SEO strategies that put you at #1 for your target keywords.',
+                features: [
+                    'Achieve #1 ranking on Google Maps',
+                    'Automated review management',
+                    'Google Business Profile optimization',
+                    'Competitor tracking and analysis',
+                    'Local keyword monitoring',
+                    'Citation building and cleanup',
+                    'Review response automation',
+                    'Monthly SEO reports',
+                    'Foot traffic analytics',
+                    'Local link building'
+                ],
+                idealFor: ['Local businesses', 'Restaurants', 'Clinics', 'Service providers', 'Retail stores'],
+                stats: { ranking: '#1 Maps', traffic: '+40%', roi: '5x' }
+            },
+            taylor: {
+                name: 'Taylor',
+                tagline: 'Document Processor',
+                color: 'orange',
+                icon: 'file-text',
+                price: '$497',
+                description: 'Process documents with 99.7% accuracy—without the manual work. Taylor reads, extracts, and processes forms, invoices, and documents at scale, integrating with your existing systems and automating workflows that used to take hours.',
+                features: [
+                    '99.7% data extraction accuracy',
+                    'Processes 1000s of documents instantly',
+                    'Integrates with any CRM or database',
+                    'Automated workflow triggers',
+                    'Custom document templates',
+                    'Batch processing capabilities',
+                    'Data validation and verification',
+                    'Audit trail and compliance',
+                    'API access for developers',
+                    'Enterprise-grade security'
+                ],
+                idealFor: ['Law firms', 'Healthcare', 'Finance', 'Logistics', 'Enterprise teams'],
+                stats: { accuracy: '99.7%', speed: '10x faster', cost: '-70%' }
+            }
+        };
+
+        // Show agent modal
+        function showAgentModal(agentKey) {
+            const agent = agentData[agentKey];
+            if (!agent) return;
+
+            const colorClasses = {
+                purple: 'text-purple-400 bg-purple-500/10',
+                blue: 'text-blue-400 bg-blue-500/10',
+                green: 'text-green-400 bg-green-500/10',
+                orange: 'text-orange-400 bg-orange-500/10'
+            };
+
+            const html = `
+                <div class="p-8">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-2xl ${colorClasses[agent.color]} flex items-center justify-center">
+                            <i data-lucide="${agent.icon}" class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-bold">${agent.name}</h2>
+                            <p class="text-gray-400">${agent.tagline}</p>
+                        </div>
+                    </div>
+                    
+                    <p class="text-lg text-gray-300 mb-8 leading-relaxed">${agent.description}</p>
+                    
+                    <div class="grid grid-cols-3 gap-4 mb-8">
+                        ${Object.entries(agent.stats).map(([key, value]) => `
+                            <div class="text-center p-4 bg-white/5 rounded-xl">
+                                <div class="text-2xl font-bold text-white">${value}</div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">${key}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <h3 class="text-xl font-semibold mb-4">Key Features</h3>
+                    <ul class="grid md:grid-cols-2 gap-3 mb-8">
+                        ${agent.features.map(f => `
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-gray-300">${f}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    
+                    <h3 class="text-xl font-semibold mb-4">Ideal For</h3>
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        ${agent.idealFor.map(role => `
+                            <span class="px-3 py-1 bg-white/5 rounded-full text-sm text-gray-300">${role}</span>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="flex items-center justify-between pt-6 border-t border-white/10">
+                        <div>
+                            <span class="text-3xl font-bold">${agent.price}</span>
+                            <span class="text-gray-500">/month</span>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="closeModal()" class="btn-secondary px-6 py-2.5 rounded-full text-sm font-medium">
+                                Close
+                            </button>
+                            <button class="btn-primary px-6 py-2.5 rounded-full text-sm font-medium">
+                                Start Free Trial
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('agentModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.getElementById('agentModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Toggle FAQ
+        function toggleFaq(button) {
+            const answer = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            if (answer.classList.contains('hidden')) {
+                answer.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                answer.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Scroll functions
+        function scrollToPricing() {
+            document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Show video demo
+        function showVideoDemo() {
+            alert('Video demo coming soon!');
+        }
+
+        // Show setup demo
+        function showSetupDemo() {
+            alert('Setup demo coming soon!');
+        }
+
+        // Show dashboard preview
+        function showDashboardPreview() {
+            alert('Dashboard preview coming soon!');
+        }
+
+        // Show all testimonials
+        function showAllTestimonials() {
+            alert('Full testimonials page coming soon!');
+        }
+
+        // Show pricing details
+        function showPricingDetails(agent) {
+            showAgentModal(agent);
+        }
+
+        // Show contact sales
+        function showContactSales() {
+            showContactModal();
+        }
+
+        // Show contact modal
+        function showContactModal() {
+            const html = `
+                <div class="p-8">
+                    <h2 class="text-3xl font-bold mb-4">Get in Touch</h2>
+                    <p class="text-gray-400 mb-8">Have questions? We'd love to hear from you.</p>
+                    
+                    <form class="space-y-4">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <input type="text" placeholder="First Name" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500">
+                            <input type="text" placeholder="Last Name" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <input type="email" placeholder="Email" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500">
+                        <input type="text" placeholder="Company" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500">
+                        <textarea placeholder="How can we help?" rows="4" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 resize-none"></textarea>
+                        
+                        <button type="submit" class="btn-primary w-full py-3 rounded-full font-medium">
+                            Send Message
+                        </button>
+                    </form>
+                    
+                    <div class="mt-8 pt-8 border-t border-white/10 text-center">
+                        <p class="text-gray-500 text-sm">Or email us directly at</p>
+                        <a href="mailto:hello@coexai.com" class="text-blue-400 hover:text-blue-300">hello@coexai.com</a>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('agentModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Show sign in
+        function showSignIn() {
+            const html = `
+                <div class="p-8 text-center">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="cpu" class="w-8 h-8 text-white"></i>
+                    </div>
+                    
+                    <h2 class="text-2xl font-bold mb-2">Welcome Back</h2>
+                    <p class="text-gray-400 mb-8">Sign in to access your AI agents</p>
+                    
+                    <form class="space-y-4 text-left">
+                        <input type="email" placeholder="Email" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500">
+                        <input type="password" placeholder="Password" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500">
+                        
+                        <button type="submit" class="btn-primary w-full py-3 rounded-full font-medium">
+                            Sign In
+                        </button>
+                    </form>
+                    
+                    <p class="mt-6 text-sm text-gray-500">
+                        Don't have an account? <a href="#" class="text-blue-400 hover:text-blue-300">Get started</a>
+                    </p>
+                </div>
+            `;
+            document.getElementById('modalBody').innerHTML = html;
+            document.getElementById('modalOverlay').classList.add('active');
+            document.getElementById('agentModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        // Other modal placeholders
+        function showAboutModal() { alert('About page coming soon!'); }
+        function showBlogModal() { alert('Blog coming soon!'); }
+        function showCareersModal() { alert('Careers page coming soon!'); }
+        function showPrivacyModal() { alert('Privacy policy coming soon!'); }
+        function showTermsModal() { alert('Terms of service coming soon!'); }
+        function showSecurityModal() { alert('Security page coming soon!'); }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
     </script>
 </body>
 </html>
