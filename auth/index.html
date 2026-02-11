@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" x-data="auth()">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started - CoExAI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+        body { background: #050505; color: #fafafa; }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .gradient-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .step-active { border-color: #667eea; color: #667eea; }
+        .step-completed { border-color: #10b981; color: #10b981; }
+        .plan-card { transition: all 0.3s ease; }
+        .plan-card:hover { transform: translateY(-4px); }
+        .plan-selected { border-color: #667eea; box-shadow: 0 0 0 2px #667eea; }
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="min-h-screen">
+    
+    <!-- Navigation -->
+    <nav class="border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <a href="/" class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg gradient-purple flex items-center justify-center">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="font-bold text-xl">CoExAI</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Progress Steps -->
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <div class="flex items-center justify-center gap-4 mb-8">
+            <template x-for="(step, index) in steps" :key="index">
+                <div class="flex items-center"
+                >
+                    <div class="flex items-center gap-2"
+                        :class="{
+                            'step-active': currentStep === index,
+                            'step-completed': currentStep > index,
+                            'text-gray-500': currentStep < index
+                        }"
+                    >
+                        <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-semibold"
+                            :class="{
+                                'border-purple-500 text-purple-400': currentStep === index,
+                                'border-green-500 text-green-400': currentStep > index,
+                                'border-gray-600 text-gray-500': currentStep < index
+                            }"
+                        >
+                            <template x-if="currentStep > index">
+                                <i data-lucide="check" class="w-4 h-4"></i>
+                            </template>
+                            <template x-if="currentStep <= index">
+                                <span x-text="index + 1"></span>
+                            </template>
+                        </div>
+                        
+                        <span class="text-sm hidden sm:block" x-text="step"></span>
+                    </div>
+                    
+                    <template x-if="index < steps.length - 1">
+                        <div class="w-12 h-px bg-gray-700 mx-2"
+                            :class="{ 'bg-purple-500': currentStep > index }"
+                        ></div>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <!-- Step 1: Choose Plan -->
+        <div x-show="currentStep === 0" x-cloak>
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold mb-2">Choose Your Plan</h1>
+                <p class="text-gray-400">Start with a 14-day free trial. Cancel anytime.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <template x-for="plan in plans" :key="plan.id">
+                    <div 
+                        class="plan-card p-6 rounded-2xl bg-white/5 border border-white/10 cursor-pointer"
+                        :class="{ 'plan-selected': selectedPlan === plan.id }"
+                        @click="selectedPlan = plan.id"
+                    >
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="font-bold text-lg" x-text="plan.name"></h3>
+                                <p class="text-sm text-gray-400" x-text="plan.followers"></p>
+                            </div>
+                            
+                            <template x-if="plan.popular">
+                                <span class="px-2 py-1 rounded-full gradient-purple text-xs font-semibold">Popular</span>
+                            </template>
+                        </div>
+
+                        <div class="mb-4">
+                            <span class="text-3xl font-bold" x-text="'$' + plan.price"></span>
+                            <span class="text-gray-500">/mo</span>
+                        </div>
+
+                        <ul class="space-y-2 text-sm mb-6">
+                            <template x-for="feature in plan.features">
+                                <li class="flex items-center gap-2"
+                                >
+                                    <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                                    <span x-text="feature"></span>
+                                </li>
+                            </template>
+                        </ul>
+
+                        <div class="text-xs text-gray-500">
+                            <span x-text="plan.agents.length + ' AI Agents'"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                <button 
+                    @click="currentStep = 1"
+                    class="gradient-purple px-8 py-3 rounded-full font-semibold hover:opacity-90 transition-opacity"
+                    :disabled="!selectedPlan"
+                    :class="{ 'opacity-50 cursor-not-allowed': !selectedPlan }"
+                >
+                    Continue →
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Create Account -->
+        <div x-show="currentStep === 1" x-cloak>
+            <div class="max-w-md mx-auto">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold mb-2">Create Your Account</h1>
+                    <p class="text-gray-400">Start your 14-day free trial</p>
+                </div>
+
+                <form @submit.prevent="createAccount" class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Full Name</label>
+                        <input 
+                            type="text" 
+                            x-model="form.name"
+                            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition-colors"
+                            placeholder="John Doe"
+                            required
+                        >
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Email</label>
+                        <input 
+                            type="email" 
+                            x-model="form.email"
+                            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition-colors"
+                            placeholder="john@example.com"
+                            required
+                        >
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-1">Password</label>
+                        <input 
+                            type="password" 
+                            x-model="form.password"
+                            class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition-colors"
+                            placeholder="••••••••"
+                            required
+                            minlength="8"
+                        >
+                        <p class="text-xs text-gray-500 mt-1">Must be at least 8 characters</p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input 
+                            type="checkbox" 
+                            x-model="form.agreed"
+                            id="terms"
+                            class="rounded bg-white/5 border-white/10"
+                            required
+                        >
+                        <label for="terms" class="text-sm text-gray-400">
+                            I agree to the <a href="#" class="text-purple-400 hover:underline">Terms</a> and <a href="#" class="text-purple-400 hover:underline">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <button 
+                        type="submit"
+                        class="w-full gradient-purple py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+                        :disabled="loading"
+                    >
+                        <template x-if="!loading">
+                            <span>Create Account & Start Free Trial</span>
+                        </template>
+                        <template x-if="loading">
+                            <span class="flex items-center justify-center gap-2">
+                                <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                                Creating account...
+                            </span>
+                        </template>
+                    </button>
+                </form>
+
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-400">
+                        Already have an account? 
+                        <a href="#" @click.prevent="showLogin = true" class="text-purple-400 hover:underline">Sign in</a>
+                    </p>
+                </div>
+
+                <div class="mt-8">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="flex-1 h-px bg-white/10"></div>
+                        <span class="text-sm text-gray-500">Or continue with</span>
+                        <div class="flex-1 h-px bg-white/10"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                            <i data-lucide="chrome" class="w-5 h-5"></i>
+                            <span class="text-sm">Google</span>
+                        </button>
+                        
+                        <button class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                            <span class="text-sm">Twitter</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Connect Platforms -->
+        <div x-show="currentStep === 2" x-cloak>
+            <div class="max-w-2xl mx-auto">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold mb-2">Connect Your Platforms</h1>
+                    <p class="text-gray-400">Link the accounts you want AI agents to manage</p>
+                </div>
+
+                <div class="space-y-3">
+                    <template x-for="platform in platforms" :key="platform.id">
+                        <div 
+                            class="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between"
+                            :class="{ 'border-green-500/50': platform.connected }"
+                        >
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl flex items-center justify-center"
+                                    :class="platform.bgColor"
+                                >
+                                    <i :data-lucide="platform.icon" class="w-6 h-6" :class="platform.textColor"></i>
+                                </div>
+                                
+                                <div>
+                                    <div class="font-semibold" x-text="platform.name"></div>
+                                    <div class="text-sm text-gray-400" x-text="platform.connected ? 'Connected' : 'Not connected'"></div>
+                                </div>
+                            </div>
+
+                            <button 
+                                @click="connectPlatform(platform)"
+                                class="px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                                :class="platform.connected ? 'bg-green-500/10 text-green-400' : 'bg-white/10 hover:bg-white/20'"
+                            >
+                                <span x-text="platform.connected ? 'Connected ✓' : 'Connect'"></span>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="mt-8 flex justify-between">
+                    <button 
+                        @click="currentStep = 1"
+                        class="px-6 py-3 rounded-xl border border-white/10 hover:bg-white/5 transition-colors"
+                    >
+                        ← Back
+                    </button>
+                    
+                    <button 
+                        @click="finishSetup()"
+                        class="gradient-purple px-8 py-3 rounded-xl font-semibold hover:opacity-90 transition-opacity"
+                    >
+                        Go to Dashboard →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function auth() {
+            return {
+                currentStep: 0,
+                steps: ['Choose Plan', 'Create Account', 'Connect'],
+                selectedPlan: null,
+                loading: false,
+                showLogin: false,
+                
+                form: {
+                    name: '',
+                    email: '',
+                    password: '',
+                    agreed: false
+                },
+
+                plans: [
+                    {
+                        id: 'starter',
+                        name: 'Starter',
+                        price: 500,
+                        followers: '10K-100K followers',
+                        popular: false,
+                        features: ['Maya (Content)', 'Email support', '5 videos/month'],
+                        agents: ['maya']
+                    },
+                    {
+                        id: 'growth',
+                        name: 'Growth',
+                        price: 700,
+                        followers: '100K-500K followers',
+                        popular: true,
+                        features: ['Maya + Engage', 'Priority support', 'Unlimited videos', 'Analytics dashboard'],
+                        agents: ['maya', 'engage']
+                    },
+                    {
+                        id: 'pro',
+                        name: 'Pro',
+                        price: 1000,
+                        followers: '500K-1M followers',
+                        popular: false,
+                        features: ['Maya + Engage + Pitch', '24/7 support', 'Brand deal finder', 'Advanced analytics'],
+                        agents: ['maya', 'engage', 'pitch']
+                    },
+                    {
+                        id: 'empire',
+                        name: 'Empire',
+                        price: 1200,
+                        followers: '1M+ followers',
+                        popular: false,
+                        features: ['All 4 AI Agents', 'Dedicated manager', 'Custom integrations', 'White-label options'],
+                        agents: ['maya', 'engage', 'pitch', 'analyze']
+                    }
+                ],
+
+                platforms: [
+                    {
+                        id: 'youtube',
+                        name: 'YouTube',
+                        icon: 'youtube',
+                        bgColor: 'bg-red-500/10',
+                        textColor: 'text-red-400',
+                        connected: false
+                    },
+                    {
+                        id: 'tiktok',
+                        name: 'TikTok',
+                        icon: 'video',
+                        bgColor: 'bg-pink-500/10',
+                        textColor: 'text-pink-400',
+                        connected: false
+                    },
+                    {
+                        id: 'instagram',
+                        name: 'Instagram',
+                        icon: 'instagram',
+                        bgColor: 'bg-purple-500/10',
+                        textColor: 'text-purple-400',
+                        connected: false
+                    },
+                    {
+                        id: 'twitter',
+                        name: 'X / Twitter',
+                        icon: 'twitter',
+                        bgColor: 'bg-blue-500/10',
+                        textColor: 'text-blue-400',
+                        connected: false
+                    }
+                ],
+
+                async createAccount() {
+                    this.loading = true;
+                    
+                    // Simulate API call
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    // Store user data in localStorage (demo)
+                    localStorage.setItem('coexai_user', JSON.stringify({
+                        email: this.form.email,
+                        name: this.form.name,
+                        plan: this.selectedPlan,
+                        created_at: new Date().toISOString()
+                    }));
+                    
+                    this.loading = false;
+                    this.currentStep = 2;
+                },
+
+                connectPlatform(platform) {
+                    // Simulate OAuth flow
+                    platform.connected = !platform.connected;
+                },
+
+                finishSetup() {
+                    // Mark onboarding complete
+                    localStorage.setItem('coexai_onboarding_complete', 'true');
+                    
+                    // Redirect to dashboard
+                    window.location.href = '/dashboard';
+                },
+
+                init() {
+                    // Check if user already has plan in URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const plan = urlParams.get('plan');
+                    if (plan) {
+                        this.selectedPlan = plan;
+                    }
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

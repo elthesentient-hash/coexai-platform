@@ -6,9 +6,10 @@
   "framework": null,
   "outputDirectory": ".",
   "routes": [
+    { "src": "/auth", "dest": "/auth/index.html" },
     { "src": "/dashboard", "dest": "/dashboard/index.html" },
     { "src": "/dashboard/(.*)", "dest": "/dashboard/index.html" },
-    { "src": "/pricing", "dest": "/checkout/pricing.html" },
+    { "src": "/pricing", "dest": "/landing-page/index.html#pricing" },
     { "src": "/checkout", "dest": "/checkout/checkout.html" },
     { "src": "/success", "dest": "/checkout/success.html" },
     { "src": "/", "dest": "/landing-page/index.html" },
