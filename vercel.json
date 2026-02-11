@@ -9,10 +9,8 @@
     { "src": "/demo", "dest": "/demo/index.html" },
     { "src": "/auth", "dest": "/auth/index.html" },
     { "src": "/dashboard", "dest": "/dashboard/index.html" },
-    { "src": "/dashboard/(.*)", "dest": "/dashboard/index.html" },
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
     { "src": "/pricing", "dest": "/landing-page/index.html#pricing" },
-    { "src": "/checkout", "dest": "/checkout/checkout.html" },
-    { "src": "/success", "dest": "/checkout/success.html" },
     { "src": "/", "dest": "/landing-page/index.html" },
     { "src": "/(.*)", "dest": "/landing-page/index.html" }
   ]

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <!-- Electric Gradient -->
+    <linearGradient id="electricGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Glow Filter -->
+    <filter id="electricGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- Intense Glow -->
+    <filter id="intenseGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background Circle with Electric Effect -->
+  <circle cx="50" cy="50" r="46" fill="url(#electricGradient)" opacity="0.1"/>
+  <circle cx="50" cy="50" r="42" fill="none" stroke="url(#electricGradient)" stroke-width="0.5" opacity="0.3"/>
+  
+  <!-- Electric Star/Sparkle - Sharp Angular Design -->
+  <g filter="url(#electricGlow)">
+    <!-- Main 4-point star - electric sharp -->
+    <polygon points="50,5 56,38 95,50 56,62 50,95 44,62 5,50 44,38" 
+             fill="url(#electricGradient)"/>
+    
+    <!-- Inner electric core -->
+    <polygon points="50,20 54,42 80,50 54,58 50,80 46,58 20,50 46,42" 
+             fill="#ffffff" opacity="0.9"/>
+    
+    <!-- Center power node -->
+    <circle cx="50" cy="50" r="8" fill="url(#electricGradient)"/>
+    <circle cx="50" cy="50" r="4" fill="#ffffff"/>
+  </g>
+  
+  <!-- Electric sparks/lines -->
+  <g stroke="url(#electricGradient)" stroke-width="1.5" fill="none" opacity="0.8">
+    <!-- Top-left spark -->
+    <polyline points="25,25 20,15 28,12" />
+    <circle cx="20" cy="15" r="1.5" fill="url(#electricGradient)"/>
+    
+    <!-- Top-right spark -->
+    <polyline points="75,25 80,15 72,12" />
+    <circle cx="80" cy="15" r="1.5" fill="url(#electricGradient)"/>
+    
+    <!-- Bottom-left spark -->
+    <polyline points="25,75 15,80 18,88" />
+    <circle cx="15" cy="80" r="1.5" fill="url(#electricGradient)"/>
+    
+    <!-- Bottom-right spark -->
+    <polyline points="75,75 85,80 82,88" />
+    <circle cx="85" cy="80" r="1.5" fill="url(#electricGradient)"/>
+  </g>
+  
+  <!-- Energy rings -->
+  <circle cx="50" cy="50" r="35" fill="none" stroke="url(#electricGradient)" stroke-width="0.3" opacity="0.4">
+    <animate attributeName="r" values="35;38;35" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4;0.1;0.4" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>
