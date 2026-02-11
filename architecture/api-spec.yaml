@@ -1,0 +1,1812 @@
+openapi: 3.1.0
+info:
+  title: CoExAI API
+  description: |
+    CoExAI is a multi-agent AI platform providing specialized AI agents for content repurposing, 
+    LinkedIn growth, local SEO, and document processing.
+    
+    ## Authentication
+    CoExAI uses API keys for authentication. Include your API key in the `Authorization` header:
+    ```
+    Authorization: Bearer coexai_live_xxxxxxxxxxxxx
+    ```
+    
+    ## Rate Limits
+    | Tier | Requests/Min | Concurrent Jobs |
+    |------|-------------|-----------------|
+    | Free | 60 | 1 |
+    | Pro | 600 | 5 |
+    | Enterprise | 6000 | 25 |
+    
+    ## Webhooks
+    Configure webhooks to receive real-time events. All webhooks include a signature header:
+    ```
+    X-CoExAI-Signature: sha256=...
+    ```
+  version: 1.0.0
+  contact:
+    name: CoExAI Support
+    email: support@coexai.com
+    url: https://coexai.com/support
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://api.coexai.com/v1
+    description: Production
+  - url: https://api.staging.coexai.com/v1
+    description: Staging
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Authentication
+    description: User authentication and session management
+  - name: Users
+    description: User profile and account management
+  - name: Organizations
+    description: Organization and team management
+  - name: Agents
+    description: AI agents and their capabilities
+  - name: Jobs
+    description: Job creation, monitoring, and management
+  - name: Files
+    description: File upload and management
+  - name: Outputs
+    description: Job outputs and results
+  - name: Webhooks
+    description: Webhook configuration and delivery
+  - name: Billing
+    description: Subscriptions, invoices, and payments
+  - name: API Keys
+    description: API key management
+
+paths:
+  # Authentication
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      summary: Authenticate user
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_in:
+                    type: integer
+
+  /auth/logout:
+    post:
+      summary: Logout user
+      tags: [Authentication]
+      responses:
+        '204':
+          description: Logout successful
+
+  /auth/oauth/{provider}:
+    get:
+      summary: Initiate OAuth flow
+      tags: [Authentication]
+      security: []
+      parameters:
+        - name: provider
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [google, microsoft, github]
+      responses:
+        '302':
+          description: Redirect to OAuth provider
+
+  # Users
+  /users/me:
+    get:
+      summary: Get current user profile
+      tags: [Users]
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    patch:
+      summary: Update user profile
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /users/me/password:
+    post:
+      summary: Change password
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [current_password, new_password]
+              properties:
+                current_password:
+                  type: string
+                  format: password
+                new_password:
+                  type: string
+                  format: password
+                  minLength: 12
+      responses:
+        '204':
+          description: Password changed
+
+  # Organizations
+  /organizations:
+    get:
+      summary: List organizations
+      tags: [Organizations]
+      responses:
+        '200':
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Organization'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /organizations/{orgId}:
+    get:
+      summary: Get organization details
+      tags: [Organizations]
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Organization details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+
+  /organizations/{orgId}/members:
+    get:
+      summary: List organization members
+      tags: [Organizations]
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of members
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrganizationMember'
+
+    post:
+      summary: Invite member
+      tags: [Organizations]
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, role]
+              properties:
+                email:
+                  type: string
+                  format: email
+                role:
+                  type: string
+                  enum: [admin, member, viewer]
+      responses:
+        '201':
+          description: Invitation sent
+
+  /organizations/{orgId}/usage:
+    get:
+      summary: Get organization usage
+      tags: [Organizations]
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Usage statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationUsage'
+
+  # Agents
+  /agents:
+    get:
+      summary: List available agents
+      tags: [Agents]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive, maintenance]
+      responses:
+        '200':
+          description: List of agents
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Agent'
+
+  /agents/{agentId}:
+    get:
+      summary: Get agent details
+      tags: [Agents]
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Agent details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Agent'
+
+  /agents/{agentId}/config:
+    get:
+      summary: Get agent configuration schema
+      tags: [Agents]
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Configuration schema
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  config_schema:
+                    type: object
+                  default_config:
+                    type: object
+
+  /agents/{agentId}/test:
+    post:
+      summary: Test agent with sample input
+      tags: [Agents]
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobCreate'
+      responses:
+        '200':
+          description: Test result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  preview:
+                    type: object
+                  estimated_duration:
+                    type: integer
+
+  # Jobs
+  /jobs:
+    get:
+      summary: List jobs
+      tags: [Jobs]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, queued, processing, completed, failed, cancelled]
+        - name: agent_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: created_after
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: created_before
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Job'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      summary: Create a new job
+      tags: [Jobs]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobCreate'
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                agent_id:
+                  type: string
+                  format: uuid
+                config:
+                  type: string
+                  description: JSON string of configuration
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+                callback_url:
+                  type: string
+                  format: uri
+      responses:
+        '201':
+          description: Job created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '429':
+          description: Rate limit or quota exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /jobs/{jobId}:
+    get:
+      summary: Get job details
+      tags: [Jobs]
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Job details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+
+    delete:
+      summary: Cancel a job
+      tags: [Jobs]
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Job cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '409':
+          description: Cannot cancel job in current state
+
+  /jobs/{jobId}/status:
+    get:
+      summary: Get job status (lightweight)
+      tags: [Jobs]
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Job status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                  progress:
+                    type: integer
+                    description: Percentage complete
+                  estimated_completion:
+                    type: string
+                    format: date-time
+
+  /jobs/{jobId}/retry:
+    post:
+      summary: Retry a failed job
+      tags: [Jobs]
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: Job queued for retry
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+
+  /jobs/{jobId}/history:
+    get:
+      summary: Get job status history
+      tags: [Jobs]
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Job history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JobHistoryEntry'
+
+  # Outputs
+  /jobs/{jobId}/output:
+    get:
+      summary: Get job output
+      tags: [Outputs]
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [json, raw]
+      responses:
+        '200':
+          description: Job output
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobOutput'
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: Output not available
+
+  /jobs/{jobId}/download:
+    get:
+      summary: Download job output as file
+      tags: [Outputs]
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [pdf, docx, csv, txt, json]
+      responses:
+        '200':
+          description: File download
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+
+  # Files
+  /files:
+    post:
+      summary: Upload a file
+      tags: [Files]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                metadata:
+                  type: string
+                  description: JSON string of metadata
+      responses:
+        '201':
+          description: File uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+
+  /files/{fileId}:
+    get:
+      summary: Get file metadata
+      tags: [Files]
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: File metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/File'
+
+    delete:
+      summary: Delete a file
+      tags: [Files]
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: File deleted
+
+  /files/{fileId}/download:
+    get:
+      summary: Download file
+      tags: [Files]
+      parameters:
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: File download
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+
+  # Webhooks
+  /webhooks:
+    get:
+      summary: List webhook endpoints
+      tags: [Webhooks]
+      responses:
+        '200':
+          description: List of webhooks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WebhookEndpoint'
+
+    post:
+      summary: Create webhook endpoint
+      tags: [Webhooks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookEndpointCreate'
+      responses:
+        '201':
+          description: Webhook created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEndpoint'
+
+  /webhooks/{webhookId}:
+    get:
+      summary: Get webhook endpoint
+      tags: [Webhooks]
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Webhook details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookEndpoint'
+
+    patch:
+      summary: Update webhook endpoint
+      tags: [Webhooks]
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookEndpointUpdate'
+      responses:
+        '200':
+          description: Webhook updated
+
+    delete:
+      summary: Delete webhook endpoint
+      tags: [Webhooks]
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Webhook deleted
+
+  /webhooks/{webhookId}/deliveries:
+    get:
+      summary: List webhook deliveries
+      tags: [Webhooks]
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, delivered, failed]
+      responses:
+        '200':
+          description: List of deliveries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WebhookDelivery'
+
+  /webhooks/{webhookId}/secret/rotate:
+    post:
+      summary: Rotate webhook secret
+      tags: [Webhooks]
+      parameters:
+        - name: webhookId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Secret rotated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  secret:
+                    type: string
+                    description: New webhook secret (only shown once)
+
+  # Billing
+  /billing/subscription:
+    get:
+      summary: Get current subscription
+      tags: [Billing]
+      responses:
+        '200':
+          description: Subscription details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+
+  /billing/invoices:
+    get:
+      summary: List invoices
+      tags: [Billing]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: List of invoices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invoice'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /billing/payment-methods:
+    get:
+      summary: List payment methods
+      tags: [Billing]
+      responses:
+        '200':
+          description: List of payment methods
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PaymentMethod'
+
+    post:
+      summary: Add payment method
+      tags: [Billing]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [payment_method_id]
+              properties:
+                payment_method_id:
+                  type: string
+                  description: Stripe payment method ID
+                set_default:
+                  type: boolean
+                  default: false
+      responses:
+        '201':
+          description: Payment method added
+
+  /billing/upgrade:
+    post:
+      summary: Upgrade/downgrade subscription
+      tags: [Billing]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tier]
+              properties:
+                tier:
+                  type: string
+                  enum: [free, pro, enterprise]
+                interval:
+                  type: string
+                  enum: [month, year]
+                  default: month
+      responses:
+        '200':
+          description: Subscription updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+
+  /billing/cancel:
+    post:
+      summary: Cancel subscription
+      tags: [Billing]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                at_period_end:
+                  type: boolean
+                  default: true
+      responses:
+        '200':
+          description: Subscription cancellation scheduled
+
+  # API Keys
+  /api-keys:
+    get:
+      summary: List API keys
+      tags: [API Keys]
+      responses:
+        '200':
+          description: List of API keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ApiKey'
+
+    post:
+      summary: Create API key
+      tags: [API Keys]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKeyCreate'
+      responses:
+        '201':
+          description: API key created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiKey'
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        description: The actual API key (only shown once)
+
+  /api-keys/{keyId}:
+    get:
+      summary: Get API key
+      tags: [API Keys]
+      parameters:
+        - name: keyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: API key details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKey'
+
+    delete:
+      summary: Revoke API key
+      tags: [API Keys]
+      parameters:
+        - name: keyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: API key revoked
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT access token or API key
+
+  schemas:
+    # Authentication
+    RegisterRequest:
+      type: object
+      required: [email, password, organization_name]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 12
+        first_name:
+          type: string
+        last_name:
+          type: string
+        organization_name:
+          type: string
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        mfa_code:
+          type: string
+          description: Required if MFA is enabled
+
+    AuthResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        organization:
+          $ref: '#/components/schemas/Organization'
+        tokens:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+            expires_in:
+              type: integer
+            token_type:
+              type: string
+              default: Bearer
+
+    # User
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+        timezone:
+          type: string
+        locale:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, suspended, pending]
+        mfa_enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        last_login_at:
+          type: string
+          format: date-time
+
+    UserUpdate:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        timezone:
+          type: string
+        locale:
+          type: string
+        avatar_url:
+          type: string
+          format: uri
+
+    # Organization
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        status:
+          type: string
+        tier:
+          type: string
+          enum: [free, pro, enterprise]
+        settings:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+
+    OrganizationMember:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user:
+          $ref: '#/components/schemas/User'
+        role:
+          type: string
+          enum: [owner, admin, member, viewer]
+        allowed_agents:
+          type: array
+          items:
+            type: string
+        joined_at:
+          type: string
+          format: date-time
+
+    OrganizationUsage:
+      type: object
+      properties:
+        organization_id:
+          type: string
+          format: uuid
+        tier:
+          type: string
+        monthly_job_quota:
+          type: integer
+        monthly_jobs_used:
+          type: integer
+        remaining_quota:
+          type: integer
+        jobs_this_month:
+          type: integer
+        active_jobs:
+          type: integer
+        active_users:
+          type: integer
+        subscription_status:
+          type: string
+        current_period_ends_at:
+          type: string
+          format: date-time
+
+    # Agent
+    Agent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [maya, jordan, sam, taylor]
+        status:
+          type: string
+          enum: [active, inactive, maintenance, deprecated]
+        version:
+          type: string
+        config_schema:
+          type: object
+        default_config:
+          type: object
+        input_types:
+          type: array
+          items:
+            type: string
+        output_formats:
+          type: array
+          items:
+            type: string
+        max_file_size_mb:
+          type: integer
+        estimated_duration_seconds:
+          type: integer
+        documentation_url:
+          type: string
+          format: uri
+        is_enabled:
+          type: boolean
+          description: Whether enabled for current organization
+
+    # Job
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        agent_id:
+          type: string
+          format: uuid
+        agent:
+          $ref: '#/components/schemas/Agent'
+        status:
+          type: string
+          enum: [pending, queued, processing, completed, failed, cancelled]
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 10
+        input_data:
+          type: object
+        input_files:
+          type: array
+          items:
+            $ref: '#/components/schemas/File'
+        config:
+          type: object
+        output_data:
+          type: object
+        output_files:
+          type: array
+          items:
+            $ref: '#/components/schemas/File'
+        error_message:
+          type: string
+        retry_count:
+          type: integer
+        max_retries:
+          type: integer
+        queue_time_ms:
+          type: integer
+        processing_time_ms:
+          type: integer
+        progress:
+          type: integer
+          description: Percentage complete (0-100)
+        callback_url:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    JobCreate:
+      type: object
+      required: [agent_id, input_data]
+      properties:
+        agent_id:
+          type: string
+          format: uuid
+        input_data:
+          type: object
+          description: Agent-specific input data
+        config:
+          type: object
+          description: Agent configuration overrides
+        file_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: IDs of previously uploaded files
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 10
+          default: 5
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook URL for job completion
+
+    JobHistoryEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        from_status:
+          type: string
+        to_status:
+          type: string
+        changed_by:
+          type: string
+          format: uuid
+        reason:
+          type: string
+        metadata:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+
+    JobOutput:
+      type: object
+      properties:
+        job_id:
+          type: string
+          format: uuid
+        format:
+          type: string
+        content:
+          type: object
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/File'
+        tokens_used:
+          type: integer
+        processing_cost_cents:
+          type: integer
+        expires_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    # File
+    File:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        original_name:
+          type: string
+        type:
+          type: string
+          enum: [document, image, video, audio, spreadsheet, archive, other]
+        mime_type:
+          type: string
+        size_bytes:
+          type: integer
+          format: int64
+        checksum:
+          type: string
+        metadata:
+          type: object
+        download_url:
+          type: string
+          format: uri
+        expires_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    # Webhook
+    WebhookEndpoint:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+            enum: [job.completed, job.failed, subscription.created, subscription.updated, subscription.cancelled, payment.succeeded, payment.failed]
+        is_active:
+          type: boolean
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    WebhookEndpointCreate:
+      type: object
+      required: [url, events]
+      properties:
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+
+    WebhookEndpointUpdate:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+        events:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+        is_active:
+          type: boolean
+
+    WebhookDelivery:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+        payload:
+          type: object
+        status:
+          type: string
+          enum: [pending, delivered, failed]
+        response_status:
+          type: integer
+        attempt_number:
+          type: integer
+        max_attempts:
+          type: integer
+        delivered_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    # Billing
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tier:
+          type: string
+          enum: [free, pro, enterprise]
+        status:
+          type: string
+        amount_cents:
+          type: integer
+        currency:
+          type: string
+        interval:
+          type: string
+        trial_ends_at:
+          type: string
+          format: date-time
+        current_period_starts_at:
+          type: string
+          format: date-time
+        current_period_ends_at:
+          type: string
+          format: date-time
+        cancel_at_period_end:
+          type: boolean
+        usage_limits:
+          type: object
+          properties:
+            maya:
+              type: integer
+            jordan:
+              type: integer
+            sam:
+              type: integer
+            taylor:
+              type: integer
+
+    Invoice:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        amount_due_cents:
+          type: integer
+        amount_paid_cents:
+          type: integer
+        currency:
+          type: string
+        status:
+          type: string
+        paid_at:
+          type: string
+          format: date-time
+        period_start:
+          type: string
+          format: date-time
+        period_end:
+          type: string
+          format: date-time
+        invoice_pdf_url:
+          type: string
+          format: uri
+        line_items:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              amount_cents:
+                type: integer
+
+    PaymentMethod:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+        brand:
+          type: string
+        last4:
+          type: string
+        exp_month:
+          type: integer
+        exp_year:
+          type: integer
+        billing_name:
+          type: string
+        is_default:
+          type: boolean
+
+    # API Key
+    ApiKey:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        prefix:
+          type: string
+          description: First 8 characters of the key for identification
+        scopes:
+          type: array
+          items:
+            type: string
+        allowed_ips:
+          type: array
+          items:
+            type: string
+        last_used_at:
+          type: string
+          format: date-time
+        usage_count:
+          type: integer
+        expires_at:
+          type: string
+          format: date-time
+        revoked_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    ApiKeyCreate:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+            enum: [read, write, admin]
+        allowed_ips:
+          type: array
+          items:
+            type: string
+        expires_in_days:
+          type: integer
+          description: Number of days until expiration (null = never)
+
+    # Common
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        total_pages:
+          type: integer
+        has_next:
+          type: boolean
+        has_prev:
+          type: boolean
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+            request_id:
+              type: string
+
+  # Webhook Event Payloads
+  examples:
+    JobCompletedEvent:
+      summary: Job completed webhook payload
+      value:
+        event: job.completed
+        timestamp: '2024-01-15T10:30:00Z'
+        data:
+          job_id: job_abc123
+          organization_id: org_def456
+          agent_id: agent_maya
+          status: completed
+          started_at: '2024-01-15T10:25:00Z'
+          completed_at: '2024-01-15T10:30:00Z'
+          processing_time_ms: 300000
+          output_url: https://api.coexai.com/v1/jobs/job_abc123/output
+
+    JobFailedEvent:
+      summary: Job failed webhook payload
+      value:
+        event: job.failed
+        timestamp: '2024-01-15T10:30:00Z'
+        data:
+          job_id: job_abc123
+          organization_id: org_def456
+          agent_id: agent_taylor
+          status: failed
+          error_code: PROCESSING_ERROR
+          error_message: Unable to process PDF - corrupted file
+          retry_count: 3
+          max_retries: 3
+
+    SubscriptionUpdatedEvent:
+      summary: Subscription updated webhook payload
+      value:
+        event: subscription.updated
+        timestamp: '2024-01-15T10:30:00Z'
+        data:
+          subscription_id: sub_abc123
+          organization_id: org_def456
+          tier: pro
+          status: active
+          previous_tier: free
+          current_period_ends_at: '2024-02-15T00:00:00Z'

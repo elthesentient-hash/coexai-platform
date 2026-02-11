@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "skills": {
+    "summarize": {
+      "version": "1.0.0",
+      "installedAt": 1770764606339
+    },
+    "openai-whisper": {
+      "version": "1.0.0",
+      "installedAt": 1770764615551
+    },
+    "github": {
+      "version": "1.0.0",
+      "installedAt": 1770764617404
+    },
+    "session-logs": {
+      "version": "1.0.0",
+      "installedAt": 1770764619227
+    },
+    "sag": {
+      "version": "1.0.0",
+      "installedAt": 1770764627626
+    },
+    "openai-image-gen": {
+      "version": "1.0.1",
+      "installedAt": 1770764629602
+    },
+    "nano-pdf": {
+      "version": "1.0.0",
+      "installedAt": 1770764631414
+    },
+    "notion": {
+      "version": "1.0.0",
+      "installedAt": 1770764639341
+    },
+    "obsidian": {
+      "version": "1.0.0",
+      "installedAt": 1770764641230
+    },
+    "trello": {
+      "version": "1.0.0",
+      "installedAt": 1770764643360
+    },
+    "slack": {
+      "version": "1.0.0",
+      "installedAt": 1770764651819
+    },
+    "himalaya": {
+      "version": "1.0.0",
+      "installedAt": 1770764653842
+    },
+    "gog": {
+      "version": "1.0.0",
+      "installedAt": 1770764655734
+    }
+  }
+}
