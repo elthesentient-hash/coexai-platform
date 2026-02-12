@@ -5,18 +5,38 @@
   "installCommand": null,
   "framework": null,
   "outputDirectory": ".",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "routes": [
     { "src": "/demo", "dest": "/demo/index.html" },
+    { "src": "/demo/(.*)", "dest": "/demo/index.html" },
     { "src": "/auth", "dest": "/auth/index.html" },
+    { "src": "/auth/(.*)", "dest": "/auth/index.html" },
     { "src": "/dashboard", "dest": "/dashboard/index.html" },
+    { "src": "/dashboard/(.*)", "dest": "/dashboard/index.html" },
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
     { "src": "/landing-page/index-apple.html", "dest": "/landing-page/index-apple.html" },
     { "src": "/landing-page/hero-datacore.html", "dest": "/landing-page/hero-datacore.html" },
     { "src": "/landing-page/hero-exact-datacore.html", "dest": "/landing-page/hero-exact-datacore.html" },
     { "src": "/landing-page/index-datacore-prompt.html", "dest": "/landing-page/index-datacore-prompt.html" },
+    { "src": "/landing-page/index-galaxy.html", "dest": "/landing-page/index-galaxy.html" },
     { "src": "/landing-page/(.*)", "dest": "/landing-page/$1" },
-    { "src": "/pricing", "dest": "/landing-page/index.html#pricing" },
-    { "src": "/", "dest": "/landing-page/index.html" },
-    { "src": "/(.*)", "dest": "/landing-page/index.html" }
+    { "src": "/pricing", "dest": "/landing-page/index-galaxy.html#pricing" },
+    { "src": "/", "dest": "/landing-page/index-galaxy.html" },
+    { "src": "/(.*)", "dest": "/landing-page/index-galaxy.html" }
+  ],
+  "headers": [
+    {
+      "source": "/dashboard/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/demo/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    }
   ]
 }
