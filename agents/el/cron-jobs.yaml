@@ -1,0 +1,38 @@
+# EL Cron Jobs
+# Schedule these in OpenClaw dashboard or via `openclaw cron add`
+
+# Morning Briefing Call - Every day at 8 AM EST
+- name: EL Morning Briefing
+  schedule: 0 8 * * *
+  timezone: America/New_York
+  action: |
+    Make a morning briefing phone call to Elijah at +16103047272.
+    Use PhoneTool.makeSmartCall with purpose='morning_briefing'.
+    Include: calendar events, pending tasks, priority focus, motivational message.
+
+# Daily Progress Check-in - Every day at 6 PM EST  
+- name: EL Evening Check-in
+  schedule: 0 18 * * *
+  timezone: America/New_York
+  action: |
+    Call Elijah at +16103047272 for evening check-in.
+    Ask about progress on daily goals, any blockers, and tomorrow's priorities.
+    Use PhoneTool with purpose='check_in'.
+
+# Weekly Review - Sundays at 9 AM EST
+- name: EL Weekly Review
+  schedule: 0 9 * * 0
+  timezone: America/New_York
+  action: |
+    Call for weekly review. Discuss: wins from the week, lessons learned,
+    metrics progress ($50K goal), and goals for next week.
+
+# Revenue Milestone Alert - When triggered
+- name: EL Revenue Milestone
+  trigger: revenue_milestone
+  action: |
+    Call immediately to celebrate revenue milestones:
+    - First $1K
+    - First $10K  
+    - First $50K
+    - Monthly recurring targets
