@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoExAI — AI Workforce for Content Creators</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        :root {
+            --background: #0a0a0a;
+            --foreground: #fafafa;
+            --card: #171717;
+            --card-foreground: #fafafa;
+            --primary: #7c3aed;
+            --primary-foreground: #ffffff;
+            --secondary: #262626;
+            --muted: #737373;
+            --muted-foreground: #a3a3a3;
+            --border: #262626;
+            --input: #262626;
+            --ring: #7c3aed;
+            --accent-red: #ef4444;
+        }
+        
+        body {
+            background: var(--background);
+            color: var(--foreground);
+        }
+        
+        /* Glass navigation */
+        .glass-nav {
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Gradient badge */
+        .gradient-badge {
+            background: linear-gradient(90deg, #7c3aed, #a855f7, #ec4899);
+            box-shadow: 0 0 16px 1px rgba(124, 58, 237, 0.4), 
+                        inset 0 1px 4px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Glass button */
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 9px 14px -5px rgba(255, 255, 255, 0.1),
+                        0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+        
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        /* Card styles */
+        .card-dark {
+            background: linear-gradient(180deg, rgba(23, 23, 23, 0.8) 0%, rgba(10, 10, 10, 0.6) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+        }
+        
+        /* Feature card */
+        .feature-card {
+            background: linear-gradient(180deg, rgba(38, 38, 38, 0.5) 0%, rgba(23, 23, 23, 0.3) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Step card */
+        .step-card {
+            background: linear-gradient(180deg, rgba(124, 58, 237, 0.1) 0%, rgba(10, 10, 10, 0.3) 100%);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+        
+        /* Gradient text */
+        .gradient-text {
+            background: linear-gradient(135deg, #fafafa 0%, #a3a3a3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Glow effects */
+        .glow-purple {
+            box-shadow: 0 0 60px rgba(124, 58, 237, 0.3);
+        }
+        
+        /* Portfolio grid */
+        .portfolio-item {
+            transition: all 0.4s ease;
+        }
+        
+        .portfolio-item:hover {
+            transform: translateY(-4px);
+        }
+        
+        .portfolio-item img {
+            filter: grayscale(100%);
+            transition: filter 0.4s ease;
+        }
+        
+        .portfolio-item:hover img {
+            filter: grayscale(0%);
+        }
+        
+        /* Scroll animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Hero video background */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+        
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15) 0%, transparent 50%);
+            z-index: 1;
+        }
+        
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, var(--background) 100%);
+            z-index: 2;
+        }
+        
+        /* Timeline line */
+        .timeline-line {
+            background: linear-gradient(180deg, #7c3aed 0%, rgba(124, 58, 237, 0.3) 100%);
+        }
+        
+        /* Pricing calculator */
+        .pricing-option {
+            transition: all 0.2s ease;
+        }
+        
+        .pricing-option:hover {
+            border-color: rgba(124, 58, 237, 0.5);
+        }
+        
+        .pricing-option.selected {
+            border-color: #7c3aed;
+            background: rgba(124, 58, 237, 0.1);
+        }
+        
+        /* Checkbox/Radio styling */
+        .custom-radio {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .custom-radio:checked {
+            border-color: #7c3aed;
+        }
+        
+        .custom-radio:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #7c3aed;
+            border-radius: 50%;
+        }
+        
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .custom-checkbox:checked {
+            border-color: #7c3aed;
+            background: #7c3aed;
+        }
+        
+        .custom-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+        }
+        
+        /* Range slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #7c3aed;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+        
+        /* Footer gradient line */
+        .footer-line {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        }
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="glass-nav fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="flex h-20 items-center justify-between">
+                <a href="#" class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="text-xl font-semibold">CoExAI</span>
+                </a>
+                
+                <ul class="hidden lg:flex items-center gap-8">
+                    <li><a href="#features" class="text-neutral-400 hover:text-white transition-colors text-sm">Features</a></li>
+                    <li><a href="#agents" class="text-neutral-400 hover:text-white transition-colors text-sm">AI Agents</a></li>
+                    <li><a href="#pricing" class="text-neutral-400 hover:text-white transition-colors text-sm">Pricing</a></li>
+                    <li><a href="#" class="text-neutral-400 hover:text-white transition-colors text-sm">Contact</a></li>
+                </ul>
+                
+                <div class="flex items-center gap-4">
+                    <a href="#" class="hidden sm:block text-neutral-400 hover:text-white transition-colors text-sm">Log in</a>
+                    <a href="/demo" class="btn-glass px-6 py-2.5 rounded-xl text-sm font-medium">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen pt-32 pb-0 overflow-hidden">
+        <div class="hero-bg"></div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="flex flex-col items-center text-center gap-8">
+                <!-- Badge -->
+                <div class="fade-up">
+                    <div class="gradient-badge px-4 py-2 rounded-full inline-flex items-center gap-2">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+                        <span class="text-white text-sm font-semibold">AI Workforce for Content Creators</span>
+                    </div>
+                </div>
+                
+                <!-- Headline -->
+                <div class="fade-up delay-100">
+                    <h1 class="text-4xl md:text-5xl lg:text-7xl font-medium leading-tight max-w-4xl">
+                        Meet your new
+                        <br>
+                        <span class="gradient-text">AI Workforce</span>
+                    </h1>
+                </div>
+                
+                <!-- Subtext -->
+                <p class="fade-up delay-200 text-neutral-400 text-lg md:text-xl max-w-2xl">
+                    Four AI agents working 24/7 to create content, engage your audience, and close brand deals while you focus on what you do best: <span class="text-white font-medium">creating</span>.
+                </p>
+                
+                <!-- CTA -->
+                <div class="fade-up delay-300">
+                    <a href="/demo" class="btn-glass inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-lg font-medium">
+                        Start Free Trial
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Dashboard Preview -->
+            <div class="relative mt-16 fade-up delay-400">
+                <div class="card-dark rounded-t-3xl p-2 max-w-5xl mx-auto">
+                    <div class="bg-gradient-to-b from-neutral-900 to-black rounded-t-2xl p-8 overflow-hidden">
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="col-span-2 bg-neutral-800/50 rounded-2xl p-6 border border-white/5">
+                                <div class="flex items-center justify-between mb-4">
+                                    <span class="text-neutral-400 text-sm">Performance</span>
+                                    <span class="text-green-400 text-sm">+23%</span>
+                                </div>
+                                <div class="text-5xl font-bold mb-2">28.5h</div>
+                                <div class="text-neutral-500 text-sm">Time saved this week</div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="bg-purple-600/20 rounded-2xl p-4 border border-purple-500/20">
+                                    <i data-lucide="wand-2" class="w-6 h-6 text-purple-400 mb-2"></i>
+                                    <div class="text-sm font-medium">Maya</div>
+                                    <div class="text-xs text-neutral-400">Creating...</div>
+                                </div>
+                                
+                                <div class="bg-blue-600/20 rounded-2xl p-4 border border-blue-500/20">
+                                    <i data-lucide="heart-handshake" class="w-6 h-6 text-blue-400 mb-2"></i>
+                                    <div class="text-sm font-medium">Engage</div>
+                                    <div class="text-xs text-neutral-400">Replying...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0a0a0a] to-transparent pointer-events-none"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="relative z-20 py-24 px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col items-center text-center gap-6 mb-16 fade-up">
+                <div class="px-3.5 py-1.5 bg-neutral-700/30 rounded-full border border-white/10 backdrop-blur-md inline-flex items-center gap-2">
+                    <i data-lucide="message-square" class="w-4 h-4 text-neutral-300"></i>
+                    <span class="text-neutral-400 text-sm">Testimonials</span>
+                </div>
+                
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-medium">What our clients say</h2>
+                
+                <p class="text-neutral-400 max-w-xl">Empowering content creators with AI-powered solutions crafted for growth.</p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row gap-6">
+                <!-- Main testimonial -->
+                <div class="flex-1 card-dark rounded-2xl p-8 lg:p-10 fade-up">
+                    <div class="flex flex-col gap-6 h-full">
+                        <div class="flex items-center gap-1">
+                            <i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 fill-yellow-400 text-yellow-400"></i>
+                        </div>
+                        
+                        <div class="flex flex-col gap-4">
+                            <p class="text-xl lg:text-2xl font-medium leading-relaxed">"CoExAI revolutionized my content workflow. I'm now creating 3x more content while spending less time on busywork."</p>
+                            
+                            <p class="text-neutral-400">"The AI agents handle all my community engagement authentically. My followers think it's me replying to every comment!"</p>
+                        </div>
+                        
+                        <div class="flex items-center gap-4 mt-auto pt-6">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500"></div>
+                            <div>
+                                <div class="font-semibold">Sarah Chen</div>
+                                <div class="text-neutral-400 text-sm">YouTuber, 500K subscribers</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Stats -->
+                <div class="flex flex-col sm:flex-row lg:flex-col gap-6 lg:w-80">
+                    <div class="flex-1 card-dark rounded-2xl p-8 fade-up delay-100">
+                        <div class="text-4xl lg:text-5xl font-semibold">3x</div>
+                        <div class="text-neutral-300 mt-2">Content Output Increase</div>
+                    </div>
+                    
+                    <div class="flex-1 card-dark rounded-2xl p-8 fade-up delay-200">
+                        <div class="text-4xl lg:text-5xl font-semibold">100+</div>
+                        <div class="text-neutral-300 mt-2">Active Creators</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Agents Section -->
+    <section id="agents" class="relative z-20 py-24 px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col items-center text-center gap-6 mb-16 fade-up">
+                <div class="px-3.5 py-1.5 bg-neutral-700/30 rounded-full border border-white/10 backdrop-blur-md inline-flex items-center gap-2">
+                    <i data-lucide="layers" class="w-4 h-4 text-neutral-300"></i>
+                    <span class="text-neutral-400 text-sm">The Team</span>
+                </div>
+                
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-medium">Meet your AI workforce</h2>
+                
+                <p class="text-neutral-400 max-w-xl">Four specialized agents, each an expert in their domain. Working together seamlessly.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Maya -->
+                <div class="portfolio-item group fade-up">
+                    <div class="card-dark rounded-3xl p-6">
+                        <div class="h-7 px-3 bg-neutral-700/30 rounded-full border border-white/10 inline-flex items-center gap-2 mb-4">
+                            <span class="text-neutral-400 text-xs">Content Creator</span>
+                        </div>
+                        
+                        <h3 class="text-2xl font-normal mb-2">Maya</h3>
+                        
+                        <p class="text-neutral-400 text-sm mb-6">Transforms 1 video into 20+ content pieces across all platforms.</p>
+                        
+                        <div class="relative rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-900">
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-600/30 to-pink-600/30"></div>
+                            <i data-lucide="wand-2" class="absolute inset-0 m-auto w-16 h-16 text-purple-400"></i>
+                        </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-white/10">
+                            <span class="text-3xl font-bold">$500</span><span class="text-neutral-500">/mo</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Engage -->
+                <div class="portfolio-item group fade-up delay-100">
+                    <div class="card-dark rounded-3xl p-6">
+                        <div class="h-7 px-3 bg-neutral-700/30 rounded-full border border-white/10 inline-flex items-center gap-2 mb-4">
+                            <span class="text-neutral-400 text-xs">Community Manager</span>
+                        </div>
+                        
+                        <h3 class="text-2xl font-normal mb-2">Engage</h3>
+                        
+                        <p class="text-neutral-400 text-sm mb-6">Replies to comments and DMs in your voice, 24/7.</p>
+                        
+                        <div class="relative rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-900">
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-600/30 to-cyan-600/30"></div>
+                            <i data-lucide="heart-handshake" class="absolute inset-0 m-auto w-16 h-16 text-blue-400"></i>
+                        </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-white/10">
+                            <span class="text-3xl font-bold">$300</span><span class="text-neutral-500">/mo</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pitch -->
+                <div class="portfolio-item group fade-up delay-200">
+                    <div class="card-dark rounded-3xl p-6">
+                        <div class="h-7 px-3 bg-neutral-700/30 rounded-full border border-white/10 inline-flex items-center gap-2 mb-4">
+                            <span class="text-neutral-400 text-xs">Deal Closer</span>
+                        </div>
+                        
+                        <h3 class="text-2xl font-normal mb-2">Pitch</h3>
+                        
+                        <p class="text-neutral-400 text-sm mb-6">Finds and closes brand partnerships automatically.</p>
+                        
+                        <div class="relative rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-900">
+                            <div class="absolute inset-0 bg-gradient-to-br from-orange-600/30 to-red-600/30"></div>
+                            <i data-lucide="briefcase" class="absolute inset-0 m-auto w-16 h-16 text-orange-400"></i>
+                        </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-white/10">
+                            <span class="text-3xl font-bold">$400</span><span class="text-neutral-500">/mo</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analyze -->
+                <div class="portfolio-item group fade-up delay-300">
+                    <div class="card-dark rounded-3xl p-6">
+                        <div class="h-7 px-3 bg-neutral-700/30 rounded-full border border-white/10 inline-flex items-center gap-2 mb-4">
+                            <span class="text-neutral-400 text-xs">Growth Coach</span>
+                        </div>
+                        
+                        <h3 class="text-2xl font-normal mb-2">Analyze</h3>
+                        
+                        <p class="text-neutral-400 text-sm mb-6">Deep analytics and actionable growth insights.</p>
+                        
+                        <div class="relative rounded-2xl overflow-hidden aspect-[4/3] bg-neutral-900">
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-600/30 to-emerald-600/30"></div>
+                            <i data-lucide="line-chart" class="absolute inset-0 m-auto w-16 h-16 text-green-400"></i>
+                        </div>
+                        
+                        <div class="mt-6 pt-6 border-t border-white/10">
+                            <span class="text-3xl font-bold">$200</span><span class="text-neutral-500">/mo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="features" class="relative z-20 py-24 px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col items-center text-center gap-6 mb-16 fade-up">
+                <div class="px-3.5 py-1.5 bg-neutral-700/30 rounded-full border border-white/10 backdrop-blur-md inline-flex items-center gap-2">
+                    <i data-lucide="zap" class="w-4 h-4 text-neutral-300"></i>
+                    <span class="text-neutral-400 text-sm">Speed, Simplicity</span>
+                </div>
+                
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-medium">Benefits of working with us</h2>
+                
+                <p class="text-neutral-400 max-w-xl">Swift setup, intelligent automation, and adaptable AI agents designed for modern creators.</p>
+            </div>
+            
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="feature-card rounded-2xl p-6 relative overflow-hidden fade-up">
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 p-3 bg-white/10 rounded-xl border border-white/20 backdrop-blur inline-flex items-center justify-center mb-6">
+                            <i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold mb-3">3x Content Output</h3>
+                        
+                        <p class="text-neutral-400">AI agents that work at machine speed, not human speed. Get days of work done in hours.</p>
+                    </div>
+                </div>
+                
+                
+                <div class="feature-card rounded-2xl p-6 relative overflow-hidden fade-up delay-100">
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 p-3 bg-white/10 rounded-xl border border-white/20 backdrop-blur inline-flex items-center justify-center mb-6">
+                            <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold mb-3">Authentic Voice</h3>
+                        
+                        <p class="text-neutral-400">AI learns your unique voice and style. Your audience will never know it's not you.</p>
+                    </div>
+                </div>
+                
+                
+                <div class="feature-card rounded-2xl p-6 relative overflow-hidden fade-up delay-200">
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 p-3 bg-white/10 rounded-xl border border-white/20 backdrop-blur inline-flex items-center justify-center mb-6">
+                            <i data-lucide="plug" class="w-6 h-6 text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold mb-3">Native Integrations</h3>
+                        
+                        <p class="text-neutral-400">Connect YouTube, TikTok, Instagram, and X with one click. OAuth handled automatically.</p>
+                    </div>
+                </div>
+                
+                
+                <div class="feature-card rounded-2xl p-6 relative overflow-hidden fade-up delay-300">
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 p-3 bg-white/10 rounded-xl border border-white/20 backdrop-blur inline-flex items-center justify-center mb-6">
+                            <i data-lucide="award" class="w-6 h-6 text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold mb-3">Top-notch Quality</h3>
+                        
+                        <p class="text-neutral-400">Get content that looks amazing and performs exceptionally. We focus on delivering the best.</p>
+                    </div>
+                </div>
+                
+                
+                <div class="feature-card rounded-2xl p-6 relative overflow-hidden fade-up delay-400">
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 p-3 bg-white/10 rounded-xl border border-white/20 backdrop-blur inline-flex items-center justify-center mb-6">
+                            <i data-lucide="dollar-sign" class="w-6 h-6 text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold mb-3">Fixed Price, No Hidden Cost</h3>
+                        
+                        <p class="text-neutral-400">Know exactly what you're paying for. Clear pricing with no surprise fees.</p>
+                    </div>
+                </div>
+                
+                
+                <div class="feature-card rounded-2xl p-6 relative overflow-hidden fade-up delay-500">
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 p-3 bg-white/10 rounded-xl border border-white/20 backdrop-blur inline-flex items-center justify-center mb-6">
+                            <i data-lucide="clock" class="w-6 h-6 text-white"></i>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold mb-3">5-Minute Setup</h3>
+                        
+                        <p class="text-neutral-400">Get started in minutes, not days. Connect your platforms and let AI take over.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="relative z-20 py-24 px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col items-center text-center gap-6 mb-20 fade-up">
+                <div class="px-3.5 py-1.5 bg-neutral-700/30 rounded-full border border-white/10 backdrop-blur-md inline-flex items-center gap-2">
+                    <i data-lucide="command" class="w-4 h-4 text-neutral-300"></i>
+                    <span class="text-neutral-400 text-sm">How it Works</span>
+                </div>
+                
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-medium max-w-3xl">We streamline content creation and growth workflow</h2>
+                
+                <p class="text-neutral-400 max-w-xl">Each agent is trained to align with your brand voice and content strategy. We never create without your approval.</p>
+            </div>
+            
+            
+            <div class="flex flex-col gap-16">
+                
+                <!-- Step 1 -->
+                <div class="flex flex-col lg:flex-row items-start gap-8 lg:gap-16 fade-up">
+                    <div class="flex items-start gap-6 lg:gap-8">
+                        <div class="flex flex-col items-center">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-b from-white to-neutral-200 flex items-center justify-center">
+                                <span class="text-xl text-black font-medium">1</span>
+                            </div>
+                            
+                            <div class="relative w-px h-32 mt-4 timeline-line"></div>
+                        </div>
+                        
+                        
+                        <div class="flex flex-col gap-3 max-w-md pt-2">
+                            <h3 class="text-2xl lg:text-3xl font-normal">Connect Your Platforms</h3>
+                            
+                            <p class="text-neutral-400">Link your YouTube, TikTok, Instagram, and X accounts. Our AI learns your voice, style, and content preferences.</p>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="relative w-full lg:w-96 h-64 lg:h-80 rounded-2xl border border-white/10 overflow-hidden ml-auto bg-neutral-900/50">
+                        <div class="absolute inset-0 flex items-center justify-center p-8">
+                            <i data-lucide="link" class="w-24 h-24 text-purple-400"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <!-- Step 2 -->
+                <div class="flex flex-col lg:flex-row items-start gap-8 lg:gap-16 fade-up">
+                    <div class="flex items-start gap-6 lg:gap-8">
+                        <div class="flex flex-col items-center">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-b from-white to-neutral-200 flex items-center justify-center">
+                                <span class="text-xl text-black font-medium">2</span>
+                            </div>
+                            
+                            <div class="relative w-px h-32 mt-4 timeline-line"></div>
+                        </div>
+                        
+                        
+                        <div class="flex flex-col gap-3 max-w-md pt-2">
+                            <h3 class="text-2xl lg:text-3xl font-normal">AI Takes Over</h3>
+                            
+                            <p class="text-neutral-400">Maya creates content, Engage handles comments, Pitch finds deals, and Analyze tracks growth — all on autopilot.</p>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="relative w-full lg:w-96 h-64 lg:h-80 rounded-2xl border border-white/10 overflow-hidden ml-auto bg-neutral-900/50">
+                        <div class="absolute inset-0 flex items-center justify-center p-8">
+                            <i data-lucide="bot" class="w-24 h-24 text-blue-400"></i>
+                        </div>                    
+                    </div>
+                </div>
+                
+                
+                <!-- Step 3 -->
+                <div class="flex flex-col lg:flex-row items-start gap-8 lg:gap-16 fade-up">
+                    <div class="flex items-start gap-6 lg:gap-8">
+                        <div class="flex flex-col items-center">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-b from-white to-neutral-200 flex items-center justify-center">
+                                <span class="text-xl text-black font-medium">3</span>
+                            </div>
+                        </div>
+                        
+                        
+                        <div class="flex flex-col gap-3 max-w-md pt-2">
+                            <h3 class="text-2xl lg:text-3xl font-normal">You Create, We Handle the Rest</h3>
+                            
+                            <p class="text-neutral-400">Focus on creating amazing content while your AI workforce handles distribution, engagement, and monetization.</p>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="relative w-full lg:w-96 h-64 lg:h-80 rounded-2xl border border-white/10 overflow-hidden ml-auto bg-neutral-900/50">
+                        <div class="absolute inset-0 flex items-center justify-center p-8">
+                            <i data-lucide="trophy" class="w-24 h-24 text-green-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="relative z-20 py-24 px-6 lg:px-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col items-center text-center gap-6 mb-16 fade-up">
+                <h2 class="text-3xl md:text-4xl lg:text-5xl font-medium">Flexible pricing for every stage.<br>Try our agent calculator.</h2>
+            </div>
+            
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 rounded-2xl overflow-hidden border border-white/10">
+                
+                <!-- Calculator -->
+                <div class="divide-y divide-white/10 px-6 py-8 lg:p-12 bg-neutral-900/50">
+                    
+                    <div class="space-y-4 pb-8">
+                        <h3 class="text-xl">Which AI agents do you need?</h3>
+                        
+                        <div class="space-y-3">
+                            
+                            <label class="pricing-option flex items-center justify-between p-4 rounded-xl border border-white/10 cursor-pointer selected">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" class="custom-checkbox" checked>
+                                    <span>Maya (Content Creator)</span>
+                                </div>
+                                <span class="text-purple-400">$500/mo</span>
+                            </label>
+                            
+                            
+                            <label class="pricing-option flex items-center justify-between p-4 rounded-xl border border-white/10 cursor-pointer selected">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" class="custom-checkbox" checked>
+                                    <span>Engage (Community)</span>
+                                </div>
+                                <span class="text-purple-400">$300/mo</span>
+                            
+                            </label>
+                            
+                            
+                            <label class="pricing-option flex items-center justify-between p-4 rounded-xl border border-white/10 cursor-pointer">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" class="custom-checkbox">
+                                    <span>Pitch (Brand Deals)</span>
+                                </div>
+                                <span class="text-purple-400">$400/mo</span>
+                            
+                            </label>
+                            
+                            
+                            <label class="pricing-option flex items-center justify-between p-4 rounded-xl border border-white/10 cursor-pointer">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" class="custom-checkbox">
+                                    <span>Analyze (Analytics)</span>
+                                </div>
+                                <span class="text-purple-400">$200/mo</span>
+                            
+                            </label>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="space-y-4 py-8">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl">Number of platforms:</h3>
+                            <span class="text-purple-400 text-xl">2</span>
+                        </div>
+                        
+                        <input type="range" min="1" max="5" value="2" class="w-full">
+                        
+                        <div class="flex justify-between text-sm text-neutral-500">
+                            <span>1</span>
+                            <span>5</span>
+                        </div>
+                    
+003e
+                    
+                    
+                    <div class="space-y-4 pt-8">
+                        <h3 class="text-xl">Billing cycle:</h3>
+                        
+                        <div class="space-y-3">
+                            
+                            <label class="pricing-option flex items-center justify-between p-4 rounded-xl border border-white/10 cursor-pointer">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="billing" class="custom-radio">
+                                    <span>Monthly</span>
+                                </div>
+                            
+                            </label>
+                            
+                            
+                            <label class="pricing-option flex items-center justify-between p-4 rounded-xl border border-white/10 cursor-pointer selected">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="billing" class="custom-radio" checked>
+                                    <span>Annual (Save 20%)</span>
+                                </div>
+                                <span class="text-purple-400">Recommended</span>
+                            
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <!-- Pricing Results -->
+                <div class="space-y-6 p-6 lg:p-12 border-l border-white/10 bg-gradient-to-b from-neutral-900/80 to-neutral-900/40">
+                    
+                    <div class="space-y-4">
+                        <h3 class="text-2xl">Estimated Cost</h3>
+                        
+                        <p class="text-neutral-400">This is an instant estimation to give you an idea how much you can save with us.</p>
+                    </div>
+                    
+                    
+                    <div class="space-y-4">
+                        
+                        <div class="rounded-2xl p-6 space-y-3 border border-white/10 bg-neutral-800/50">
+                            <h4 class="text-lg">Hiring humans would cost</h4>
+                            
+                            <div class="text-4xl font-bold">$15,000+</div>
+                            
+                            <p class="text-neutral-400 text-sm">+ Too much extra time & management</p>
+                        </div>
+                        
+                        
+                        <div class="rounded-2xl p-6 space-y-3 border border-white/10 bg-neutral-800/50">
+                            <h4 class="text-lg">Other AI tools charge</h4>
+                            
+                            <div class="text-4xl font-bold">$2,000+</div>
+                            
+                            <p class="text-neutral-400 text-sm">+ Fragmented tools & headaches</p>
+                        </div>
+                        
+                        
+                        <div class="rounded-2xl p-6 space-y-3 border border-purple-500/30 relative overflow-hidden bg-gradient-to-br from-purple-900/30 to-neutral-900/50">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl"></div>
+                            
+                            <h4 class="text-lg relative z-10">With CoExAI</h4>
+                            
+                            <div class="text-5xl font-bold relative z-10">$640</div>
+                            
+                            <p class="text-neutral-300">Save your money, time & headache</p>
+                            
+                            
+                            <a href="/demo" class="btn-glass w-full py-3 text-center block rounded-xl mt-4 relative z-10">
+                                Get Started
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="relative py-24 px-6 lg:px-12 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-purple-900/20 to-transparent"></div>
+        
+        
+        <div class="max-w-xl mx-auto flex flex-col items-center gap-8 relative z-10">
+            
+            <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center glow-purple">
+                <i data-lucide="sparkles" class="w-10 h-10 text-white"></i>
+            </div>
+            
+            
+            <div class="flex flex-col items-center gap-6">
+                
+                <h2 class="text-center text-3xl md:text-4xl lg:text-5xl font-medium">Ready to 10x your content?</h2>
+                
+                
+                <a href="/demo" class="btn-glass inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-lg font-medium">
+                    Start Free Trial
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="relative z-20 pt-24 pb-12 px-6 lg:px-12">
+        <div class="footer-line h-px w-full mb-16"></div>
+        
+        
+        <div class="max-w-7xl mx-auto">
+            
+            <div class="flex flex-col lg:flex-row justify-between gap-16">
+                
+                <div class="max-w-sm flex flex-col gap-8">
+                    
+                    <div class="flex flex-col gap-4">
+                        
+                        <a href="#" class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                                <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+                            </div>
+                            
+                            <span class="text-xl font-semibold">CoExAI</span>
+                        </a>
+                        
+                        
+                        <p class="text-neutral-400">AI workforce for content creators. Create more, work less.</p>
+                    </div>
+                    
+                    
+                    <div class="flex items-center gap-4">
+                        
+                        <a href="#" class="p-3 rounded-full border border-white/20 hover:border-white/40 transition-colors">
+                            <i data-lucide="twitter" class="w-5 h-5 text-neutral-400"></i>
+                        </a>
+                        
+                        
+                        <a href="#" class="p-3 rounded-full border border-white/20 hover:border-white/40 transition-colors">
+                            <i data-lucide="instagram" class="w-5 h-5 text-neutral-400"></i>
+                        </a>
+                        
+                        
+                        <a href="#" class="p-3 rounded-full border border-white/20 hover:border-white/40 transition-colors">
+                            <i data-lucide="youtube" class="w-5 h-5 text-neutral-400"></i>
+                        </a>
+                    
+                    </div>
+                </div>
+                
+                
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8 lg:gap-16">
+                    
+                    <div class="flex flex-col gap-6">
+                        
+                        <span class="text-lg font-medium">Product</span>
+                        
+                        
+                        <ul class="flex flex-col gap-4">
+                            
+                            <li><a href="#features" class="text-neutral-400 hover:text-white transition-colors">Features</a></li>
+                            
+                            
+                            <li><a href="#agents" class="text-neutral-400 hover:text-white transition-colors">AI Agents</a></li>
+                            
+                            
+                            <li><a href="#pricing" class="text-neutral-400 hover:text-white transition-colors">Pricing</a></li>
+                            
+                            
+                            <li><a href="/demo" class="text-neutral-400 hover:text-white transition-colors">Demo</a></li>
+                        
+                        </ul>
+                    </div>
+                    
+                    
+                    <div class="flex flex-col gap-6">
+                        
+                        <span class="text-lg font-medium">Company</span>
+                        
+                        
+                        <ul class="flex flex-col gap-4">
+                            
+                            <li><a href="#" class="text-neutral-400 hover:text-white transition-colors">About</a></li>
+                            
+                            
+                            <li><a href="#" class="text-neutral-400 hover:text-white transition-colors">Blog</a></li>
+                            
+                            
+                            <li><a href="#" class="text-neutral-400 hover:text-white transition-colors">Contact</a></li>
+                        
+                        </ul>
+                    </div>
+                    
+                    
+                    <div class="flex flex-col gap-6">
+                        
+                        <span class="text-lg font-medium">Legal</span>
+                        
+                        
+                        <ul class="flex flex-col gap-4">
+                            
+                            <li><a href="#" class="text-neutral-400 hover:text-white transition-colors">Privacy</a></li>
+                            
+                            
+                            <li><a href="#" class="text-neutral-400 hover:text-white transition-colors">Terms</a></li>
+                        
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="mt-16 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                
+                <p class="text-neutral-500">© 2026 CoExAI. All rights reserved.</p>
+                
+                
+                <p class="text-neutral-500">Designed with <span class="text-purple-400">♥</span> for creators</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Scroll animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.fade-up').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // Pricing calculator interaction
+        document.querySelectorAll('.pricing-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const checkbox = this.querySelector('input[type="checkbox"], input[type="radio"]');
+                if (checkbox) {
+                    if (checkbox.type === 'radio') {
+                        // For radio buttons, remove selected from siblings
+                        const name = checkbox.name;
+                        document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+                            radio.closest('.pricing-option').classList.remove('selected');
+                        });
+                        checkbox.checked = true;
+                        this.classList.add('selected');
+                    } else {
+                        // For checkboxes
+                        checkbox.checked = !checkbox.checked;
+                        this.classList.toggle('selected', checkbox.checked);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
