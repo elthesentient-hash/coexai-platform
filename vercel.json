@@ -8,7 +8,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "routes": [
-    { "src": "/", "dest": "/landing-page/index.html" },
+    { "src": "/", "dest": "/index.html" },
     { "src": "/demo", "dest": "/demo/index.html" },
     { "src": "/demo/(.*)", "dest": "/demo/index.html" },
     { "src": "/auth", "dest": "/auth/index.html" },
@@ -22,7 +22,9 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate, max-age=0" },
+        { "key": "Pragma", "value": "no-cache" },
+        { "key": "Expires", "value": "0" }
       ]
     }
   ]

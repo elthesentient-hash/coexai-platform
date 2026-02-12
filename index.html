@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoExAI — AI Workforce for Content Creators</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    
+    /* 3D Galaxy Canvas */
+    #galaxy-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    /* Floating Stars Layer */
+    .stars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--duration) ease-in-out infinite;
+      opacity: var(--opacity);
+      box-shadow: 0 0 4px rgba(255,255,255,0.5);
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--opacity); transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 10px rgba(255,255,255,0.9); }
+    }
+    
+    /* Shooting Stars */
+    .shooting-star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: linear-gradient(90deg, white, transparent);
+      border-radius: 50%;
+      animation: shoot 2.5s linear infinite;
+      opacity: 0;
+    }
+    
+    .shooting-star::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 150px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+      transform: translateY(-50%);
+    }
+    
+    @keyframes shoot {
+      0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; }
+      100% { transform: translateX(600px) translateY(600px) rotate(-45deg); opacity: 0; }
+    }
+    
+    /* Nebula Effects - Grayscale */
+    .nebula {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.2;
+      z-index: 0;
+      animation: nebula-float 25s ease-in-out infinite;
+    }
+    
+    .nebula-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, transparent 70%);
+      top: -10%;
+      right: -5%;
+    }
+    
+    .nebula-2 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(200,200,200,0.2) 0%, rgba(150,150,150,0.06) 40%, transparent 70%);
+      bottom: -10%;
+      left: -10%;
+      animation-delay: -12s;
+    }
+    
+    @keyframes nebula-float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(40px, -40px) scale(1.08); }
+      50% { transform: translate(-30px, 30px) scale(0.95); }
+      75% { transform: translate(30px, 20px) scale(1.03); }
+    }
+    
+    /* Navigation - Completely Transparent */
+    .nav-glass {
+      background: transparent;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+    
+    /* Primary CTA Button - White */
+    .btn-primary {
+      position: relative;
+      background: #fff;
+      color: #000;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      overflow: hidden;
+      transition: all 0.3s;
+      box-shadow: 0 0 40px rgba(255,255,255,0.3), inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+    
+    .btn-primary:hover {
+      background: #f0f0f0;
+      box-shadow: 0 0 60px rgba(255,255,255,0.5);
+      transform: translateY(-2px) scale(1.02);
+    }
+    
+    /* Secondary Button - Outline */
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.4);
+      box-shadow: 0 0 30px rgba(255,255,255,0.1);
+    }
+    
+    /* Gradient text - White/Silver */
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff 0%, #c0c0c0 50%, #ffffff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* ===== AGENT HUB STYLES ===== */
+    .agent-hub {
+      position: relative;
+      width: 600px;
+      height: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Central Hub */
+    .hub-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 20;
+    }
+    
+    .hub-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%);
+      border: 2px solid rgba(255,255,255,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: 
+        0 0 50px rgba(255,255,255,0.15),
+        0 0 100px rgba(255,255,255,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.15);
+      animation: hub-pulse 3s ease-in-out infinite;
+    }
+    
+    @keyframes hub-pulse {
+      0%, 100% { box-shadow: 0 0 50px rgba(255,255,255,0.15), 0 0 100px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.15); transform: scale(1); }
+      50% { box-shadow: 0 0 70px rgba(255,255,255,0.25), 0 0 140px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.25); transform: scale(1.02); }
+    }
+    
+    .hub-icon::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent, rgba(255,255,255,0.15));
+      z-index: -1;
+      opacity: 0.5;
+    }
+    
+    .hub-icon::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+    }
+    
+    /* Orbit Rings - adjusted for larger radius */
+    .orbit-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px dashed rgba(255,255,255,0.12);
+    }
+    
+    .orbit-ring-1 {
+      width: 240px;
+      height: 240px;
+      animation: ring-rotate 36s linear infinite;
+    }
+    
+    .orbit-ring-2 {
+      width: 400px;
+      height: 400px;
+      border-color: rgba(255,255,255,0.08);
+      animation: ring-rotate 48s linear infinite reverse;
+    }
+    
+    @keyframes ring-rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    
+    /* ===== ORBITING AGENTS ===== */
+    .orbit-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+    }
+    
+    .agent-orbit {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 15;
+      transform-origin: center;
+    }
+    
+    .agent-orbit:hover {
+      z-index: 25;
+    }
+    
+    .agent-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 8px 32px rgba(0,0,0,0.4),
+        0 0 20px rgba(255,255,255,0.05);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .agent-icon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+    }
+    
+    .agent-orbit:hover .agent-icon {
+      transform: scale(1.2);
+      border-color: rgba(255,255,255,0.35);
+      box-shadow: 
+        0 12px 40px rgba(0,0,0,0.5),
+        0 0 30px rgba(255,255,255,0.15);
+    }
+    
+    .agent-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.85);
+      background: rgba(0,0,0,0.7);
+      padding: 4px 10px;
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      white-space: nowrap;
+      transition: all 0.3s;
+    }
+    
+    .agent-orbit:hover .agent-label {
+      color: #fff;
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.9);
+      transform: scale(1.1);
+    }
+    
+    /* Orbit positions - 6 agents at 60° intervals, larger radius */
+    .orbit-analyze { animation: orbit-1 24s linear infinite; }
+    @keyframes orbit-1 {
+      from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+      to { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
+    }
+    
+    .orbit-support { animation: orbit-2 24s linear infinite; animation-delay: -4s; }
+    @keyframes orbit-2 {
+      from { transform: rotate(60deg) translateX(200px) rotate(-60deg); }
+      to { transform: rotate(420deg) translateX(200px) rotate(-420deg); }
+    }
+    
+    .orbit-seo { animation: orbit-3 24s linear infinite; animation-delay: -8s; }
+    @keyframes orbit-3 {
+      from { transform: rotate(120deg) translateX(200px) rotate(-120deg); }
+      to { transform: rotate(480deg) translateX(200px) rotate(-480deg); }
+    }
+    
+    .orbit-maya { animation: orbit-4 24s linear infinite; animation-delay: -12s; }
+    @keyframes orbit-4 {
+      from { transform: rotate(180deg) translateX(200px) rotate(-180deg); }
+      to { transform: rotate(540deg) translateX(200px) rotate(-540deg); }
+    }
+    
+    .orbit-engage { animation: orbit-5 24s linear infinite; animation-delay: -16s; }
+    @keyframes orbit-5 {
+      from { transform: rotate(240deg) translateX(200px) rotate(-240deg); }
+      to { transform: rotate(600deg) translateX(200px) rotate(-600deg); }
+    }
+    
+    .orbit-pitch { animation: orbit-6 24s linear infinite; animation-delay: -20s; }
+    @keyframes orbit-6 {
+      from { transform: rotate(300deg) translateX(200px) rotate(-300deg); }
+      to { transform: rotate(660deg) translateX(200px) rotate(-660deg); }
+    }
+    
+    /* Badge */
+    .badge-pulse {
+      animation: badge-glow 2s ease-in-out infinite;
+    }
+    
+    @keyframes badge-glow {
+      0%, 100% { box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+      50% { box-shadow: 0 0 25px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.2); }
+    }
+    
+    /* ===== SECTION STYLES ===== */
+    .section-content {
+      position: relative;
+      z-index: 10;
+    }
+    
+    /* Glass Card */
+    .glass-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .glass-card:hover {
+      background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(255,255,255,0.05);
+    }
+    
+    /* Step Card */
+    .step-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .step-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.05) 50%, transparent 60%);
+    }
+    
+    .step-number {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+    
+    /* Pricing Card */
+    .pricing-card {
+      background: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      transition: all 0.4s;
+      position: relative;
+    }
+    
+    .pricing-card:hover {
+      border-color: rgba(255,255,255,0.25);
+      transform: translateY(-8px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    }
+    
+    .pricing-card.popular {
+      background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+      border-color: rgba(255,255,255,0.25);
+    }
+    
+    .pricing-card.popular::before {
+      content: 'Most Popular';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      color: #000;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    /* Feature Check */
+    .feature-check {
+      width: 20px;
+      height: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Divider Line */
+    .gradient-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    }
+    
+    /* Scroll Reveal Animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+    .reveal-delay-6 { transition-delay: 0.6s; }
+  </style>
+</head>
+<body class="min-h-screen bg-black text-white">
+
+  <!-- 3D Galaxy Canvas -->
+  <canvas id="galaxy-canvas"></canvas>
+  
+  <!-- Nebula Effects -->
+  <div class="nebula nebula-1"></div>
+  <div class="nebula nebula-2"></div>
+  
+  <!-- Floating Stars Container -->
+  <div class="stars-container" id="stars-container"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-glass">
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+      <a href="#" class="flex items-center gap-2 text-lg font-semibold tracking-tight">
+        <div class="w-7 h-7 bg-white rounded-lg flex items-center justify-center">
+          <i data-lucide="sparkles" class="w-4 h-4 text-black"></i>
+        </div>
+        <span class="font-bold">CoExAI</span>
+      </a>
+      
+      <div class="hidden items-center gap-8 md:flex">
+        <a href="#features" class="text-sm text-white/60 transition-colors hover:text-white">Features</a>
+        <a href="#agents" class="text-sm text-white/60 transition-colors hover:text-white">AI Agents</a>
+        <a href="#pricing" class="text-sm text-white/60 transition-colors hover:text-white">Pricing</a>
+        <a href="#" class="text-sm text-white/60 transition-colors hover:text-white">Contact</a>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <a href="#" class="hidden sm:block text-sm text-white/60 hover:text-white transition-colors">Log in</a>
+        <a href="/demo" class="btn-primary text-sm">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-20 section-content">
+    
+    <!-- Central Agent Hub -->
+    <div class="agent-hub mb-8">
+      <div class="orbit-ring orbit-ring-1"></div>
+      <div class="orbit-ring orbit-ring-2"></div>
+      
+      <div class="hub-center">
+        <div class="hub-icon">
+          <span class="text-lg font-bold text-white tracking-tight">CoExAI</span>
+        </div>
+      </div>
+      
+      <div class="orbit-container">
+        <a href="#" class="agent-orbit orbit-analyze">
+          <div class="agent-icon">
+            <i data-lucide="bar-chart-3" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">Analyze</span>
+        </a>
+        
+        <a href="#" class="agent-orbit orbit-support">
+          <div class="agent-icon">
+            <i data-lucide="headphones" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">Support</span>
+        </a>
+        
+        <a href="#" class="agent-orbit orbit-seo">
+          <div class="agent-icon">
+            <i data-lucide="search" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">SEO</span>
+        </a>
+        
+        <a href="#" class="agent-orbit orbit-maya">
+          <div class="agent-icon">
+            <i data-lucide="wand-2" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">Maya</span>
+        </a>
+        
+        <a href="#" class="agent-orbit orbit-engage">
+          <div class="agent-icon">
+            <i data-lucide="heart-handshake" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">Engage</span>
+        </a>
+        
+        <a href="#" class="agent-orbit orbit-pitch">
+          <div class="agent-icon">
+            <i data-lucide="briefcase" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">Pitch</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- Hero Content -->
+    <div class="relative z-10 flex max-w-4xl flex-col items-center text-center">
+      <div class="mb-6 flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm backdrop-blur-xl">
+        <span class="h-2 w-2 rounded-full bg-white badge-pulse"></span>
+        <span class="text-white/80">Early access · <span class="text-white font-semibold">12 spots remaining</span></span>
+      </div>
+      
+      <h1 class="text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl leading-[1.1]">
+        AI agents that work
+        <br>
+        <span class="gradient-text">so you don't have to.</span>
+      </h1>
+      
+      <p class="mt-6 max-w-2xl text-lg text-white/60 sm:text-xl leading-relaxed">
+        Four AI agents for content, engagement, brand deals, and growth.
+        <br class="hidden sm:block">
+        Trained on your brand. Running on autopilot.
+      </p>
+      
+      <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row">
+        <a href="/demo" class="btn-primary inline-flex items-center gap-2">
+          Deploy Your First Agent
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+        
+        <a href="#how-it-works" class="btn-secondary inline-flex items-center gap-2 text-[0.9375rem]">
+          <i data-lucide="play-circle" class="w-5 h-5"></i>
+          Watch It Work
+        </a>
+      </div>
+      
+      <p class="mt-6 text-sm text-white/40">Starting at $59/mo · Cancel anytime · No credit card required</p>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="relative py-32 px-6 section-content">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-20 reveal">
+        <p class="text-sm font-medium text-white/50 uppercase tracking-widest mb-4">How It Works</p>
+        <h2 class="text-4xl md:text-5xl font-bold">Deploy your AI workforce in<br><span class="gradient-text">three simple steps</span></h2>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Step 1 -->
+        <div class="step-card p-8 reveal reveal-delay-1">
+          <div class="step-number mb-6">1</div>
+          <h3 class="text-xl font-semibold mb-3">Choose Your Agent</h3>
+          <p class="text-white/60 leading-relaxed">Select from Maya, Engage, Pitch, or Analyze. Each agent specializes in a different aspect of your creator business.</p>
+        </div>
+        
+        <!-- Step 2 -->
+        <div class="step-card p-8 reveal reveal-delay-2">
+          <div class="step-number mb-6">2</div>
+          <h3 class="text-xl font-semibold mb-3">Train on Your Brand</h3>
+          <p class="text-white/60 leading-relaxed">Connect your social accounts and upload your content. Our AI learns your voice, style, and audience in minutes.</p>
+        </div>
+        
+        <!-- Step 3 -->
+        <div class="step-card p-8 reveal reveal-delay-3">
+          <div class="step-number mb-6">3</div>
+          <h3 class="text-xl font-semibold mb-3">Go Autopilot</h3>
+          <p class="text-white/60 leading-relaxed">Your AI agent starts working 24/7. Create content, engage fans, find deals, and analyze growth — automatically.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="relative py-32 px-6 section-content">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-20 reveal">
+        <p class="text-sm font-medium text-white/50 uppercase tracking-widest mb-4">Features</p>
+        <h2 class="text-4xl md:text-5xl font-bold">Everything you need to<br><span class="gradient-text">scale your creator business</span></h2>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
+        <div class="glass-card p-8 reveal reveal-delay-1">
+          <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
+            <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Lightning Fast</h3>
+          <p class="text-white/60 text-sm leading-relaxed">Generate content, replies, and pitches in seconds, not hours. Your AI works at machine speed.</p>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div class="glass-card p-8 reveal reveal-delay-2">
+          <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
+            <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Brand Safe</h3>
+          <p class="text-white/60 text-sm leading-relaxed">Every output is trained on your unique voice. Your audience won't know it's AI — and neither will brands.</p>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div class="glass-card p-8 reveal reveal-delay-3">
+          <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
+            <i data-lucide="clock" class="w-6 h-6 text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">24/7 Operation</h3>
+          <p class="text-white/60 text-sm leading-relaxed">While you sleep, your AI agents engage fans, respond to comments, and hunt for brand deals.</p>
+        </div>
+        
+        <!-- Feature 4 -->
+        <div class="glass-card p-8 reveal reveal-delay-4">
+          <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
+            <i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Data-Driven</h3>
+          <p class="text-white/60 text-sm leading-relaxed">Real-time analytics show what's working. Your AI learns and improves from every interaction.</p>
+        </div>
+        
+        <!-- Feature 5 -->
+        <div class="glass-card p-8 reveal reveal-delay-5">
+          <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
+            <i data-lucide="layers" class="w-6 h-6 text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Multi-Platform</h3>
+          <p class="text-white/60 text-sm leading-relaxed">Connect YouTube, TikTok, Instagram, and X. One dashboard to rule them all.</p>
+        </div>
+        
+        <!-- Feature 6 -->
+        <div class="glass-card p-8 reveal reveal-delay-6">
+          <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
+            <i data-lucide="sliders" class="w-6 h-6 text-white"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Full Control</h3>
+          <p class="text-white/60 text-sm leading-relaxed">Review, edit, or approve everything. Set your comfort level — from hands-off to hands-on.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Agents Section -->
+  <section id="agents" class="relative py-32 px-6 section-content">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-20 reveal">
+        <p class="text-sm font-medium text-white/50 uppercase tracking-widest mb-4">AI Agents</p>
+        <h2 class="text-4xl md:text-5xl font-bold">Meet your<br><span class="gradient-text">AI workforce</span></h2>
+      </div>
+      
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Maya -->
+        <div class="glass-card p-8 reveal reveal-delay-1">
+          <div class="flex items-start gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="wand-2" class="w-7 h-7 text-white"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-3 mb-2">
+                <h3 class="text-xl font-semibold">Maya</h3>
+                <span class="text-xs bg-white/10 px-3 py-1 rounded-full">Content</span>
+              </div>
+              <p class="text-white/60 leading-relaxed mb-4">Your content multiplier. Turns one video into 20+ pieces — shorts, clips, tweets, thumbnails, and more.</p>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Auto-generate viral clips
+                </li>
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Write SEO-optimized descriptions
+                </li>
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Create thumbnails that click
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Engage -->
+        <div class="glass-card p-8 reveal reveal-delay-2">
+          <div class="flex items-start gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="heart-handshake" class="w-7 h-7 text-white"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-3 mb-2">
+                <h3 class="text-xl font-semibold">Engage</h3>
+                <span class="text-xs bg-white/10 px-3 py-1 rounded-full">Community</span>
+              </div>
+              <p class="text-white/60 leading-relaxed mb-4">Your community manager. Replies to comments, DMs, and mentions in your exact voice — 24/7.</p>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Auto-reply to comments
+                </li>
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Handle DMs professionally
+                </li>
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Build fan relationships
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pitch -->
+        <div class="glass-card p-8 reveal reveal-delay-3">
+          <div class="flex items-start gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="briefcase" class="w-7 h-7 text-white"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-3 mb-2">
+                <h3 class="text-xl font-semibold">Pitch</h3>
+                <span class="text-xs bg-white/10 px-3 py-1 rounded-full">Deals</span>
+              </div>
+              <p class="text-white/60 leading-relaxed mb-4">Your brand deal hunter. Finds opportunities, writes pitches, and negotiates rates — while you create.</p>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Find relevant brand deals
+                </li>
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Write winning pitches
+                </li>
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Negotiate better rates
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Analyze -->
+        <div class="glass-card p-8 reveal reveal-delay-4">
+          <div class="flex items-start gap-5">
+            <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="bar-chart-3" class="w-7 h-7 text-white"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-3 mb-2">
+                <h3 class="text-xl font-semibold">Analyze</h3>
+                <span class="text-xs bg-white/10 px-3 py-1 rounded-full">Growth</span>
+              </div>
+              <p class="text-white/60 leading-relaxed mb-4">Your performance coach. Tracks metrics, spots trends, and tells you exactly what to do next to grow.</p>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Track all platform metrics
+                </li>
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Spot viral content patterns
+                </li>
+                <li class="flex items-center gap-2 text-sm text-white/70">
+                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
+                  Get growth recommendations
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="relative py-32 px-6 section-content">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-20 reveal">
+        <p class="text-sm font-medium text-white/50 uppercase tracking-widest mb-4">Pricing</p>
+        <h2 class="text-4xl md:text-5xl font-bold">Simple pricing,<br><span class="gradient-text">powerful results</span></h2>
+        <p class="mt-4 text-white/60">Start free. Upgrade when you're ready.</p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Starter -->
+        <div class="pricing-card p-8 reveal reveal-delay-1">
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-2">Starter</h3>
+            <p class="text-white/50 text-sm">Perfect for testing the waters</p>
+          </div>
+          
+          <div class="mb-6">
+            <span class="text-4xl font-bold">$59</span>
+            <span class="text-white/50">/mo</span>
+          </div>
+          
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">1 AI Agent</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">1,000 AI generations/mo</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">2 platform connections</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">Email support</span>
+            </li>
+          </ul>
+          
+          <a href="/demo" class="btn-secondary w-full text-center block">Get Started</a>
+        </div>
+        
+        <!-- Pro (Popular) -->
+        <div class="pricing-card popular p-8 reveal reveal-delay-2">
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-2">Pro</h3>
+            <p class="text-white/50 text-sm">For serious creators</p>
+          </div>
+          
+          <div class="mb-6">
+            <span class="text-4xl font-bold">$149</span>
+            <span class="text-white/50">/mo</span>
+          </div>
+          
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">3 AI Agents</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">10,000 AI generations/mo</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">All platforms</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">Priority support</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">Analytics dashboard</span>
+            </li>
+          </ul>
+          
+          <a href="/demo" class="btn-primary w-full text-center block">Get Started</a>
+        </div>
+        
+        <!-- Business -->
+        <div class="pricing-card p-8 reveal reveal-delay-3">
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-2">Business</h3>
+            <p class="text-white/50 text-sm">For creator teams</p>
+          </div>
+          
+          <div class="mb-6">
+            <span class="text-4xl font-bold">$349</span>
+            <span class="text-white/50">/mo</span>
+          </div>
+          
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">All 6 AI Agents</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">Unlimited generations</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">Unlimited platforms</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">White-glove onboarding</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-sm text-white/80">Dedicated account manager</span>
+            </li>
+          </ul>
+          
+          <a href="/demo" class="btn-secondary w-full text-center block">Contact Sales</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="relative py-32 px-6 section-content">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="glass-card p-12 md:p-16 reveal">
+        <h2 class="text-3xl md:text-5xl font-bold mb-6">Ready to 10x your output?</h2>
+        
+        <p class="text-lg text-white/60 mb-10 max-w-2xl mx-auto">
+          Join hundreds of creators who've already deployed their AI workforce.
+          Start free, upgrade when you're ready.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/demo" class="btn-primary inline-flex items-center justify-center gap-2">
+            Deploy Your First Agent
+            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+          </a>
+          
+          <a href="#" class="btn-secondary inline-flex items-center justify-center gap-2">
+            <i data-lucide="calendar" class="w-5 h-5"></i>
+            Book a Demo
+          </a>
+        </div>
+        
+        <p class="mt-8 text-sm text-white/40">✨ No credit card required · 14-day free trial · Cancel anytime</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="relative py-16 px-6 section-content border-t border-white/5">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-12 mb-12">
+        <!-- Brand -->
+        <div class="md:col-span-1">
+          <a href="#" class="flex items-center gap-2 text-lg font-semibold mb-4">
+            <div class="w-7 h-7 bg-white rounded-lg flex items-center justify-center">
+              <i data-lucide="sparkles" class="w-4 h-4 text-black"></i>
+            </div>
+            <span>CoExAI</span>
+          </a>
+          
+          <p class="text-white/50 text-sm leading-relaxed">AI agents that work so you don't have to. Built for creators, by creators.</p>
+        </div>
+        
+        <!-- Product -->
+        <div>
+          <h4 class="font-semibold mb-4">Product</h4>
+          <ul class="space-y-3">
+            <li><a href="#agents" class="text-white/50 hover:text-white text-sm transition-colors">AI Agents</a></li>
+            <li><a href="#pricing" class="text-white/50 hover:text-white text-sm transition-colors">Pricing</a></li>
+            <li><a href="#" class="text-white/50 hover:text-white text-sm transition-colors">Integrations</a></li>
+            <li><a href="#" class="text-white/50 hover:text-white text-sm transition-colors">Changelog</a></li>
+          </ul>
+        </div>
+        
+        <!-- Company -->
+        <div>
+          <h4 class="font-semibold mb-4">Company</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-white/50 hover:text-white text-sm transition-colors">About</a></li>
+            <li><a href="#" class="text-white/50 hover:text-white text-sm transition-colors">Blog</a></li>
+            <li><a href="#" class="text-white/50 hover:text-white text-sm transition-colors">Careers</a></li>
+            <li><a href="#" class="text-white/50 hover:text-white text-sm transition-colors">Contact</a></li>
+          </ul>
+        </div>
+        
+        <!-- Legal -->
+        <div>
+          <h4 class="font-semibold mb-4">Legal</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-white/50 hover:text-white text-sm transition-colors">Privacy</a></li>
+            <li><a href="#" class="text-white/50 hover:text-white text-sm transition-colors">Terms</a></li>
+            <li><a href="#" class="text-white/50 hover:text-white text-sm transition-colors">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="gradient-line mb-8"></div>
+      
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-white/40 text-sm">© 2026 CoExAI. All rights reserved.</p>
+        
+        <div class="flex items-center gap-4">
+          <a href="#" class="text-white/40 hover:text-white transition-colors">
+            <i data-lucide="twitter" class="w-5 h-5"></i>
+          </a>
+          
+          <a href="#" class="text-white/40 hover:text-white transition-colors">
+            <i data-lucide="github" class="w-5 h-5"></i>
+          </a>
+          
+          <a href="#" class="text-white/40 hover:text-white transition-colors">
+            <i data-lucide="linkedin" class="w-5 h-5"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+    
+    // 3D Galaxy
+    const canvas = document.getElementById('galaxy-canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    const parameters = {
+      count: 3000,
+      size: 0.018,
+      radius: 6,
+      branches: 6,
+      spin: 1.2,
+      randomness: 0.6,
+      randomnessPower: 3,
+      insideColor: '#ffffff',
+      outsideColor: '#888888'
+    };
+    
+    let geometry = null, material = null, points = null;
+    
+    const generateGalaxy = () => {
+      if (points) {
+        geometry.dispose();
+        material.dispose();
+        scene.remove(points);
+      }
+      geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(parameters.count * 3);
+      const colors = new Float32Array(parameters.count * 3);
+      const colorInside = new THREE.Color(parameters.insideColor);
+      const colorOutside = new THREE.Color(parameters.outsideColor);
+      
+      for (let i = 0; i < parameters.count; i++) {
+        const i3 = i * 3;
+        const radius = Math.random() * parameters.radius;
+        const spinAngle = radius * parameters.spin;
+        const branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2;
+        const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+        const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius * 0.3;
+        const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+        positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+        positions[i3 + 1] = randomY;
+        positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+        const mixedColor = colorInside.clone();
+        mixedColor.lerp(colorOutside, radius / parameters.radius);
+        colors[i3] = mixedColor.r;
+        colors[i3 + 1] = mixedColor.g;
+        colors[i3 + 2] = mixedColor.b;
+      }
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      material = new THREE.PointsMaterial({
+        size: parameters.size,
+        sizeAttenuation: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8
+      });
+      points = new THREE.Points(geometry, material);
+      scene.add(points);
+    };
+    generateGalaxy();
+    camera.position.z = 4;
+    camera.position.y = 1.2;
+    
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (event) => {
+      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+    });
+    
+    const clock = new THREE.Clock();
+    const animate = () => {
+      const elapsedTime = clock.getElapsedTime();
+      if (points) {
+        points.rotation.y = elapsedTime * 0.04;
+        points.rotation.x = mouseY * 0.08;
+        points.rotation.z = mouseX * 0.04;
+      }
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    };
+    animate();
+    
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    
+    // Floating Stars
+    const starsContainer = document.getElementById('stars-container');
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      const size = Math.random() * 2.5 + 0.5;
+      star.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${Math.random() * 100}%;
+        top: ${Math.random() * 100}%;
+        --duration: ${Math.random() * 4 + 2}s;
+        --opacity: ${Math.random() * 0.5 + 0.2};
+        animation-delay: ${Math.random() * 5}s;
+      `;
+      starsContainer.appendChild(star);
+    }
+    
+    // Shooting Stars
+    const createShootingStar = () => {
+      const star = document.createElement('div');
+      star.className = 'shooting-star';
+      star.style.left = `${Math.random() * window.innerWidth}px`;
+      star.style.top = `${Math.random() * window.innerHeight * 0.5}px`;
+      document.body.appendChild(star);
+      setTimeout(() => star.remove(), 2500);
+    };
+    setInterval(createShootingStar, 4000 + Math.random() * 4000);
+    
+    // Scroll Reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
