@@ -3,74 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 CoExAI Demo - Try Everything!</title>
+    <title>CoExAI Demo - Try Everything!</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', system-ui, sans-serif; }
-        body { background: #050505; color: #fafafa; }
-        .gradient-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        * { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+        body { background: #000; color: #fff; overflow-x: hidden; }
+        
+        /* Galaxy Canvas */
+        #galaxy-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        /* Content Layer */
+        .content-layer { position: relative; z-index: 10; }
+        
+        /* Gradient Text */
         .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #f093fb 50%, #f5576c 100%);
+            background: linear-gradient(135deg, #fff 0%, #c0c0c0 50%, #fff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .demo-pulse {
-            animation: demoPulse 2s ease-in-out infinite;
+        
+        /* Demo Banner */
+        .demo-banner {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-        @keyframes demoPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        
+        /* Navigation */
+        .nav-transparent {
+            background: transparent;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .step-complete { border-color: #10b981 !important; color: #10b981 !important; }
+        
+        /* Glass Card */
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            transition: all 0.3s;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .glass-card.selected {
+            border-color: rgba(255,255,255,0.4);
+            box-shadow: 0 0 40px rgba(255,255,255,0.1);
+        }
+        
+        /* Buttons */
+        .btn-primary {
+            background: #fff;
+            color: #000;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+        }
+        
+        .btn-primary:hover {
+            background: #f0f0f0;
+            box-shadow: 0 0 50px rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.25);
+        }
+        
+        /* Progress Steps */
+        .step-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .step-circle.active {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+        
+        .step-circle.complete {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.4);
+        }
+        
+        .step-line {
+            height: 2px;
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            margin: 0 8px;
+            transition: all 0.3s;
+        }
+        
+        .step-line.complete {
+            background: rgba(255,255,255,0.4);
+        }
+        
+        /* Platform Cards */
+        .platform-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+        
+        .platform-card:hover {
+            border-color: rgba(255,255,255,0.2);
+        }
+        
+        .platform-card.connected {
+            border-color: rgba(255,255,255,0.3);
+            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+        }
+        
         [x-cloak] { display: none !important; }
     </style>
 </head>
 <body x-data="demoApp()" class="min-h-screen">
 
+    <!-- Galaxy Background -->
+    <canvas id="galaxy-canvas"></canvas>
+
     <!-- Demo Banner -->
-    <div class="gradient-purple text-center py-3 text-sm font-semibold demo-pulse">
-        🎮 LIVE DEMO MODE - Experience the full app without real signup!
+    <div class="demo-banner text-center py-3 text-sm font-medium content-layer">
+        <span class="inline-flex items-center gap-2">
+            <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+            LIVE DEMO MODE - Experience the full app without real signup!
+        </span>
     </div>
 
     <!-- Navigation -->
-    <nav class="border-b border-white/5">
+    <nav class="nav-transparent content-layer">
         <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2">
-                <svg viewBox="0 0 32 32" width="32" height="32" class="flex-shrink-0">
-                    <defs>
-                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#667eea" />
-                            <stop offset="100%" style="stop-color:#ec4899" />
-                        </linearGradient>
-                    </defs>
-                    <polygon points="16,2 19,13 30,16 19,19 16,30 13,19 2,16 13,13" fill="url(#logoGrad)"/>
-                    <polygon points="16,8 17.5,14.5 24,16 17.5,17.5 16,24 14.5,17.5 8,16 14.5,14.5" fill="#ffffff" opacity="0.9"/>
-                    <circle cx="16" cy="16" r="2" fill="url(#logoGrad)"/>
-                </svg>
+                <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-black"></i>
+                </div>
                 <span class="font-bold text-xl">CoExAI</span>
-                <span class="ml-2 px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 text-xs">DEMO</span>
+                <span class="ml-2 px-2 py-0.5 rounded-full bg-white/10 text-white/70 text-xs border border-white/10">DEMO</span>
             </a>
             
-            <div class="text-sm text-gray-400">
+            <div class="text-sm text-white/50">
                 Step <span x-text="currentStep"></span> of 4
             </div>
         </div>
     </nav>
 
-    <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="max-w-4xl mx-auto px-4 py-8 content-layer">
 
         <!-- Progress -->
-        <div class="flex items-center justify-center gap-2 mb-8">
+        <div class="flex items-center justify-center mb-12">
             <template x-for="i in 4" :key="i">
-                <div class="flex items-center"
-                >
-                    <div class="w-10 h-10 rounded-full border-2 flex items-center justify-center font-semibold transition-all"
+                <div class="flex items-center">
+                    <div class="step-circle"
                         :class="{
-                            'gradient-purple border-transparent': currentStep >= i,
-                            'border-gray-600 text-gray-500': currentStep < i
+                            'active': currentStep === i,
+                            'complete': currentStep > i
                         }"
                     >
                         <template x-if="currentStep > i">
@@ -82,44 +203,46 @@
                     </div>
                     
                     <template x-if="i < 4">
-                        <div class="w-8 h-1 mx-2 rounded-full transition-all"
-                            :class="currentStep > i ? 'bg-purple-500' : 'bg-gray-700'"
-                        ></div>
+                        <div class="step-line" :class="currentStep > i ? 'complete' : ''"></div>
                     </template>
                 </div>
             </template>
         </div>
 
         <!-- Step 1: Choose Plan -->
-        <div x-show="currentStep === 1" x-cloak>
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold mb-2">Choose Your Plan</h1>
-                <p class="text-gray-400">Demo mode - no credit card required! <span class="text-purple-400">Click any plan to continue</span></p>
+        <div x-show="currentStep === 1" x-cloak
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-4"
+             x-transition:enter-end="opacity-100 translate-y-0">
+            
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-bold mb-3">Choose Your Plan</h1>
+                <p class="text-white/50">Demo mode - no credit card required! <span class="text-white/70">Click any plan to continue</span></p>
             </div>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <template x-for="plan in plans" :key="plan.id">
                     <div 
                         @click="selectPlan(plan)"
-                        class="p-6 rounded-2xl bg-white/5 border-2 border-white/10 cursor-pointer transition-all hover:border-purple-500/50 hover:-translate-y-1"
-                        :class="{ 'border-purple-500 shadow-lg shadow-purple-500/20': selectedPlan?.id === plan.id }"
+                        class="glass-card p-6 cursor-pointer"
+                        :class="{ 'selected': selectedPlan?.id === plan.id }"
                     >
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="font-bold text-lg" x-text="plan.name"></h3>
                             <template x-if="plan.popular">
-                                <span class="px-2 py-1 rounded-full gradient-purple text-xs font-semibold">Popular</span>
+                                <span class="px-2 py-1 rounded-full bg-white text-black text-xs font-semibold">Popular</span>
                             </template>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-5">
                             <span class="text-3xl font-bold gradient-text" x-text="'$' + plan.price"></span>
-                            <span class="text-gray-500">/mo</span>
+                            <span class="text-white/40">/mo</span>
                         </div>
 
-                        <ul class="space-y-2 text-sm">
+                        <ul class="space-y-3 text-sm">
                             <template x-for="feature in plan.features">
                                 <li class="flex items-center gap-2">
-                                    <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                                    <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
                                     <span x-text="feature"></span>
                                 </li>
                             </template>
@@ -129,39 +252,47 @@
             </div>
         </div>
 
-        <!-- Step 2: Create Account (Auto-skipped in demo) -->
-        <div x-show="currentStep === 2" x-cloak class="text-center py-12">
-            <div class="w-20 h-20 rounded-full gradient-purple flex items-center justify-center mx-auto mb-6 animate-spin">
+        <!-- Step 2: Creating Account -->
+        <div x-show="currentStep === 2" x-cloak class="text-center py-16"
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100">
+            
+            <div class="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-6 animate-spin">
                 <i data-lucide="loader-2" class="w-10 h-10"></i>
             </div>
+            
             <h2 class="text-2xl font-bold mb-2">Creating Demo Account...</h2>
-            <p class="text-gray-400">Simulating: Creating user → Setting up trial → Preparing dashboard</p>
+            
+            <p class="text-white/50">Simulating: Creating user → Setting up trial → Preparing dashboard</p>
         </div>
 
         <!-- Step 3: Connect Platforms -->
-        <div x-show="currentStep === 3" x-cloak>
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold mb-2">Connect Your Platforms</h1>
-                <p class="text-gray-400">Click "Connect" to simulate OAuth flow <span class="text-purple-400">(Try connecting all 4!)</span></p>
+        <div x-show="currentStep === 3" x-cloak
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-4"
+             x-transition:enter-end="opacity-100 translate-y-0">
+            
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-bold mb-3">Connect Your Platforms</h1>
+                <p class="text-white/50">Click "Connect" to simulate OAuth flow <span class="text-white/70">(Try connecting all 4!)</span></p>
             </div>
 
             <div class="space-y-3 max-w-2xl mx-auto">
                 <template x-for="platform in platforms" :key="platform.id">
                     <div 
-                        class="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between transition-all"
-                        :class="platform.connected ? 'border-green-500/50 bg-green-500/5' : ''"
+                        class="platform-card p-4 flex items-center justify-between"
+                        :class="platform.connected ? 'connected' : ''"
                     >
                         <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 rounded-xl flex items-center justify-center"
-                                :class="platform.bgColor"
-                            >
-                                <i :data-lucide="platform.icon" class="w-6 h-6" :class="platform.textColor"></i>
+                            <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
+                                <i :data-lucide="platform.icon" class="w-6 h-6"></i>
                             </div>
                             
                             <div>
                                 <div class="font-semibold" x-text="platform.name"></div>
                                 <div class="text-sm"
-                                    :class="platform.connected ? 'text-green-400' : 'text-gray-400'"
+                                    :class="platform.connected ? 'text-white/70' : 'text-white/40'"
                                     x-text="platform.connected ? (platform.channelName + ' • ' + platform.followers.toLocaleString() + ' followers') : 'Not connected'"
                                 ></div>
                             </div>
@@ -169,52 +300,60 @@
 
                         <button 
                             @click="togglePlatform(platform)"
-                            class="px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2"
-                            :class="platform.connected ? 'bg-green-500/20 text-green-400' : 'bg-white/10 hover:bg-white/20'"
+                            class="px-5 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
+                            :class="platform.connected ? 'bg-white text-black' : 'btn-secondary'"
                             :disabled="platform.loading"
                         >
                             <template x-if="platform.loading">
                                 <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
                             </template>
                             
-                            <span x-text="platform.connected ? 'Connected ✓' : 'Connect'"></span>
+                            <span x-text="platform.connected ? 'Connected' : 'Connect'"></span>
+                            
+                            <template x-if="platform.connected">
+                                <i data-lucide="check" class="w-4 h-4"></i>
+                            </template>
                         </button>
                     </div>
                 </template>
             </div>
 
-            <div class="mt-8 text-center">
+            <div class="mt-10 text-center">
                 <button 
                     @click="goToDashboard"
-                    class="gradient-purple px-8 py-4 rounded-full font-semibold text-lg hover:opacity-90 transition-opacity flex items-center gap-2 mx-auto"
+                    class="btn-primary inline-flex items-center gap-2 text-lg"
                 >
                     Launch Dashboard
                     <i data-lucide="arrow-right" class="w-5 h-5"></i>
                 </button>
                 
-                <p class="mt-4 text-sm text-gray-500">(You can connect more platforms later)</p>
+                <p class="mt-4 text-sm text-white/40">(You can connect more platforms later)</p>
             </div>
         </div>
 
         <!-- Demo Info -->
-        <div class="mt-12 p-6 rounded-2xl bg-white/5 border border-white/10">
+        <div class="mt-16 glass-card p-6">
             <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
-                    <i data-lucide="info" class="w-5 h-5 text-purple-400"></i>
+                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                    <i data-lucide="info" class="w-5 h-5"></i>
                 </div>
                 
                 <div>
                     <h4 class="font-semibold mb-1">About This Demo</h4>
-                    <p class="text-sm text-gray-400 mb-3">
+                    
+                    <p class="text-sm text-white/50 mb-4">
                         This is a fully functional simulation. Everything you see is generated in real-time 
                         to demonstrate the user experience. No real accounts, payments, or data are created.
                     </p>
                     
                     <div class="flex flex-wrap gap-2">
-                        <span class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">✓ Simulated Auth</span>
-                        <span class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">✓ Fake OAuth Flow</span>
-                        <span class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">✓ Demo Dashboard</span>
-                        <span class="px-2 py-1 rounded bg-green-500/10 text-green-400 text-xs">✓ Mock AI Responses</span>
+                        <span class="px-3 py-1 rounded-full bg-white/10 text-white/70 text-xs border border-white/10">✓ Simulated Auth</span>
+                        
+                        <span class="px-3 py-1 rounded-full bg-white/10 text-white/70 text-xs border border-white/10">✓ Fake OAuth Flow</span>
+                        
+                        <span class="px-3 py-1 rounded-full bg-white/10 text-white/70 text-xs border border-white/10">✓ Demo Dashboard</span>
+                        
+                        <span class="px-3 py-1 rounded-full bg-white/10 text-white/70 text-xs border border-white/10">✓ Mock AI Responses</span>
                     </div>
                 </div>
             </div>
@@ -231,30 +370,30 @@
                     {
                         id: 'starter',
                         name: 'Starter',
-                        price: 500,
+                        price: 59,
                         popular: false,
                         features: ['Maya (Content)', 'Email support', '5 videos/month']
                     },
                     {
                         id: 'growth',
                         name: 'Growth',
-                        price: 700,
+                        price: 149,
                         popular: true,
                         features: ['Maya + Engage', 'Priority support', 'Unlimited videos']
                     },
                     {
                         id: 'pro',
                         name: 'Pro',
-                        price: 1000,
+                        price: 349,
                         popular: false,
-                        features: ['Maya + Engage + Pitch', '24/7 support', 'Brand deals']
+                        features: ['All 4 AI Agents', '24/7 support', 'Brand deals']
                     },
                     {
-                        id: 'empire',
-                        name: 'Empire',
-                        price: 1200,
+                        id: 'business',
+                        name: 'Business',
+                        price: 999,
                         popular: false,
-                        features: ['All 4 AI Agents', 'Dedicated manager', 'Custom integrations']
+                        features: ['All 6 AI Agents', 'White-glove', 'Custom integrations']
                     }
                 ],
 
@@ -263,8 +402,6 @@
                         id: 'youtube',
                         name: 'YouTube',
                         icon: 'youtube',
-                        bgColor: 'bg-red-500/10',
-                        textColor: 'text-red-400',
                         connected: false,
                         loading: false,
                         channelName: null,
@@ -274,8 +411,6 @@
                         id: 'tiktok',
                         name: 'TikTok',
                         icon: 'video',
-                        bgColor: 'bg-pink-500/10',
-                        textColor: 'text-pink-400',
                         connected: false,
                         loading: false,
                         channelName: null,
@@ -285,8 +420,6 @@
                         id: 'instagram',
                         name: 'Instagram',
                         icon: 'instagram',
-                        bgColor: 'bg-purple-500/10',
-                        textColor: 'text-purple-400',
                         connected: false,
                         loading: false,
                         channelName: null,
@@ -296,8 +429,6 @@
                         id: 'twitter',
                         name: 'X / Twitter',
                         icon: 'twitter',
-                        bgColor: 'bg-blue-500/10',
-                        textColor: 'text-blue-400',
                         connected: false,
                         loading: false,
                         channelName: null,
@@ -307,14 +438,9 @@
 
                 async selectPlan(plan) {
                     this.selectedPlan = plan;
-                    
-                    // Auto-advance to step 2
                     this.currentStep = 2;
-                    
-                    // Simulate account creation
                     await new Promise(r => setTimeout(r, 1500));
                     
-                    // Store demo session
                     localStorage.setItem('coexai_demo_session', JSON.stringify({
                         user: {
                             id: 'demo-user',
@@ -325,7 +451,6 @@
                         plan: plan
                     }));
                     
-                    // Advance to step 3
                     this.currentStep = 3;
                 },
 
@@ -338,11 +463,8 @@
                     }
                     
                     platform.loading = true;
-                    
-                    // Simulate OAuth delay
                     await new Promise(r => setTimeout(r, 1500));
                     
-                    // Simulate successful connection
                     const mockData = {
                         youtube: { name: 'Demo Creator', followers: 450000 },
                         tiktok: { name: '@democreator', followers: 320000 },
@@ -355,7 +477,6 @@
                     platform.followers = mockData[platform.id].followers;
                     platform.loading = false;
                     
-                    // Store connected platforms
                     const connected = this.platforms
                         .filter(p => p.connected)
                         .map(p => ({ id: p.id, name: p.channelName, followers: p.followers }));
@@ -369,6 +490,89 @@
                 }
             }
         }
+
+        // Galaxy Background
+        const canvas = document.getElementById('galaxy-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        
+        const parameters = {
+            count: 2000,
+            size: 0.015,
+            radius: 5,
+            branches: 5,
+            spin: 1,
+            randomness: 0.5,
+            randomnessPower: 3,
+            insideColor: '#ffffff',
+            outsideColor: '#666666'
+        };
+        
+        let geometry = null, material = null, points = null;
+        
+        const generateGalaxy = () => {
+            if (points) {
+                geometry.dispose();
+                material.dispose();
+                scene.remove(points);
+            }
+            geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(parameters.count * 3);
+            const colors = new Float32Array(parameters.count * 3);
+            const colorInside = new THREE.Color(parameters.insideColor);
+            const colorOutside = new THREE.Color(parameters.outsideColor);
+            
+            for (let i = 0; i < parameters.count; i++) {
+                const i3 = i * 3;
+                const radius = Math.random() * parameters.radius;
+                const spinAngle = radius * parameters.spin;
+                const branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2;
+                const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+                const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius * 0.3;
+                const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+                positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+                positions[i3 + 1] = randomY;
+                positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+                const mixedColor = colorInside.clone();
+                mixedColor.lerp(colorOutside, radius / parameters.radius);
+                colors[i3] = mixedColor.r;
+                colors[i3 + 1] = mixedColor.g;
+                colors[i3 + 2] = mixedColor.b;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            material = new THREE.PointsMaterial({
+                size: parameters.size,
+                sizeAttenuation: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.7
+            });
+            points = new THREE.Points(geometry, material);
+            scene.add(points);
+        };
+        generateGalaxy();
+        camera.position.z = 3.5;
+        
+        const clock = new THREE.Clock();
+        const animate = () => {
+            const elapsedTime = clock.getElapsedTime();
+            if (points) points.rotation.y = elapsedTime * 0.03;
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        };
+        animate();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();

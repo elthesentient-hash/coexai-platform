@@ -3,160 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoExAI Dashboard - Demo Mode</title>
+    <title>CoExAI Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+        body { background: #000; color: #fff; overflow-x: hidden; }
         
-        /* Dynamic gradient background */
-        body { 
-            background: #000;
-            color: #fafafa;
-            position: relative;
-        }
-        
-        body::before {
-            content: '';
+        /* Galaxy Canvas */
+        #galaxy-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(ellipse at 20% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(168, 85, 247, 0.08) 0%, transparent 60%);
-            z-index: -2;
-            animation: gradientShift 20s ease-in-out infinite;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            pointer-events: none;
         }
         
-        @keyframes gradientShift {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.1); }
-        }
+        /* Content Layer */
+        .content-layer { position: relative; z-index: 10; }
         
-        .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #a855f7 50%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .gradient-purple { background: linear-gradient(135deg, #667eea 0%, #a855f7 100%); }
-        .gradient-pink { background: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%); }
-        .gradient-orange { background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%); }
-        .gradient-blue { background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%); }
-        
-        /* Glassmorphism cards */
+        /* Glass Card */
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 
-                0 4px 30px rgba(0, 0, 0, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            transition: all 0.3s;
         }
         
         .glass-card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.12);
-            box-shadow: 
-                0 8px 40px rgba(0, 0, 0, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
         }
         
-        /* Neon effects */
-        .neon-purple {
-            box-shadow: 
-                0 0 20px rgba(102, 126, 234, 0.3),
-                0 0 40px rgba(102, 126, 234, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        }
-        
-        .neon-pink {
-            box-shadow: 
-                0 0 20px rgba(236, 72, 153, 0.3),
-                0 0 40px rgba(236, 72, 153, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        }
-        
-        .agent-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .agent-card:hover { 
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        
-        .agent-maya { border-left: 3px solid #a855f7; box-shadow: inset 0 0 30px rgba(168, 85, 247, 0.1); }
-        .agent-engage { border-left: 3px solid #ec4899; box-shadow: inset 0 0 30px rgba(236, 72, 153, 0.1); }
-        .agent-pitch { border-left: 3px solid #f59e0b; box-shadow: inset 0 0 30px rgba(245, 158, 11, 0.1); }
-        .agent-analyze { border-left: 3px solid #3b82f6; box-shadow: inset 0 0 30px rgba(59, 130, 246, 0.1); }
-        
-        .stat-card {
-            background: rgba(255, 255, 255, 0.03);
+        /* Sidebar */
+        .sidebar {
+            background: rgba(0,0,0,0.8);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255,255,255,0.05);
         }
         
+        /* Navigation Item */
         .nav-item {
-            transition: all 0.2s ease;
+            transition: all 0.2s;
             border-radius: 12px;
         }
-        .nav-item:hover, .nav-item.active { 
-            background: rgba(255, 255, 255, 0.06);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.08);
         }
         
+        /* Status Dots */
         .status-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .status-active { 
-            background: #10b981; 
-            box-shadow: 0 0 10px #10b981, 0 0 20px rgba(16, 185, 129, 0.5);
+        .status-active { background: #fff; box-shadow: 0 0 10px #fff; }
+        .status-paused { background: rgba(255,255,255,0.4); }
+        
+        /* Buttons */
+        .btn-primary {
+            background: #fff;
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s;
         }
-        .status-paused { 
-            background: #f59e0b; 
-            box-shadow: 0 0 10px #f59e0b, 0 0 20px rgba(245, 158, 11, 0.5);
+        .btn-primary:hover {
+            background: #f0f0f0;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
         
-        .sidebar { 
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
         }
         
-        .progress-bar { 
-            background: rgba(255, 255, 255, 0.1); 
-            border-radius: 999px; 
+        /* Agent Cards */
+        .agent-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .agent-card:hover {
+            border-color: rgba(255,255,255,0.2);
+            transform: translateY(-4px);
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 999px;
             overflow: hidden;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
         }
         .progress-fill {
             height: 100%;
+            background: #fff;
             border-radius: 999px;
             transition: width 0.5s ease;
-            box-shadow: 0 0 10px currentColor;
         }
         
-        .demo-banner { 
-            background: linear-gradient(90deg, #667eea 0%, #a855f7 50%, #ec4899 100%); 
-            animation: demoPulse 2s infinite;
-        }
-        
-        .glass-nav {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-        
-        @keyframes demoPulse { 
-            0%, 100% { opacity: 0.9; } 
-            50% { opacity: 1; } 
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         [x-cloak] { display: none !important; }
@@ -164,80 +125,75 @@
 </head>
 <body class="min-h-screen">
 
+    <!-- Galaxy Background -->
+    <canvas id="galaxy-canvas"></canvas>
+
     <!-- Demo Banner -->
-    <div class="demo-banner text-center py-2 text-sm font-semibold">
-        🎮 DEMO MODE - You're viewing simulated data. 
-        <a href="/demo" class="underline hover:text-white ml-2">Restart Demo →</a>
+    <div class="content-layer bg-white/5 border-b border-white/10 text-center py-2 text-sm">
+        <span class="inline-flex items-center gap-2">
+            <span class="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
+            DEMO MODE - Simulated data
+            <a href="/demo" class="underline hover:text-white ml-2">Restart Demo →</a>
+        </span>
     </div>
 
     <!-- Sidebar -->
-    <aside class="fixed left-0 top-0 bottom-0 w-64 sidebar z-50 flex flex-col">
+    <aside class="sidebar fixed left-0 top-[33px] bottom-0 w-64 z-50 flex flex-col content-layer">
         <!-- Logo -->
         <div class="p-5 border-b border-white/5">
-            <a href="/" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
-                <svg viewBox="0 0 32 32" width="36" height="36" class="flex-shrink-0">
-                    <defs>
-                        <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#667eea" />
-                            <stop offset="100%" style="stop-color:#ec4899" />
-                        </linearGradient>
-                    </defs>
-                    <polygon points="16,2 19,13 30,16 19,19 16,30 13,19 2,16 13,13" fill="url(#logoGrad)"/>
-                    <polygon points="16,8 17.5,14.5 24,16 17.5,17.5 16,24 14.5,17.5 8,16 14.5,14.5" fill="#ffffff" opacity="0.9"/>
-                    <circle cx="16" cy="16" r="2" fill="url(#logoGrad)"/>
-                </svg>
+            <a href="/" class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-white rounded-lg flex items-center justify-center">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-black"></i>
+                </div>
                 <span class="font-bold text-xl">CoExAI</span>
             </a>
         </div>
 
         <!-- Navigation -->
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-            <button @click="view = 'dashboard'"
-                    :class="{ 'active': view === 'dashboard' }"
-                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white">
-                <i data-lucide="layout-dashboard" class="w-[18px] h-[18px]"></i>
+            <button @click="view = 'dashboard'" :class="{ 'active': view === 'dashboard' }"
+                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:text-white">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span>Dashboard</span>
             </button>
 
             <div class="pt-5 pb-2 px-4">
-                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">AI Agents</span>
+                <span class="text-[11px] font-semibold text-white/30 uppercase tracking-wider">AI Agents</span>
             </div>
 
             <template x-for="agent in agents" :key="agent.id">
-                <button @click="selectAgent(agent.id)"
-                        :class="{ 'active': selectedAgent === agent.id }"
+                <button @click="selectAgent(agent.id)" :class="{ 'active': selectedAgent === agent.id }"
                         class="nav-item w-full flex items-center gap-3 px-3 py-2.5 text-sm group">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
-                         :class="agent.bgColor">
-                        <i :data-lucide="agent.icon" class="w-4 h-4" :class="agent.textColor"></i>
+                    <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                        <i :data-lucide="agent.icon" class="w-4 h-4"></i>
                     </div>
                     <div class="flex-1 min-w-0 text-left">
-                        <div class="font-medium text-gray-200" x-text="agent.name"></div>
-                        <div class="text-[11px] text-gray-500 capitalize" x-text="agent.status"></div>
+                        <div class="font-medium" x-text="agent.name"></div>
+                        <div class="text-[11px] text-white/40 capitalize" x-text="agent.status"></div>
                     </div>
                     <div class="status-dot shrink-0" :class="`status-${agent.status}`"></div>
                 </button>
             </template>
 
             <div class="pt-5 pb-2 px-4">
-                <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Settings</span>
+                <span class="text-[11px] font-semibold text-white/30 uppercase tracking-wider">Settings</span>
             </div>
 
             <button @click="view = 'connections'" :class="{ 'active': view === 'connections' }"
-                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white">
-                <i data-lucide="link" class="w-[18px] h-[18px]"></i>
+                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:text-white">
+                <i data-lucide="link" class="w-5 h-5"></i>
                 <span>Connections</span>
             </button>
 
             <button @click="view = 'billing'" :class="{ 'active': view === 'billing' }"
-                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white">
-                <i data-lucide="credit-card" class="w-[18px] h-[18px]"></i>
+                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:text-white">
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
                 <span>Billing</span>
             </button>
 
             <button @click="view = 'settings'" :class="{ 'active': view === 'settings' }"
-                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white">
-                <i data-lucide="settings" class="w-[18px] h-[18px]"></i>
+                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:text-white">
+                <i data-lucide="settings" class="w-5 h-5"></i>
                 <span>Settings</span>
             </button>
         </nav>
@@ -245,36 +201,34 @@
         <!-- User Profile -->
         <div class="p-4 border-t border-white/5">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full gradient-purple flex items-center justify-center text-white font-semibold text-sm">
+                <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-semibold text-sm">
                     DC
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="font-medium text-sm truncate">Demo Creator</div>
-                    <div class="text-xs text-purple-400">Growth Plan (Demo)</div>
+                    <div class="text-xs text-white/50">Growth Plan</div>
                 </div>
             </div>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <div class="ml-64 min-h-screen flex flex-col">
+    <div class="ml-64 min-h-screen flex flex-col content-layer">
         <!-- Header -->
-        <header class="sticky top-0 z-40 glass-nav border-b border-white/5">
+        <header class="sticky top-0 z-40 bg-black/50 backdrop-blur-xl border-b border-white/5">
             <div class="flex items-center justify-between px-6 py-4">
                 <div>
                     <h1 class="text-xl font-semibold" x-text="pageTitle"></h1>
-                    <p class="text-sm text-gray-500 mt-0.5" x-show="view === 'dashboard'">Manage your AI workforce</p>
+                    <p class="text-sm text-white/40 mt-0.5" x-show="view === 'dashboard'">Manage your AI workforce</p>
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <!-- Notifications -->
                     <button class="relative p-2.5 hover:bg-white/5 rounded-xl transition-colors">
-                        <i data-lucide="bell" class="w-5 h-5 text-gray-400"></i>
-                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-black animate-pulse"></span>
+                        <i data-lucide="bell" class="w-5 h-5 text-white/60"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-white rounded-full"></span>
                     </button>
 
-                    <!-- Quick Actions -->
-                    <button class="gradient-purple px-4 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-purple-500/25">
+                    <button class="btn-primary flex items-center gap-2">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                         New Content
                     </button>
@@ -286,130 +240,114 @@
         <main class="flex-1 p-6">
             <!-- Stats Overview -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <!-- Time Saved -->
-                <div class="stat-card p-5">
+                <div class="glass-card p-5">
                     <div class="flex items-start justify-between mb-3">
                         <div>
-                            <div class="text-sm text-gray-500 mb-1">Time Saved This Week</div>
+                            <div class="text-sm text-white/40 mb-1">Time Saved This Week</div>
                             <div class="text-2xl font-bold gradient-text">28.5 hrs</div>
                         </div>
-                        <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center">
-                            <i data-lucide="clock" class="w-5 h-5 text-purple-400"></i>
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <i data-lucide="clock" class="w-5 h-5"></i>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 text-xs">
-                        <i data-lucide="trending-up" class="w-3.5 h-3.5 text-green-400"></i>
-                        <span class="text-green-400 font-medium">+12%</span>
-                        <span class="text-gray-500">vs last week</span>
+                        <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
+                        <span class="font-medium">+12%</span>
+                        <span class="text-white/40">vs last week</span>
                     </div>
                 </div>
 
-                <!-- Content Created -->
-                <div class="stat-card p-5">
+                <div class="glass-card p-5">
                     <div class="flex items-start justify-between mb-3">
                         <div>
-                            <div class="text-sm text-gray-500 mb-1">Content Pieces Created</div>
+                            <div class="text-sm text-white/40 mb-1">Content Created</div>
                             <div class="text-2xl font-bold">147</div>
                         </div>
-                        <div class="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center">
-                            <i data-lucide="file-text" class="w-5 h-5 text-pink-400"></i>
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <i data-lucide="file-text" class="w-5 h-5"></i>
                         </div>
                     </div>
-                    <div class="flex items-center gap-1.5 text-xs">
-                        <span class="text-gray-500">By Maya</span>
-                    </div>
+                    <div class="text-xs text-white/40">By Maya</div>
                 </div>
 
-                <!-- Comments Replied -->
-                <div class="stat-card p-5">
+                <div class="glass-card p-5">
                     <div class="flex items-start justify-between mb-3">
                         <div>
-                            <div class="text-sm text-gray-500 mb-1">Comments Replied</div>
+                            <div class="text-sm text-white/40 mb-1">Comments Replied</div>
                             <div class="text-2xl font-bold">1,284</div>
                         </div>
-                        <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center">
-                            <i data-lucide="message-circle" class="w-5 h-5 text-green-400"></i>
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 text-xs">
-                        <i data-lucide="trending-up" class="w-3.5 h-3.5 text-green-400"></i>
-                        <span class="text-green-400 font-medium">94%</span>
-                        <span class="text-gray-500">response rate</span>
+                        <span class="font-medium">94%</span>
+                        <span class="text-white/40">response rate</span>
                     </div>
                 </div>
 
-                <!-- Brand Deals -->
-                <div class="stat-card p-5">
+                <div class="glass-card p-5">
                     <div class="flex items-start justify-between mb-3">
                         <div>
-                            <div class="text-sm text-gray-500 mb-1">Brand Deals Found</div>
-                            <div class="text-2xl font-bold text-orange-400">$12.5K</div>
+                            <div class="text-sm text-white/40 mb-1">Brand Deals Found</div>
+                            <div class="text-2xl font-bold gradient-text">$12.5K</div>
                         </div>
-                        <div class="w-10 h-10 rounded-xl bg-orange-500/10 flex items-center justify-center">
-                            <i data-lucide="handshake" class="w-5 h-5 text-orange-400"></i>
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <i data-lucide="handshake" class="w-5 h-5"></i>
                         </div>
                     </div>
-                    <div class="flex items-center gap-1.5 text-xs">
-                        <span class="text-gray-500">3 deals this month</span>
-                    </div>
+                    <div class="text-xs text-white/40">3 deals this month</div>
                 </div>
             </div>
 
-            <!-- AI Agents Status -->
+            <!-- AI Agents -->
             <div class="mb-8">
                 <div class="flex items-center justify-between mb-5">
                     <h2 class="text-lg font-semibold">Your AI Agents</h2>
-                    <button class="text-sm text-gray-400 hover:text-white transition-colors">View All</button>
+                    <button class="text-sm text-white/40 hover:text-white transition-colors">View All</button>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                     <template x-for="agent in agents" :key="agent.id">
-                        <div class="agent-card p-5 rounded-2xl bg-white/5 border border-white/10 cursor-pointer"
-                             :class="`agent-${agent.id}`"
-                             @click="selectAgent(agent.id)">
-
+                        <div class="agent-card p-5" @click="selectAgent(agent.id)">
                             <div class="flex items-start justify-between mb-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-                                         :class="agent.bgColor">
-                                        <i :data-lucide="agent.icon" class="w-5 h-5" :class="agent.textColor"></i>
+                                    <div class="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                                        <i :data-lucide="agent.icon" class="w-5 h-5"></i>
                                     </div>
 
                                     <div>
                                         <div class="font-semibold" x-text="agent.name"></div>
-                                        <div class="text-sm text-gray-500" x-text="agent.tagline"></div>
+                                        <div class="text-sm text-white/40" x-text="agent.tagline"></div>
                                     </div>
                                 </div>
 
-                                <div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/5">
+                                <div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
                                     <div class="status-dot" :class="`status-${agent.status}`"></div>
                                     <span class="text-xs capitalize" x-text="agent.status"></span>
                                 </div>
                             </div>
 
-                            <!-- Progress for each agent -->
                             <div class="space-y-3 mb-4">
                                 <template x-for="stat in agent.stats" :key="stat.label">
                                     <div>
                                         <div class="flex justify-between text-xs mb-1">
-                                            <span class="text-gray-400" x-text="stat.label"></span>
-                                            <span class="text-white" x-text="stat.value"></span>
+                                            <span class="text-white/40" x-text="stat.label"></span>
+                                            <span x-text="stat.value"></span>
                                         </div>
                                         <div class="progress-bar h-1.5">
-                                            <div class="progress-fill"
-                                                 :class="agent.progressColor"
-                                                 :style="`width: ${stat.percentage}%`"></div>
+                                            <div class="progress-fill" :style="`width: ${stat.percentage}%`"></div>
                                         </div>
                                     </div>
                                 </template>
                             </div>
 
                             <div class="flex items-center justify-between">
-                                <div class="text-xs text-gray-500">
-                                    Last active: <span class="text-gray-300" x-text="agent.lastActive"></span>
+                                <div class="text-xs text-white/40">
+                                    Last active: <span x-text="agent.lastActive"></span>
                                 </div>
 
-                                <button class="text-sm text-gray-400 hover:text-white font-medium flex items-center gap-1 transition-colors">
+                                <button class="text-sm text-white/50 hover:text-white flex items-center gap-1">
                                     Configure
                                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                 </button>
@@ -421,79 +359,62 @@
 
             <!-- Recent Activity -->
             <div class="grid lg:grid-cols-3 gap-6">
-                <!-- Activity Feed -->
                 <div class="lg:col-span-2">
                     <div class="flex items-center justify-between mb-5">
                         <h2 class="text-lg font-semibold">Recent Activity</h2>
-                        <button class="text-sm text-gray-400 hover:text-white transition-colors">View All</button>
+                        <button class="text-sm text-white/40 hover:text-white">View All</button>
                     </div>
 
-                    <div class="stat-card divide-y divide-white/5">
+                    <div class="glass-card divide-y divide-white/5">
                         <template x-for="activity in recentActivity" :key="activity.id">
                             <div class="flex items-center gap-4 p-4 hover:bg-white/[0.02] transition-colors">
-                                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
-                                     :class="activity.bgColor">
-                                    <i :data-lucide="activity.icon" class="w-5 h-5" :class="activity.textColor"></i>
+                                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+                                    <i :data-lucide="activity.icon" class="w-5 h-5"></i>
                                 </div>
 
                                 <div class="flex-1 min-w-0">
                                     <div class="font-medium text-sm" x-text="activity.title"></div>
-                                    <div class="text-sm text-gray-500 truncate" x-text="activity.description"></div>
+                                    <div class="text-sm text-white/40 truncate" x-text="activity.description"></div>
                                 </div>
 
-                                <div class="text-xs text-gray-500 shrink-0" x-text="activity.time"></div>
+                                <div class="text-xs text-white/40 shrink-0" x-text="activity.time"></div>
                             </div>
                         </template>
                     </div>
                 </div>
 
-                <!-- Quick Stats -->
                 <div>
                     <div class="flex items-center justify-between mb-5">
                         <h2 class="text-lg font-semibold">This Month</h2>
                     </div>
 
-                    <div class="stat-card p-5 space-y-4">
+                    <div class="glass-card p-5 space-y-4">
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-400">Content Posted</span>
+                            <span class="text-sm text-white/40">Content Posted</span>
                             <span class="font-semibold">47 pieces</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-400">Engagement Rate</span>
-                            <span class="font-semibold text-green-400">+23%</span>
+                            <span class="text-sm text-white/40">Engagement Rate</span>
+                            <span class="font-semibold">+23%</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-400">New Followers</span>
+                            <span class="text-sm text-white/40">New Followers</span>
                             <span class="font-semibold">+12.4K</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-400">Brand Inquiries</span>
-                            <span class="font-semibold text-orange-400">8 deals</span>
+                            <span class="text-sm text-white/40">Brand Inquiries</span>
+                            <span class="font-semibold">8 deals</span>
                         </div>
 
                         <div class="pt-4 border-t border-white/10">
-                            <div class="text-sm text-gray-400 mb-2">Plan Usage</div>
+                            <div class="text-sm text-white/40 mb-2">Plan Usage</div>
                             <div class="flex items-center gap-2">
                                 <div class="flex-1 progress-bar h-2">
-                                    <div class="progress-fill gradient-purple" style="width: 75%"></div>
+                                    <div class="progress-fill" style="width: 75%"></div>
                                 </div>
-                                <span class="text-xs text-gray-400">75%</span>
+                                <span class="text-xs text-white/40">75%</span>
                             </div>
-                            <div class="text-xs text-gray-500 mt-1">Pro Plan - 3 of 4 agents active</div>
-                        </div>
-                    </div>
-
-                    <!-- Upgrade CTA -->
-                    <div class="mt-4 p-4 rounded-2xl gradient-purple/10 border border-purple-500/20">
-                        <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg gradient-purple flex items-center justify-center shrink-0">
-                                <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
-                            </div>
-                            <div>
-                                <div class="font-medium text-sm mb-1">Unlock Pitch</div>
-                                <div class="text-xs text-gray-400 mb-2">Find brand deals automatically</div>
-                                <button class="text-xs text-purple-400 hover:text-purple-300 font-medium">Upgrade to Pro →</button>
-                            </div>
+                            <div class="text-xs text-white/40 mt-1">Pro Plan - 3 of 4 agents active</div>
                         </div>
                     </div>
                 </div>
@@ -502,10 +423,6 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-        });
-
         function dashboard() {
             return {
                 view: 'dashboard',
@@ -525,9 +442,6 @@
                         name: 'Maya',
                         tagline: 'Content Multiplier',
                         icon: 'wand-2',
-                        bgColor: 'bg-purple-500/10',
-                        textColor: 'text-purple-400',
-                        progressColor: 'bg-purple-500',
                         status: 'active',
                         lastActive: '2 min ago',
                         stats: [
@@ -541,9 +455,6 @@
                         name: 'Engage',
                         tagline: 'Community Manager',
                         icon: 'heart-handshake',
-                        bgColor: 'bg-pink-500/10',
-                        textColor: 'text-pink-400',
-                        progressColor: 'bg-pink-500',
                         status: 'active',
                         lastActive: 'Just now',
                         stats: [
@@ -557,9 +468,6 @@
                         name: 'Pitch',
                         tagline: 'Brand Deal Hunter',
                         icon: 'handshake',
-                        bgColor: 'bg-orange-500/10',
-                        textColor: 'text-orange-400',
-                        progressColor: 'bg-orange-500',
                         status: 'paused',
                         lastActive: '3 days ago',
                         stats: [
@@ -573,9 +481,6 @@
                         name: 'Analyze',
                         tagline: 'Performance Coach',
                         icon: 'line-chart',
-                        bgColor: 'bg-blue-500/10',
-                        textColor: 'text-blue-400',
-                        progressColor: 'bg-blue-500',
                         status: 'paused',
                         lastActive: '1 week ago',
                         stats: [
@@ -590,8 +495,6 @@
                     {
                         id: 1,
                         icon: 'video',
-                        bgColor: 'bg-purple-500/10',
-                        textColor: 'text-purple-400',
                         title: 'Maya processed new video',
                         description: 'Generated 20 content pieces from "How to Grow on TikTok"',
                         time: '2 min ago'
@@ -599,8 +502,6 @@
                     {
                         id: 2,
                         icon: 'message-circle',
-                        bgColor: 'bg-pink-500/10',
-                        textColor: 'text-pink-400',
                         title: 'Engage replied to 47 comments',
                         description: 'On your latest TikTok video',
                         time: '15 min ago'
@@ -608,17 +509,13 @@
                     {
                         id: 3,
                         icon: 'handshake',
-                        bgColor: 'bg-orange-500/10',
-                        textColor: 'text-orange-400',
-                        title: '🚨 Brand deal opportunity',
+                        title: 'Brand deal opportunity',
                         description: 'Nike interested in collaboration ($5K budget)',
                         time: '1 hour ago'
                     },
                     {
                         id: 4,
                         icon: 'trending-up',
-                        bgColor: 'bg-green-500/10',
-                        textColor: 'text-green-400',
                         title: 'Engagement rate increased',
                         description: '+23% this week vs last week',
                         time: '3 hours ago'
@@ -626,8 +523,6 @@
                     {
                         id: 5,
                         icon: 'users',
-                        bgColor: 'bg-blue-500/10',
-                        textColor: 'text-blue-400',
                         title: 'Gained 1,247 new followers',
                         description: 'Across all platforms today',
                         time: '5 hours ago'
@@ -636,10 +531,96 @@
 
                 selectAgent(id) {
                     this.selectedAgent = id;
-                    console.log(`Selected agent: ${id}`);
                 }
             }
         }
+
+        // Galaxy Background
+        const canvas = document.getElementById('galaxy-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        
+        const parameters = {
+            count: 1500,
+            size: 0.012,
+            radius: 4,
+            branches: 5,
+            spin: 1,
+            randomness: 0.5,
+            randomnessPower: 3,
+            insideColor: '#ffffff',
+            outsideColor: '#444444'
+        };
+        
+        let geometry = null, material = null, points = null;
+        
+        const generateGalaxy = () => {
+            if (points) {
+                geometry.dispose();
+                material.dispose();
+                scene.remove(points);
+            }
+            geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(parameters.count * 3);
+            const colors = new Float32Array(parameters.count * 3);
+            const colorInside = new THREE.Color(parameters.insideColor);
+            const colorOutside = new THREE.Color(parameters.outsideColor);
+            
+            for (let i = 0; i < parameters.count; i++) {
+                const i3 = i * 3;
+                const radius = Math.random() * parameters.radius;
+                const spinAngle = radius * parameters.spin;
+                const branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2;
+                const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+                const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius * 0.3;
+                const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+                positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+                positions[i3 + 1] = randomY;
+                positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+                const mixedColor = colorInside.clone();
+                mixedColor.lerp(colorOutside, radius / parameters.radius);
+                colors[i3] = mixedColor.r;
+                colors[i3 + 1] = mixedColor.g;
+                colors[i3 + 2] = mixedColor.b;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            material = new THREE.PointsMaterial({
+                size: parameters.size,
+                sizeAttenuation: true,
+                depthWrite: false,
+                blending: THREE.AdditiveBlending,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6
+            });
+            points = new THREE.Points(geometry, material);
+            scene.add(points);
+        };
+        generateGalaxy();
+        camera.position.z = 3;
+        
+        const clock = new THREE.Clock();
+        const animate = () => {
+            const elapsedTime = clock.getElapsedTime();
+            if (points) points.rotation.y = elapsedTime * 0.02;
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        };
+        animate();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
     </script>
 </body>
 </html>
