@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>CoExAI — AI Workforce for Content Creators</title>
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -28,6 +25,7 @@
       overflow-x: hidden;
     }
     
+    /* 3D Galaxy Canvas */
     #galaxy-canvas {
       position: fixed;
       top: 0;
@@ -38,6 +36,7 @@
       pointer-events: none;
     }
     
+    /* Floating Stars Layer */
     .stars-container {
       position: fixed;
       top: 0;
@@ -63,6 +62,7 @@
       50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 10px rgba(255,255,255,0.9); }
     }
     
+    /* Shooting Stars */
     .shooting-star {
       position: absolute;
       width: 4px;
@@ -89,6 +89,7 @@
       100% { transform: translateX(600px) translateY(600px) rotate(-45deg); opacity: 0; }
     }
     
+    /* Nebula Effects - Grayscale */
     .nebula {
       position: fixed;
       border-radius: 50%;
@@ -122,6 +123,7 @@
       75% { transform: translate(30px, 20px) scale(1.03); }
     }
     
+    /* Navigation - Completely Transparent */
     .nav-glass {
       background: transparent;
       position: fixed;
@@ -131,6 +133,7 @@
       z-index: 100;
     }
     
+    /* Primary CTA Button - White */
     .btn-primary {
       position: relative;
       background: #fff;
@@ -150,6 +153,7 @@
       transform: translateY(-2px) scale(1.02);
     }
     
+    /* Secondary Button - Outline */
     .btn-secondary {
       background: transparent;
       border: 1px solid rgba(255,255,255,0.2);
@@ -166,6 +170,7 @@
       box-shadow: 0 0 30px rgba(255,255,255,0.1);
     }
     
+    /* Gradient text - White/Silver */
     .gradient-text {
       background: linear-gradient(135deg, #ffffff 0%, #c0c0c0 50%, #ffffff 100%);
       -webkit-background-clip: text;
@@ -173,6 +178,7 @@
       background-clip: text;
     }
     
+    /* ===== AGENT HUB STYLES ===== */
     .agent-hub {
       position: relative;
       width: 600px;
@@ -180,6 +186,7 @@
       margin: 0 auto;
     }
     
+    /* Central Hub */
     .hub-center {
       position: absolute;
       top: 50%;
@@ -228,6 +235,7 @@
       background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
     }
     
+    /* Orbit Rings - adjusted for larger radius */
     .orbit-ring {
       position: absolute;
       top: 50%;
@@ -255,6 +263,7 @@
       to { transform: translate(-50%, -50%) rotate(360deg); }
     }
     
+    /* ===== ORBITING AGENTS ===== */
     .orbit-container {
       position: absolute;
       top: 50%;
@@ -330,6 +339,7 @@
       transform: scale(1.1);
     }
     
+    /* Orbit positions - 6 agents at 60° intervals, larger radius */
     .orbit-analyze { animation: orbit-1 24s linear infinite; }
     @keyframes orbit-1 {
       from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
@@ -366,6 +376,7 @@
       to { transform: rotate(660deg) translateX(200px) rotate(-660deg); }
     }
     
+    /* Badge */
     .badge-pulse {
       animation: badge-glow 2s ease-in-out infinite;
     }
@@ -375,11 +386,13 @@
       50% { box-shadow: 0 0 25px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.2); }
     }
     
+    /* ===== SECTION STYLES ===== */
     .section-content {
       position: relative;
       z-index: 10;
     }
     
+    /* Glass Card */
     .glass-card {
       background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
       border: 1px solid rgba(255,255,255,0.1);
@@ -395,6 +408,7 @@
       box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(255,255,255,0.05);
     }
     
+    /* Step Card */
     .step-card {
       background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
       border: 1px solid rgba(255,255,255,0.08);
@@ -424,6 +438,7 @@
       font-size: 1.25rem;
     }
     
+    /* Pricing Card */
     .pricing-card {
       background: linear-gradient(145deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%);
       border: 1px solid rgba(255,255,255,0.1);
@@ -457,6 +472,7 @@
       font-weight: 600;
     }
     
+    /* Feature Check */
     .feature-check {
       width: 20px;
       height: 20px;
@@ -467,11 +483,13 @@
       justify-content: center;
     }
     
+    /* Divider Line */
     .gradient-line {
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
     }
     
+    /* Scroll Reveal Animation */
     .reveal {
       opacity: 0;
       transform: translateY(30px);
@@ -493,13 +511,17 @@
 </head>
 <body class="min-h-screen bg-black text-white">
 
+  <!-- 3D Galaxy Canvas -->
   <canvas id="galaxy-canvas"></canvas>
   
+  <!-- Nebula Effects -->
   <div class="nebula nebula-1"></div>
   <div class="nebula nebula-2"></div>
   
+  <!-- Floating Stars Container -->
   <div class="stars-container" id="stars-container"></div>
 
+  <!-- Navigation -->
   <nav class="nav-glass">
     <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
       <a href="#" class="flex items-center gap-2 text-lg font-semibold tracking-tight">
@@ -523,8 +545,10 @@
     </div>
   </nav>
 
+  <!-- Hero Section -->
   <section class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-20 section-content">
     
+    <!-- Central Agent Hub -->
     <div class="agent-hub mb-8">
       <div class="orbit-ring orbit-ring-1"></div>
       <div class="orbit-ring orbit-ring-2"></div>
@@ -580,6 +604,7 @@
       </div>
     </div>
     
+    <!-- Hero Content -->
     <div class="relative z-10 flex max-w-4xl flex-col items-center text-center">
       <div class="mb-6 flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm backdrop-blur-xl">
         <span class="h-2 w-2 rounded-full bg-white badge-pulse"></span>
@@ -614,6 +639,7 @@
     </div>
   </section>
 
+  <!-- How It Works Section -->
   <section id="how-it-works" class="relative py-32 px-6 section-content">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-20 reveal">
@@ -622,18 +648,21 @@
       </div>
       
       <div class="grid md:grid-cols-3 gap-8">
+        <!-- Step 1 -->
         <div class="step-card p-8 reveal reveal-delay-1">
           <div class="step-number mb-6">1</div>
           <h3 class="text-xl font-semibold mb-3">Choose Your Agent</h3>
           <p class="text-white/60 leading-relaxed">Select from Maya, Engage, Pitch, or Analyze. Each agent specializes in a different aspect of your creator business.</p>
         </div>
         
+        <!-- Step 2 -->
         <div class="step-card p-8 reveal reveal-delay-2">
           <div class="step-number mb-6">2</div>
           <h3 class="text-xl font-semibold mb-3">Train on Your Brand</h3>
           <p class="text-white/60 leading-relaxed">Connect your social accounts and upload your content. Our AI learns your voice, style, and audience in minutes.</p>
         </div>
         
+        <!-- Step 3 -->
         <div class="step-card p-8 reveal reveal-delay-3">
           <div class="step-number mb-6">3</div>
           <h3 class="text-xl font-semibold mb-3">Go Autopilot</h3>
@@ -643,6 +672,7 @@
     </div>
   </section>
 
+  <!-- Features Section -->
   <section id="features" class="relative py-32 px-6 section-content">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-20 reveal">
@@ -651,6 +681,7 @@
       </div>
       
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Feature 1 -->
         <div class="glass-card p-8 reveal reveal-delay-1">
           <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
             <i data-lucide="zap" class="w-6 h-6 text-white"></i>
@@ -659,6 +690,7 @@
           <p class="text-white/60 text-sm leading-relaxed">Generate content, replies, and pitches in seconds, not hours. Your AI works at machine speed.</p>
         </div>
         
+        <!-- Feature 2 -->
         <div class="glass-card p-8 reveal reveal-delay-2">
           <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
             <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
@@ -667,6 +699,7 @@
           <p class="text-white/60 text-sm leading-relaxed">Every output is trained on your unique voice. Your audience won't know it's AI — and neither will brands.</p>
         </div>
         
+        <!-- Feature 3 -->
         <div class="glass-card p-8 reveal reveal-delay-3">
           <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
             <i data-lucide="clock" class="w-6 h-6 text-white"></i>
@@ -675,6 +708,7 @@
           <p class="text-white/60 text-sm leading-relaxed">While you sleep, your AI agents engage fans, respond to comments, and hunt for brand deals.</p>
         </div>
         
+        <!-- Feature 4 -->
         <div class="glass-card p-8 reveal reveal-delay-4">
           <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
             <i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
@@ -683,6 +717,7 @@
           <p class="text-white/60 text-sm leading-relaxed">Real-time analytics show what's working. Your AI learns and improves from every interaction.</p>
         </div>
         
+        <!-- Feature 5 -->
         <div class="glass-card p-8 reveal reveal-delay-5">
           <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
             <i data-lucide="layers" class="w-6 h-6 text-white"></i>
@@ -691,6 +726,7 @@
           <p class="text-white/60 text-sm leading-relaxed">Connect YouTube, TikTok, Instagram, and X. One dashboard to rule them all.</p>
         </div>
         
+        <!-- Feature 6 -->
         <div class="glass-card p-8 reveal reveal-delay-6">
           <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6">
             <i data-lucide="sliders" class="w-6 h-6 text-white"></i>
@@ -702,6 +738,7 @@
     </div>
   </section>
 
+  <!-- AI Agents Section -->
   <section id="agents" class="relative py-32 px-6 section-content">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-20 reveal">
@@ -710,6 +747,7 @@
       </div>
       
       <div class="grid md:grid-cols-2 gap-6">
+        <!-- Maya -->
         <div class="glass-card p-8 reveal reveal-delay-1">
           <div class="flex items-start gap-5">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
@@ -739,6 +777,7 @@
           </div>
         </div>
         
+        <!-- Engage -->
         <div class="glass-card p-8 reveal reveal-delay-2">
           <div class="flex items-start gap-5">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
@@ -768,6 +807,7 @@
           </div>
         </div>
         
+        <!-- Pitch -->
         <div class="glass-card p-8 reveal reveal-delay-3">
           <div class="flex items-start gap-5">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
@@ -797,6 +837,7 @@
           </div>
         </div>
         
+        <!-- Analyze -->
         <div class="glass-card p-8 reveal reveal-delay-4">
           <div class="flex items-start gap-5">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
@@ -829,6 +870,7 @@
     </div>
   </section>
 
+  <!-- Pricing Section -->
   <section id="pricing" class="relative py-32 px-6 section-content">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-20 reveal">
@@ -838,6 +880,7 @@
       </div>
       
       <div class="grid md:grid-cols-3 gap-8">
+        <!-- Starter -->
         <div class="pricing-card p-8 reveal reveal-delay-1">
           <div class="mb-6">
             <h3 class="text-lg font-semibold mb-2">Starter</h3>
@@ -871,6 +914,7 @@
           <a href="/demo" class="btn-secondary w-full text-center block">Get Started</a>
         </div>
         
+        <!-- Pro (Popular) -->
         <div class="pricing-card popular p-8 reveal reveal-delay-2">
           <div class="mb-6">
             <h3 class="text-lg font-semibold mb-2">Pro</h3>
@@ -908,6 +952,7 @@
           <a href="/demo" class="btn-primary w-full text-center block">Get Started</a>
         </div>
         
+        <!-- Business -->
         <div class="pricing-card p-8 reveal reveal-delay-3">
           <div class="mb-6">
             <h3 class="text-lg font-semibold mb-2">Business</h3>
@@ -948,32 +993,39 @@
     </div>
   </section>
 
+  <!-- CTA Section -->
   <section class="relative py-32 px-6 section-content">
     <div class="max-w-4xl mx-auto text-center">
       <div class="glass-card p-12 md:p-16 reveal">
         <h2 class="text-3xl md:text-5xl font-bold mb-6">Ready to 10x your output?</h2>
+        
         <p class="text-lg text-white/60 mb-10 max-w-2xl mx-auto">
           Join hundreds of creators who've already deployed their AI workforce.
           Start free, upgrade when you're ready.
         </p>
+        
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a href="/demo" class="btn-primary inline-flex items-center justify-center gap-2">
             Deploy Your First Agent
             <i data-lucide="arrow-right" class="w-5 h-5"></i>
           </a>
+          
           <a href="#" class="btn-secondary inline-flex items-center justify-center gap-2">
             <i data-lucide="calendar" class="w-5 h-5"></i>
             Book a Demo
           </a>
         </div>
+        
         <p class="mt-8 text-sm text-white/40">✨ No credit card required · 14-day free trial · Cancel anytime</p>
       </div>
     </div>
   </section>
 
+  <!-- Footer -->
   <footer class="relative py-16 px-6 section-content border-t border-white/5">
     <div class="max-w-6xl mx-auto">
       <div class="grid md:grid-cols-4 gap-12 mb-12">
+        <!-- Brand -->
         <div class="md:col-span-1">
           <a href="#" class="flex items-center gap-2 text-lg font-semibold mb-4">
             <div class="w-7 h-7 bg-white rounded-lg flex items-center justify-center">
@@ -981,9 +1033,11 @@
             </div>
             <span>CoExAI</span>
           </a>
+          
           <p class="text-white/50 text-sm leading-relaxed">AI agents that work so you don't have to. Built for creators, by creators.</p>
         </div>
         
+        <!-- Product -->
         <div>
           <h4 class="font-semibold mb-4">Product</h4>
           <ul class="space-y-3">
@@ -994,6 +1048,7 @@
           </ul>
         </div>
         
+        <!-- Company -->
         <div>
           <h4 class="font-semibold mb-4">Company</h4>
           <ul class="space-y-3">
@@ -1004,6 +1059,7 @@
           </ul>
         </div>
         
+        <!-- Legal -->
         <div>
           <h4 class="font-semibold mb-4">Legal</h4>
           <ul class="space-y-3">
@@ -1018,13 +1074,16 @@
       
       <div class="flex flex-col md:flex-row justify-between items-center gap-4">
         <p class="text-white/40 text-sm">© 2026 CoExAI. All rights reserved.</p>
+        
         <div class="flex items-center gap-4">
           <a href="#" class="text-white/40 hover:text-white transition-colors">
             <i data-lucide="twitter" class="w-5 h-5"></i>
           </a>
+          
           <a href="#" class="text-white/40 hover:text-white transition-colors">
             <i data-lucide="github" class="w-5 h-5"></i>
           </a>
+          
           <a href="#" class="text-white/40 hover:text-white transition-colors">
             <i data-lucide="linkedin" class="w-5 h-5"></i>
           </a>
@@ -1036,6 +1095,7 @@
   <script>
     lucide.createIcons();
     
+    // 3D Galaxy
     const canvas = document.getElementById('galaxy-canvas');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
@@ -1129,6 +1189,7 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
     
+    // Floating Stars
     const starsContainer = document.getElementById('stars-container');
     for (let i = 0; i < 80; i++) {
       const star = document.createElement('div');
@@ -1146,6 +1207,7 @@
       starsContainer.appendChild(star);
     }
     
+    // Shooting Stars
     const createShootingStar = () => {
       const star = document.createElement('div');
       star.className = 'shooting-star';
@@ -1156,6 +1218,7 @@
     };
     setInterval(createShootingStar, 4000 + Math.random() * 4000);
     
+    // Scroll Reveal
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
