@@ -281,6 +281,9 @@
       gap: 8px;
       z-index: 15;
       transform-origin: center;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform-style: preserve-3d;
     }
     
     .agent-orbit:hover {
@@ -303,6 +306,8 @@
       transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: relative;
       overflow: hidden;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
     
     .agent-icon::before {
@@ -739,9 +744,9 @@
           <span class="agent-label">SEO</span>
         </a>
         
-        <a href="#" class="agent-orbit orbit-maya" style="z-index: 20;">
-          <div class="agent-icon" style="position: relative; z-index: 21;">
-            <i data-lucide="wand-2" class="w-6 h-6 text-white/90" style="display: block;"></i>
+        <a href="#" class="agent-orbit orbit-maya">
+          <div class="agent-icon">
+            <i data-lucide="wand-2" class="w-6 h-6 text-white/90"></i>
           </div>
           <span class="agent-label">Maya</span>
         </a>
