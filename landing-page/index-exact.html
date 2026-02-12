@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CoExAI — AI Workforce for Content Creators</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    :root {
+      --background: 0 0% 0%;
+      --foreground: 0 0% 100%;
+      --card: 0 0% 0%;
+      --card-foreground: 0 0% 100%;
+      --popover: 0 0% 0%;
+      --popover-foreground: 0 0% 100%;
+      --primary: 0 0% 100%;
+      --primary-foreground: 0 0% 0%;
+      --secondary: 0 0% 25%;
+      --secondary-foreground: 0 0% 100%;
+      --muted: 0 0% 15%;
+      --muted-foreground: 0 0% 70%;
+      --accent: 0 0% 25%;
+      --accent-foreground: 0 0% 100%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 100%;
+      --border: 0 0% 100% / .1;
+      --input: 0 0% 25%;
+      --ring: 0 0% 100%;
+      --hero-glow: 220 100% 70%;
+      --hero-accent: 280 100% 70%;
+      --surface: 0 0% 7%;
+      --surface-end: 0 0% 17%;
+      --nav-bg: 0 0% 100% / .05;
+      --nav-border: 0 0% 100% / .05;
+      --nav-text: 240 6% 83%;
+      --btn-glass-border: 0 0% 100% / .24;
+      --btn-glass-shadow: 0 0% 0% / .14;
+      --btn-glass-inset: 0 0% 100% / .3;
+      --badge-from: 0 0% 10%;
+      --badge-via: 0 0% 40%;
+      --badge-to: 0 0% 10%;
+      --badge-glow: 0 0% 100% / .12;
+      --badge-inset: 0 0% 7% / .5;
+      --badge-border: 0 0% 50% / .5;
+      --accent-red: 0 100% 67%;
+      --card-gradient-from: 0 0% 67%;
+      --card-gradient-to: 0 0% 41%;
+      --radius: .5rem;
+    }
+    
+    body {
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      line-height: 1.5;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+    
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: hsl(var(--nav-bg));
+      border-bottom: 1px solid hsl(var(--nav-border));
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+    }
+    
+    .nav-link {
+      color: hsl(var(--nav-text));
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    
+    .nav-link:hover {
+      color: hsl(var(--foreground));
+    }
+    
+    .btn-glass {
+      background: transparent;
+      border: 1px solid hsl(var(--btn-glass-border));
+      box-shadow: inset 0 9px 14px -5px hsl(var(--btn-glass-inset)), 
+                  0 4px 6px hsl(var(--btn-glass-shadow));
+      color: hsl(var(--foreground));
+      transition: all 0.2s;
+    }
+    
+    .btn-glass:hover {
+      opacity: 0.9;
+    }
+    
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      padding-top: 8rem;
+      overflow: hidden;
+    }
+    
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+    }
+    
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top, rgba(124, 58, 237, 0.15) 0%, transparent 50%);
+      z-index: 1;
+    }
+    
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 0%, hsl(var(--background)) 100%);
+      z-index: 2;
+    }
+    
+    .badge-gradient {
+      background: linear-gradient(90deg, hsl(var(--badge-from)), hsl(var(--badge-via)), hsl(var(--badge-to)));
+      box-shadow: 0 0 16px 1px hsl(var(--badge-glow)), 
+                  inset 0 1px 4px 0.5px hsl(var(--badge-inset)),
+                  inset 0 -1px 4px 0.5px hsl(var(--badge-inset));
+      border: 1px solid hsl(var(--badge-border));
+    }
+    
+    /* Cards */
+    .card-gradient {
+      background: linear-gradient(180deg, hsl(0 0% 17% / .37) 0%, hsl(0 0% 21% / .37) 100%);
+      border: 1px solid hsl(var(--border));
+      backdrop-filter: blur(40px);
+    }
+    
+    .card-surface {
+      background: linear-gradient(180deg, hsl(var(--surface)) 0%, hsl(var(--surface-end)) 100%);
+      border: 1px solid hsl(var(--border));
+    }
+    
+    .feature-card {
+      background: linear-gradient(180deg, hsl(0 0% 17% / .37) 0%, hsl(0 0% 21% / .37) 100%);
+      border: 1px solid hsl(var(--border));
+      backdrop-filter: blur(10px);
+      transition: all 0.4s;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-4px);
+    }
+    
+    /* Portfolio */
+    .portfolio-item img {
+      filter: grayscale(100%);
+      transition: filter 0.4s;
+    }
+    
+    .portfolio-item:hover img {
+      filter: grayscale(0%);
+    }
+    
+    .portfolio-item:hover {
+      transform: translateY(-4px);
+    }
+    
+    /* Animations */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .delay-100 { transition-delay: 0.1s; }
+    .delay-200 { transition-delay: 0.2s; }
+    .delay-300 { transition-delay: 0.3s; }
+    .delay-400 { transition-delay: 0.4s; }
+    
+    /* Timeline */
+    .timeline-line {
+      background: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(0 0% 100% / 0.3) 100%);
+    }
+    
+    /* Pricing */
+    .pricing-option {
+      transition: all 0.2s;
+    }
+    
+    .pricing-option.selected {
+      border-color: hsl(var(--accent-red));
+    }
+    
+    /* Footer line */
+    .footer-line {
+      background: linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.2), transparent);
+      height: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <nav class="container flex h-20 items-center justify-between">
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+          <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+        </div>
+        <span class="text-xl font-semibold">CoExAI</span>
+      </a>
+      
+      <ul class="hidden lg:flex items-center gap-8">
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="#agents" class="nav-link">AI Agents</a></li>
+        <li><a href="#pricing" class="nav-link">Pricing</a></li>
+        <li><a href="#" class="nav-link">Contact</a></li>
+      </ul>
+      
+      <div class="flex items-center gap-4">
+        <a href="#" class="hidden sm:block text-sm text-neutral-400 hover:text-white transition-colors">Log in</a>
+        <a href="/demo" class="btn-glass px-6 py-2.5 rounded-[10px] text-sm font-medium">Get Started</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    
+    <div class="container relative z-10">
+      <div class="flex flex-col items-center text-center gap-7">
+        <!-- Badge -->
+        <div class="fade-up">
+          <div class="badge-gradient px-4 py-2 rounded-full inline-flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+            <span class="text-white text-sm font-semibold">AI Workforce for Content Creators</span>
+          </div>
+        </div>
+        
+        <!-- Headline -->
+        <div class="fade-up delay-100">
+          <h1 class="text-4xl md:text-5xl lg:text-[74px] font-medium leading-tight max-w-[720px]">
+            Meet your new
+            <br>
+            AI Workforce
+          </h1>
+        </div>
+        
+        <!-- Subtext -->
+        <p class="fade-up delay-200 text-neutral-400 text-lg md:text-xl max-w-[684px] opacity-90">
+          Four AI agents working 24/7 to create content, engage your audience, and close brand deals while you focus on what you do best: <span class="text-white font-medium">creating</span>.
+        </p>
+        
+        <!-- CTA -->
+        <div class="fade-up delay-300">
+          <a href="/demo" class="btn-glass inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-lg font-medium">
+            Start Free Trial
+            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Dashboard -->
+      <div class="relative z-[5] mt-16 fade-up delay-400">
+        <div class="card-gradient rounded-t-2xl p-2 max-w-5xl mx-auto">
+          <div class="bg-gradient-to-b from-neutral-900 to-black rounded-t-2xl p-8 overflow-hidden">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="col-span-2 bg-neutral-800/50 rounded-2xl p-6 border border-white/5">
+                <div class="flex items-center justify-between mb-4">
+                  <span class="text-neutral-400 text-sm">Performance</span>
+                  <span class="text-green-400 text-sm">+23%</span>
+                </div>
+                <div class="text-4xl font-bold mb-2">28.5h</div>
+                <div class="text-neutral-500 text-sm">Time saved this week</div>
+              </div>
+              
+              <div class="space-y-4">
+                <div class="bg-purple-600/20 rounded-2xl p-4 border border-purple-500/20">
+                  <i data-lucide="wand-2" class="w-6 h-6 text-purple-400 mb-2"></i>
+                  <div class="text-sm font-medium">Maya</div>
+                  <div class="text-xs text-neutral-400">Creating...</div>
+                </div>
+                
+                <div class="bg-blue-600/20 rounded-2xl p-4 border border-blue-500/20">
+                  <i data-lucide="heart-handshake" class="w-6 h-6 text-blue-400 mb-2"></i>
+                  <div class="text-sm font-medium">Engage</div>
+                  <div class="text-xs text-neutral-400">Replying...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent pointer-events-none"></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    lucide.createIcons();
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
