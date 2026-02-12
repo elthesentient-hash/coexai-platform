@@ -390,135 +390,145 @@
     /* ===== MOBILE RESPONSIVE ===== */
     @media (max-width: 768px) {
       .agent-hub {
-        width: 350px;
-        height: 350px;
+        width: 340px;
+        height: 340px;
       }
       
       .hub-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 16px;
+        width: 55px;
+        height: 55px;
+        border-radius: 15px;
       }
       
       .hub-icon span {
-        font-size: 14px !important;
+        font-size: 13px !important;
       }
       
       .orbit-ring-1 {
-        width: 140px;
-        height: 140px;
+        width: 130px;
+        height: 130px;
       }
       
       .orbit-ring-2 {
-        width: 240px;
-        height: 240px;
+        width: 220px;
+        height: 220px;
       }
       
       .agent-icon {
-        width: 45px;
-        height: 45px;
-        border-radius: 12px;
+        width: 42px;
+        height: 42px;
+        border-radius: 11px;
       }
       
       .agent-icon svg {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
       }
       
       .agent-label {
-        font-size: 9px;
-        padding: 3px 8px;
+        font-size: 8px;
+        padding: 2px 6px;
       }
       
-      /* Smaller orbit radius for mobile */
-      @keyframes orbit-1 {
-        from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
-        to { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
-      }
+      /* Consistent orbit radius for tablet - 110px */
+      .orbit-analyze { animation: orbit-mobile-1 28s linear infinite; }
+      .orbit-support { animation: orbit-mobile-1 28s linear infinite; animation-delay: -4.66s; }
+      .orbit-seo { animation: orbit-mobile-1 28s linear infinite; animation-delay: -9.33s; }
+      .orbit-maya { animation: orbit-mobile-1 28s linear infinite; animation-delay: -14s; }
+      .orbit-engage { animation: orbit-mobile-1 28s linear infinite; animation-delay: -18.66s; }
+      .orbit-pitch { animation: orbit-mobile-1 28s linear infinite; animation-delay: -23.33s; }
       
-      @keyframes orbit-2 {
-        from { transform: rotate(60deg) translateX(120px) rotate(-60deg); }
-        to { transform: rotate(420deg) translateX(120px) rotate(-420deg); }
+      @keyframes orbit-mobile-1 {
+        from { transform: rotate(0deg) translateX(110px) rotate(0deg); }
+        to { transform: rotate(360deg) translateX(110px) rotate(-360deg); }
       }
-      
-      @keyframes orbit-3 {
-        from { transform: rotate(120deg) translateX(120px) rotate(-120deg); }
-        to { transform: rotate(480deg) translateX(120px) rotate(-480deg); }
+      @keyframes orbit-mobile-2 {
+        from { transform: rotate(60deg) translateX(110px) rotate(-60deg); }
+        to { transform: rotate(420deg) translateX(110px) rotate(-420deg); }
       }
-      
-      @keyframes orbit-4 {
-        from { transform: rotate(180deg) translateX(120px) rotate(-180deg); }
-        to { transform: rotate(540deg) translateX(120px) rotate(-540deg); }
+      @keyframes orbit-mobile-3 {
+        from { transform: rotate(120deg) translateX(110px) rotate(-120deg); }
+        to { transform: rotate(480deg) translateX(110px) rotate(-480deg); }
       }
-      
-      @keyframes orbit-5 {
-        from { transform: rotate(240deg) translateX(120px) rotate(-240deg); }
-        to { transform: rotate(600deg) translateX(120px) rotate(-600deg); }
+      @keyframes orbit-mobile-4 {
+        from { transform: rotate(180deg) translateX(110px) rotate(-180deg); }
+        to { transform: rotate(540deg) translateX(110px) rotate(-540deg); }
       }
-      
-      @keyframes orbit-6 {
-        from { transform: rotate(300deg) translateX(120px) rotate(-300deg); }
-        to { transform: rotate(660deg) translateX(120px) rotate(-660deg); }
+      @keyframes orbit-mobile-5 {
+        from { transform: rotate(240deg) translateX(110px) rotate(-240deg); }
+        to { transform: rotate(600deg) translateX(110px) rotate(-600deg); }
+      }
+      @keyframes orbit-mobile-6 {
+        from { transform: rotate(300deg) translateX(110px) rotate(-300deg); }
+        to { transform: rotate(660deg) translateX(110px) rotate(-660deg); }
       }
     }
     
     @media (max-width: 480px) {
       .agent-hub {
-        width: 280px;
-        height: 280px;
+        width: 300px;
+        height: 300px;
       }
       
       .hub-icon {
-        width: 50px;
-        height: 50px;
+        width: 48px;
+        height: 48px;
       }
       
       .orbit-ring-1 {
-        width: 110px;
-        height: 110px;
+        width: 115px;
+        height: 115px;
       }
       
       .orbit-ring-2 {
-        width: 190px;
-        height: 190px;
+        width: 200px;
+        height: 200px;
       }
       
       .agent-icon {
-        width: 38px;
-        height: 38px;
+        width: 36px;
+        height: 36px;
       }
       
       .agent-icon svg {
-        width: 16px;
-        height: 16px;
+        width: 15px;
+        height: 15px;
       }
       
-      @keyframes orbit-1 {
+      .agent-label {
+        font-size: 7px;
+        padding: 2px 5px;
+      }
+      
+      /* Consistent orbit radius for phone - 95px */
+      .orbit-analyze { animation: orbit-phone-1 28s linear infinite; }
+      .orbit-support { animation: orbit-phone-2 28s linear infinite; animation-delay: -4.66s; }
+      .orbit-seo { animation: orbit-phone-3 28s linear infinite; animation-delay: -9.33s; }
+      .orbit-maya { animation: orbit-phone-4 28s linear infinite; animation-delay: -14s; }
+      .orbit-engage { animation: orbit-phone-5 28s linear infinite; animation-delay: -18.66s; }
+      .orbit-pitch { animation: orbit-phone-6 28s linear infinite; animation-delay: -23.33s; }
+      
+      @keyframes orbit-phone-1 {
         from { transform: rotate(0deg) translateX(95px) rotate(0deg); }
         to { transform: rotate(360deg) translateX(95px) rotate(-360deg); }
       }
-      
-      @keyframes orbit-2 {
+      @keyframes orbit-phone-2 {
         from { transform: rotate(60deg) translateX(95px) rotate(-60deg); }
         to { transform: rotate(420deg) translateX(95px) rotate(-420deg); }
       }
-      
-      @keyframes orbit-3 {
+      @keyframes orbit-phone-3 {
         from { transform: rotate(120deg) translateX(95px) rotate(-120deg); }
         to { transform: rotate(480deg) translateX(95px) rotate(-480deg); }
       }
-      
-      @keyframes orbit-4 {
+      @keyframes orbit-phone-4 {
         from { transform: rotate(180deg) translateX(95px) rotate(-180deg); }
         to { transform: rotate(540deg) translateX(95px) rotate(-540deg); }
       }
-      
-      @keyframes orbit-5 {
+      @keyframes orbit-phone-5 {
         from { transform: rotate(240deg) translateX(95px) rotate(-240deg); }
         to { transform: rotate(600deg) translateX(95px) rotate(-600deg); }
       }
-      
-      @keyframes orbit-6 {
+      @keyframes orbit-phone-6 {
         from { transform: rotate(300deg) translateX(95px) rotate(-300deg); }
         to { transform: rotate(660deg) translateX(95px) rotate(-660deg); }
       }
