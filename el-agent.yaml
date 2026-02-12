@@ -1,0 +1,65 @@
+# EL Agent Configuration
+# OpenAI Responses API + Tools
+
+model:
+  default: gpt-4o
+  reasoning: o3-mini
+  max_tokens: 4096
+  temperature: 0.7
+
+api:
+  mode: responses  # responses | chat_completions
+  streaming: true
+  store_responses: true
+
+tools:
+  web_search:
+    enabled: true
+    model: gpt-4o-search-preview
+    citation_style: brackets  # brackets | url
+    
+  file_search:
+    enabled: true
+    vector_store_id: auto  # auto-create on startup
+    max_results: 10
+    
+  computer_use:
+    enabled: true
+    environment: browser  # browser | desktop
+    screenshot_resolution: high
+    
+  code_interpreter:
+    enabled: true
+    sandbox: restricted
+
+orchestration:
+  mode: multi_agent  # single | multi_agent
+  handoff_strategy: smart  # round_robin | smart
+  max_agents_per_workflow: 5
+
+proactive:
+  enabled: true
+  check_interval_ms: 300000  # 5 minutes
+  triggers:
+    - file_changes
+    - calendar_events
+    - external_updates
+    - heartbeat
+  
+memory:
+  short_term: session  # in-memory session context
+  long_term: vector_store  # file search + MEMORY.md
+  episodic: daily_logs  # memory/YYYY-MM-DD.md
+
+tracing:
+  enabled: true
+  destination: file  # file | openai | both
+  log_level: info
+  include_tool_calls: true
+  include_tokens: true
+
+safety:
+  confirm_destructive: true
+  confirm_external_send: true
+  max_daily_api_calls: 1000
+  rate_limit_per_minute: 60
