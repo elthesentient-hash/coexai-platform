@@ -387,6 +387,143 @@
       50% { box-shadow: 0 0 25px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.2); }
     }
     
+    /* ===== MOBILE RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .agent-hub {
+        width: 350px;
+        height: 350px;
+      }
+      
+      .hub-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+      }
+      
+      .hub-icon span {
+        font-size: 14px !important;
+      }
+      
+      .orbit-ring-1 {
+        width: 140px;
+        height: 140px;
+      }
+      
+      .orbit-ring-2 {
+        width: 240px;
+        height: 240px;
+      }
+      
+      .agent-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+      }
+      
+      .agent-icon svg {
+        width: 20px;
+        height: 20px;
+      }
+      
+      .agent-label {
+        font-size: 9px;
+        padding: 3px 8px;
+      }
+      
+      /* Smaller orbit radius for mobile */
+      @keyframes orbit-1 {
+        from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+        to { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+      }
+      
+      @keyframes orbit-2 {
+        from { transform: rotate(60deg) translateX(120px) rotate(-60deg); }
+        to { transform: rotate(420deg) translateX(120px) rotate(-420deg); }
+      }
+      
+      @keyframes orbit-3 {
+        from { transform: rotate(120deg) translateX(120px) rotate(-120deg); }
+        to { transform: rotate(480deg) translateX(120px) rotate(-480deg); }
+      }
+      
+      @keyframes orbit-4 {
+        from { transform: rotate(180deg) translateX(120px) rotate(-180deg); }
+        to { transform: rotate(540deg) translateX(120px) rotate(-540deg); }
+      }
+      
+      @keyframes orbit-5 {
+        from { transform: rotate(240deg) translateX(120px) rotate(-240deg); }
+        to { transform: rotate(600deg) translateX(120px) rotate(-600deg); }
+      }
+      
+      @keyframes orbit-6 {
+        from { transform: rotate(300deg) translateX(120px) rotate(-300deg); }
+        to { transform: rotate(660deg) translateX(120px) rotate(-660deg); }
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .agent-hub {
+        width: 280px;
+        height: 280px;
+      }
+      
+      .hub-icon {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .orbit-ring-1 {
+        width: 110px;
+        height: 110px;
+      }
+      
+      .orbit-ring-2 {
+        width: 190px;
+        height: 190px;
+      }
+      
+      .agent-icon {
+        width: 38px;
+        height: 38px;
+      }
+      
+      .agent-icon svg {
+        width: 16px;
+        height: 16px;
+      }
+      
+      @keyframes orbit-1 {
+        from { transform: rotate(0deg) translateX(95px) rotate(0deg); }
+        to { transform: rotate(360deg) translateX(95px) rotate(-360deg); }
+      }
+      
+      @keyframes orbit-2 {
+        from { transform: rotate(60deg) translateX(95px) rotate(-60deg); }
+        to { transform: rotate(420deg) translateX(95px) rotate(-420deg); }
+      }
+      
+      @keyframes orbit-3 {
+        from { transform: rotate(120deg) translateX(95px) rotate(-120deg); }
+        to { transform: rotate(480deg) translateX(95px) rotate(-480deg); }
+      }
+      
+      @keyframes orbit-4 {
+        from { transform: rotate(180deg) translateX(95px) rotate(-180deg); }
+        to { transform: rotate(540deg) translateX(95px) rotate(-540deg); }
+      }
+      
+      @keyframes orbit-5 {
+        from { transform: rotate(240deg) translateX(95px) rotate(-240deg); }
+        to { transform: rotate(600deg) translateX(95px) rotate(-600deg); }
+      }
+      
+      @keyframes orbit-6 {
+        from { transform: rotate(300deg) translateX(95px) rotate(-300deg); }
+        to { transform: rotate(660deg) translateX(95px) rotate(-660deg); }
+      }
+    }
+    
     /* ===== SECTION STYLES ===== */
     .section-content {
       position: relative;
