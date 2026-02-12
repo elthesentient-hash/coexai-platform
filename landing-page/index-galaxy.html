@@ -19,12 +19,6 @@
       box-sizing: border-box;
     }
     
-    :root {
-      --accent: #14b8a6;
-      --accent-glow: rgba(20,184,166,0.5);
-      --purple-glow: rgba(139,92,246,0.4);
-    }
-    
     body {
       background: #000;
       color: #fff;
@@ -65,7 +59,7 @@
     
     @keyframes twinkle {
       0%, 100% { opacity: var(--opacity); transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 8px rgba(255,255,255,0.8); }
+      50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 10px rgba(255,255,255,0.9); }
     }
     
     /* Shooting Stars */
@@ -86,7 +80,7 @@
       right: 0;
       width: 150px;
       height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(20,184,166,0.8), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
       transform: translateY(-50%);
     }
     
@@ -95,12 +89,12 @@
       100% { transform: translateX(600px) translateY(600px) rotate(-45deg); opacity: 0; }
     }
     
-    /* Nebula Effects */
+    /* Nebula Effects - Grayscale */
     .nebula {
       position: fixed;
       border-radius: 50%;
       filter: blur(100px);
-      opacity: 0.35;
+      opacity: 0.25;
       z-index: 0;
       animation: nebula-float 25s ease-in-out infinite;
     }
@@ -108,7 +102,7 @@
     .nebula-1 {
       width: 700px;
       height: 700px;
-      background: radial-gradient(circle, rgba(20,184,166,0.4) 0%, rgba(6,182,212,0.15) 40%, transparent 70%);
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 40%, transparent 70%);
       top: -10%;
       right: -5%;
     }
@@ -116,7 +110,7 @@
     .nebula-2 {
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, rgba(139,92,246,0.35) 0%, rgba(124,58,237,0.15) 40%, transparent 70%);
+      background: radial-gradient(circle, rgba(200,200,200,0.25) 0%, rgba(150,150,150,0.08) 40%, transparent 70%);
       bottom: -10%;
       left: -10%;
       animation-delay: -12s;
@@ -125,7 +119,7 @@
     .nebula-3 {
       width: 500px;
       height: 500px;
-      background: radial-gradient(circle, rgba(236,72,153,0.25) 0%, rgba(219,39,119,0.1) 50%, transparent 70%);
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(200,200,200,0.05) 50%, transparent 70%);
       top: 40%;
       left: 20%;
       animation-delay: -6s;
@@ -151,64 +145,46 @@
       z-index: 100;
     }
     
-    /* Shiny CTA Button */
-    .shiny-cta {
+    /* Primary CTA Button - White */
+    .btn-primary {
       position: relative;
-      background: linear-gradient(135deg, #14b8a6 0%, #0d9488 50%, #14b8a6 100%);
-      background-size: 200% 200%;
-      color: white;
+      background: #fff;
+      color: #000;
       padding: 16px 32px;
       border-radius: 12px;
       font-weight: 600;
       font-size: 0.95rem;
       overflow: hidden;
       transition: all 0.3s;
-      box-shadow: 0 0 40px rgba(20,184,166,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
-      animation: gradient-shift 3s ease infinite;
+      box-shadow: 0 0 40px rgba(255,255,255,0.3), inset 0 1px 0 rgba(255,255,255,0.5);
     }
     
-    @keyframes gradient-shift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-    
-    .shiny-cta:hover {
-      box-shadow: 0 0 60px rgba(20,184,166,0.7), inset 0 1px 0 rgba(255,255,255,0.3);
+    .btn-primary:hover {
+      background: #f0f0f0;
+      box-shadow: 0 0 60px rgba(255,255,255,0.5);
       transform: translateY(-2px) scale(1.02);
     }
     
-    .shiny-cta::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      transition: left 0.6s;
-    }
-    
-    .shiny-cta:hover::before {
-      left: 100%;
-    }
-    
-    /* Glass button */
-    .btn-glass {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      backdrop-filter: blur(10px);
+    /* Secondary Button - Outline */
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 500;
       transition: all 0.3s;
     }
     
-    .btn-glass:hover {
+    .btn-secondary:hover {
       background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.4);
       box-shadow: 0 0 30px rgba(255,255,255,0.1);
     }
     
-    /* Gradient text */
+    /* Gradient text - White/Silver */
     .gradient-text {
-      background: linear-gradient(135deg, #ffffff 0%, #14b8a6 40%, #8b5cf6 100%);
+      background: linear-gradient(135deg, #ffffff 0%, #c0c0c0 50%, #ffffff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -235,22 +211,22 @@
       width: 90px;
       height: 90px;
       border-radius: 24px;
-      background: linear-gradient(135deg, rgba(20,184,166,0.3) 0%, rgba(20,184,166,0.1) 100%);
-      border: 2px solid rgba(20,184,166,0.5);
+      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+      border: 2px solid rgba(255,255,255,0.3);
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       box-shadow: 
-        0 0 60px rgba(20,184,166,0.4),
-        0 0 120px rgba(20,184,166,0.2),
-        inset 0 1px 0 rgba(255,255,255,0.1);
+        0 0 60px rgba(255,255,255,0.2),
+        0 0 120px rgba(255,255,255,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.2);
       animation: hub-pulse 3s ease-in-out infinite;
     }
     
     @keyframes hub-pulse {
-      0%, 100% { box-shadow: 0 0 60px rgba(20,184,166,0.4), 0 0 120px rgba(20,184,166,0.2), inset 0 1px 0 rgba(255,255,255,0.1); transform: scale(1); }
-      50% { box-shadow: 0 0 80px rgba(20,184,166,0.6), 0 0 160px rgba(20,184,166,0.3), inset 0 1px 0 rgba(255,255,255,0.2); transform: scale(1.02); }
+      0%, 100% { box-shadow: 0 0 60px rgba(255,255,255,0.2), 0 0 120px rgba(255,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.2); transform: scale(1); }
+      50% { box-shadow: 0 0 80px rgba(255,255,255,0.35), 0 0 160px rgba(255,255,255,0.15), inset 0 1px 0 rgba(255,255,255,0.3); transform: scale(1.02); }
     }
     
     .hub-icon::before {
@@ -258,7 +234,7 @@
       position: absolute;
       inset: -4px;
       border-radius: 28px;
-      background: linear-gradient(135deg, rgba(20,184,166,0.5), transparent, rgba(139,92,246,0.3));
+      background: linear-gradient(135deg, rgba(255,255,255,0.4), transparent, rgba(255,255,255,0.2));
       z-index: -1;
       opacity: 0.5;
     }
@@ -268,7 +244,7 @@
       position: absolute;
       inset: 0;
       border-radius: 24px;
-      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
     }
     
     /* Orbit Rings */
@@ -290,14 +266,14 @@
     .orbit-ring-2 {
       width: 340px;
       height: 340px;
-      border-color: rgba(20,184,166,0.1);
+      border-color: rgba(255,255,255,0.1);
       animation: ring-rotate 40s linear infinite reverse;
     }
     
     .orbit-ring-3 {
       width: 420px;
       height: 420px;
-      border-color: rgba(139,92,246,0.08);
+      border-color: rgba(255,255,255,0.06);
       animation: ring-rotate 50s linear infinite;
     }
     
@@ -306,7 +282,7 @@
       to { transform: translate(-50%, -50%) rotate(360deg); }
     }
     
-    /* Agent Cards - Perfectly Positioned */
+    /* Agent Cards */
     .agent-card {
       position: absolute;
       display: flex;
@@ -326,15 +302,15 @@
       width: 70px;
       height: 70px;
       border-radius: 20px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%);
-      border: 1px solid rgba(255,255,255,0.15);
+      background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.12);
       backdrop-filter: blur(10px);
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 
         0 8px 32px rgba(0,0,0,0.4),
-        0 0 20px rgba(20,184,166,0.1);
+        0 0 20px rgba(255,255,255,0.05);
       transition: all 0.3s;
       position: relative;
       overflow: hidden;
@@ -344,20 +320,20 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
     }
     
     .agent-card:hover .agent-icon {
-      border-color: rgba(20,184,166,0.5);
+      border-color: rgba(255,255,255,0.4);
       box-shadow: 
         0 12px 40px rgba(0,0,0,0.5),
-        0 0 30px rgba(20,184,166,0.3);
+        0 0 30px rgba(255,255,255,0.15);
     }
     
     .agent-label {
       font-size: 12px;
       font-weight: 500;
-      color: rgba(255,255,255,0.8);
+      color: rgba(255,255,255,0.85);
       background: rgba(0,0,0,0.6);
       padding: 4px 12px;
       border-radius: 20px;
@@ -366,7 +342,7 @@
       white-space: nowrap;
     }
     
-    /* Perfect Hexagon Positions (6 agents) */
+    /* Perfect Hexagon Positions */
     .agent-analyze { top: 8%; left: 50%; transform: translateX(-50%); }
     .agent-support { top: 22%; right: 8%; }
     .agent-seo { bottom: 22%; right: 8%; }
@@ -375,26 +351,9 @@
     .agent-pitch { top: 22%; left: 8%; }
     
     .agent-card:hover .agent-label {
-      color: #14b8a6;
-      border-color: rgba(20,184,166,0.3);
-    }
-    
-    /* Connection Lines */
-    .connection-line {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 140px;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(20,184,166,0.3), transparent);
-      transform-origin: left center;
-      opacity: 0.5;
-      animation: line-pulse 3s ease-in-out infinite;
-    }
-    
-    @keyframes line-pulse {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 0.7; }
+      color: #fff;
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.8);
     }
     
     /* Floating particles */
@@ -416,14 +375,14 @@
       100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
     }
     
-    /* Badge pulse */
+    /* Badge */
     .badge-pulse {
       animation: badge-glow 2s ease-in-out infinite;
     }
     
     @keyframes badge-glow {
-      0%, 100% { box-shadow: 0 0 10px rgba(20,184,166,0.5); }
-      50% { box-shadow: 0 0 25px rgba(20,184,166,0.8), 0 0 40px rgba(20,184,166,0.4); }
+      0%, 100% { box-shadow: 0 0 10px rgba(255,255,255,0.3); }
+      50% { box-shadow: 0 0 25px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.2); }
     }
     
     /* Scroll indicator */
@@ -463,10 +422,10 @@
   <nav class="nav-glass">
     <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
       <a href="#" class="flex items-center gap-2 text-lg font-semibold tracking-tight">
-        <div class="w-7 h-7 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-lg flex items-center justify-center shadow-lg shadow-teal-500/30">
+        <div class="w-7 h-7 bg-white rounded-lg flex items-center justify-center">
           <i data-lucide="sparkles" class="w-4 h-4 text-black"></i>
         </div>
-        <span class="gradient-text">CoExAI</span>
+        <span class="font-bold">CoExAI</span>
       </a>
       
       <div class="hidden items-center gap-8 md:flex">
@@ -478,7 +437,7 @@
       
       <div class="flex items-center gap-4">
         <a href="#" class="hidden sm:block text-sm text-white/60 hover:text-white transition-colors">Log in</a>
-        <a href="/demo" class="shiny-cta text-sm">Get Started</a>
+        <a href="/demo" class="btn-primary text-sm">Get Started</a>
       </div>
     </div>
   </nav>
@@ -486,7 +445,7 @@
   <!-- Hero Section -->
   <section class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-20">
     
-    <!-- Central Agent Hub - ALIGNED -->
+    <!-- Central Agent Hub -->
     <div class="agent-hub mb-8">
       
       <!-- Orbit Rings -->
@@ -497,13 +456,11 @@
       <!-- Central Hub -->
       <div class="hub-center">
         <div class="hub-icon">
-          <i data-lucide="zap" class="w-10 h-10 text-teal-300"></i>
+          <i data-lucide="zap" class="w-10 h-10 text-white"></i>
         </div>
       </div>
       
-      <!-- Agent Cards - Perfectly Aligned Hexagon -->
-      
-      <!-- Analyze (Top) -->
+      <!-- Agent Cards -->
       <a href="#" class="agent-card agent-analyze">
         <div class="agent-icon">
           <i data-lucide="bar-chart-3" class="w-7 h-7 text-white/90"></i>
@@ -511,7 +468,6 @@
         <span class="agent-label">Analyze</span>
       </a>
       
-      <!-- Support (Top-Right) -->
       <a href="#" class="agent-card agent-support">
         <div class="agent-icon">
           <i data-lucide="headphones" class="w-7 h-7 text-white/90"></i>
@@ -519,7 +475,6 @@
         <span class="agent-label">Support</span>
       </a>
       
-      <!-- SEO (Bottom-Right) -->
       <a href="#" class="agent-card agent-seo">
         <div class="agent-icon">
           <i data-lucide="search" class="w-7 h-7 text-white/90"></i>
@@ -527,7 +482,6 @@
         <span class="agent-label">SEO</span>
       </a>
       
-      <!-- Maya (Bottom) -->
       <a href="#" class="agent-card agent-maya">
         <div class="agent-icon">
           <i data-lucide="wand-2" class="w-7 h-7 text-white/90"></i>
@@ -535,7 +489,6 @@
         <span class="agent-label">Maya</span>
       </a>
       
-      <!-- Engage (Bottom-Left) -->
       <a href="#" class="agent-card agent-engage">
         <div class="agent-icon">
           <i data-lucide="heart-handshake" class="w-7 h-7 text-white/90"></i>
@@ -543,7 +496,6 @@
         <span class="agent-label">Engage</span>
       </a>
       
-      <!-- Pitch (Top-Left) -->
       <a href="#" class="agent-card agent-pitch">
         <div class="agent-icon">
           <i data-lucide="briefcase" class="w-7 h-7 text-white/90"></i>
@@ -552,19 +504,19 @@
       </a>
       
       <!-- Decorative Dots -->
-      <div class="absolute top-1/4 left-1/4 w-1.5 h-1.5 bg-teal-400/60 rounded-full shadow-lg shadow-teal-400/50"></div>
-      <div class="absolute top-1/3 right-1/4 w-1 h-1 bg-purple-400/50 rounded-full"></div>
-      <div class="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-cyan-400/60 rounded-full shadow-lg shadow-cyan-400/50"></div>
-      <div class="absolute bottom-1/3 right-1/3 w-1 h-1 bg-pink-400/50 rounded-full"></div>
+      <div class="absolute top-1/4 left-1/4 w-1.5 h-1.5 bg-white/60 rounded-full shadow-lg shadow-white/30"></div>
+      <div class="absolute top-1/3 right-1/4 w-1 h-1 bg-white/40 rounded-full"></div>
+      <div class="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-white/60 rounded-full shadow-lg shadow-white/30"></div>
+      <div class="absolute bottom-1/3 right-1/3 w-1 h-1 bg-white/40 rounded-full"></div>
     </div>
     
     <!-- Hero Content -->
     <div class="relative z-10 flex max-w-4xl flex-col items-center text-center">
       
       <!-- Badge -->
-      <div class="mb-6 flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-5 py-2 text-sm backdrop-blur-xl">
-        <span class="h-2 w-2 rounded-full bg-teal-400 badge-pulse"></span>
-        <span class="text-teal-100">Early access · <span class="text-white font-semibold">12 spots remaining</span></span>
+      <div class="mb-6 flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2 text-sm backdrop-blur-xl">
+        <span class="h-2 w-2 rounded-full bg-white badge-pulse"></span>
+        <span class="text-white/80">Early access · <span class="text-white font-semibold">12 spots remaining</span></span>
       </div>
       
       <!-- Headline -->
@@ -583,12 +535,12 @@
       
       <!-- CTAs -->
       <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row">
-        <a href="/demo" class="shiny-cta inline-flex items-center gap-2">
+        <a href="/demo" class="btn-primary inline-flex items-center gap-2">
           Deploy Your First Agent
           <i data-lucide="arrow-right" class="w-5 h-5"></i>
         </a>
         
-        <a href="#how-it-works" class="btn-glass inline-flex items-center gap-2 rounded-xl px-8 py-4 text-[0.9375rem] font-medium text-white/90">
+        <a href="#how-it-works" class="btn-secondary inline-flex items-center gap-2 text-[0.9375rem]">
           <i data-lucide="play-circle" class="w-5 h-5"></i>
           Watch It Work
         </a>
@@ -605,11 +557,10 @@
   </section>
 
   <script>
-    // Initialize Lucide icons
     lucide.createIcons();
     
     // ============================================
-    // 3D GALAXY WITH THREE.JS
+    // 3D GALAXY - BLACK & WHITE
     // ============================================
     const canvas = document.getElementById('galaxy-canvas');
     const scene = new THREE.Scene();
@@ -620,15 +571,15 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     
     const parameters = {
-      count: 10000,
-      size: 0.018,
+      count: 12000,
+      size: 0.02,
       radius: 6,
       branches: 6,
       spin: 1.2,
       randomness: 0.6,
       randomnessPower: 3,
-      insideColor: '#14b8a6',
-      outsideColor: '#8b5cf6'
+      insideColor: '#ffffff',
+      outsideColor: '#888888'
     };
     
     let geometry = null, material = null, points = null;
@@ -643,7 +594,6 @@
       geometry = new THREE.BufferGeometry();
       const positions = new Float32Array(parameters.count * 3);
       const colors = new Float32Array(parameters.count * 3);
-      const scales = new Float32Array(parameters.count);
       
       const colorInside = new THREE.Color(parameters.insideColor);
       const colorOutside = new THREE.Color(parameters.outsideColor);
@@ -662,18 +612,17 @@
         positions[i3 + 1] = randomY;
         positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
         
+        // Grayscale gradient from white center to gray edges
         const mixedColor = colorInside.clone();
         mixedColor.lerp(colorOutside, radius / parameters.radius);
         
         colors[i3] = mixedColor.r;
         colors[i3 + 1] = mixedColor.g;
         colors[i3 + 2] = mixedColor.b;
-        scales[i] = Math.random();
       }
       
       geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
       geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
       
       material = new THREE.PointsMaterial({
         size: parameters.size,
@@ -682,7 +631,7 @@
         blending: THREE.AdditiveBlending,
         vertexColors: true,
         transparent: true,
-        opacity: 0.9
+        opacity: 0.85
       });
       
       points = new THREE.Points(geometry, material);
@@ -722,7 +671,7 @@
     // FLOATING STARS
     // ============================================
     const starsContainer = document.getElementById('stars-container');
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 250; i++) {
       const star = document.createElement('div');
       star.className = 'star';
       const size = Math.random() * 3 + 1;
@@ -750,20 +699,6 @@
       setTimeout(() => star.remove(), 2500);
     };
     setInterval(createShootingStar, 3000 + Math.random() * 3000);
-    
-    // ============================================
-    // FLOATING PARTICLES
-    // ============================================
-    for (let i = 0; i < 40; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      particle.style.cssText = `
-        left: ${Math.random() * 100}%;
-        animation-duration: ${Math.random() * 15 + 15}s;
-        animation-delay: ${Math.random() * 20}s;
-      `;
-      document.body.appendChild(particle);
-    }
   </script>
 </body>
 </html>
