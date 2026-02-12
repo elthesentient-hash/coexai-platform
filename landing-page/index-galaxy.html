@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoExAI — AI Workforce for Content Creators</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --background: #000000;
+      --foreground: #ffffff;
+      --accent: #14b8a6;
+      --accent-glow: rgba(20,184,166,0.4);
+    }
+    
+    body {
+      background: var(--background);
+      color: var(--foreground);
+      overflow-x: hidden;
+    }
+    
+    /* 3D Galaxy Canvas */
+    #galaxy-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    /* Floating Stars Layer */
+    .stars-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--duration) ease-in-out infinite;
+      opacity: var(--opacity);
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: var(--opacity); transform: scale(1); }
+      50% { opacity: calc(var(--opacity) * 2); transform: scale(1.2); }
+    }
+    
+    /* Shooting Stars */
+    .shooting-star {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: linear-gradient(90deg, white, transparent);
+      border-radius: 50%;
+      animation: shoot 3s linear infinite;
+      opacity: 0;
+    }
+    
+    .shooting-star::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 100px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+      transform: translateY(-50%);
+    }
+    
+    @keyframes shoot {
+      0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; }
+      100% { transform: translateX(500px) translateY(500px) rotate(-45deg); opacity: 0; }
+    }
+    
+    /* Nebula Effects */
+    .nebula {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      z-index: 0;
+      animation: nebula-float 20s ease-in-out infinite;
+    }
+    
+    .nebula-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(20,184,166,0.3) 0%, rgba(6,182,212,0.1) 50%, transparent 70%);
+      top: 10%;
+      right: 10%;
+    }
+    
+    .nebula-2 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(139,92,246,0.25) 0%, rgba(124,58,237,0.1) 50%, transparent 70%);
+      bottom: 20%;
+      left: 5%;
+      animation-delay: -10s;
+    }
+    
+    .nebula-3 {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(236,72,153,0.2) 0%, rgba(219,39,119,0.08) 50%, transparent 70%);
+      top: 50%;
+      left: 30%;
+      animation-delay: -5s;
+    }
+    
+    @keyframes nebula-float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 10px) scale(1.02); }
+    }
+    
+    /* Energy Rings */
+    .energy-ring {
+      position: fixed;
+      border: 1px solid rgba(20,184,166,0.1);
+      border-radius: 50%;
+      z-index: 1;
+      animation: pulse-ring 4s ease-out infinite;
+    }
+    
+    @keyframes pulse-ring {
+      0% { transform: scale(1); opacity: 0.5; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+    
+    /* Navigation */
+    .nav-glass {
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+    }
+    
+    /* Shiny CTA Button */
+    .shiny-cta {
+      position: relative;
+      background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 500;
+      overflow: hidden;
+      transition: all 0.3s;
+      box-shadow: 0 0 30px rgba(20,184,166,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    
+    .shiny-cta:hover {
+      box-shadow: 0 0 50px rgba(20,184,166,0.6), inset 0 1px 0 rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+    
+    .shiny-cta::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s;
+    }
+    
+    .shiny-cta:hover::before {
+      left: 100%;
+    }
+    
+    /* Glass button */
+    .btn-glass {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+    }
+    
+    .btn-glass:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.25);
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+    
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff 0%, #14b8a6 50%, #8b5cf6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Glow effects */
+    .glow-teal {
+      box-shadow: 0 0 60px rgba(20,184,166,0.4), 0 0 120px rgba(20,184,166,0.2);
+    }
+    
+    /* Icon shiny effect */
+    .shiny-icon {
+      background: linear-gradient(135deg, rgba(20,184,166,0.3) 0%, rgba(20,184,166,0.1) 100%);
+      border: 1px solid rgba(20,184,166,0.4);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .shiny-icon::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+    }
+    
+    /* Orbit animation */
+    @keyframes orbit {
+      from { transform: rotate(0deg) translateX(140px) rotate(0deg); }
+      to { transform: rotate(360deg) translateX(140px) rotate(-360deg); }
+    }
+    
+    .orbit-item {
+      animation: orbit 25s linear infinite;
+    }
+    
+    .orbit-item:nth-child(2) { animation-delay: -4.16s; }
+    .orbit-item:nth-child(3) { animation-delay: -8.33s; }
+    .orbit-item:nth-child(4) { animation-delay: -12.5s; }
+    .orbit-item:nth-child(5) { animation-delay: -16.66s; }
+    .orbit-item:nth-child(6) { animation-delay: -20.83s; }
+    
+    /* Badge pulse */
+    .badge-pulse {
+      animation: pulse-badge 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse-badge {
+      0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(20,184,166,0.5); }
+      50% { opacity: 0.7; box-shadow: 0 0 20px rgba(20,184,166,0.8); }
+    }
+    
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 50%;
+      animation: float-up 15s linear infinite;
+    }
+    
+    @keyframes float-up {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+    }
+    
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.5;
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-10px); }
+    }
+    
+    /* Section content */
+    .content-layer {
+      position: relative;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-black text-white">
+
+  <!-- 3D Galaxy Canvas -->
+  <canvas id="galaxy-canvas"></canvas>
+  
+  <!-- Nebula Effects -->
+  <div class="nebula nebula-1"></div>
+  <div class="nebula nebula-2"></div>
+  <div class="nebula nebula-3"></div>
+  
+  <!-- Floating Stars Container -->
+  <div class="stars-container" id="stars-container"></div>
+  
+  <!-- Floating Particles -->
+  <div class="particles-container" id="particles-container"></div>
+
+  <!-- Navigation -->
+  <nav class="nav-glass">
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+      <a href="#" class="flex items-center gap-2 text-lg font-semibold tracking-tight">
+        <div class="w-7 h-7 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-lg flex items-center justify-center shadow-lg shadow-teal-500/30">
+          <i data-lucide="sparkles" class="w-4 h-4 text-black"></i>
+        </div>
+        <span class="gradient-text">CoExAI</span>
+      </a>
+      
+      <div class="hidden items-center gap-8 md:flex">
+        <a href="#features" class="text-sm text-white/60 transition-colors hover:text-white">Features</a>
+        <a href="#agents" class="text-sm text-white/60 transition-colors hover:text-white">AI Agents</a>
+        <a href="#pricing" class="text-sm text-white/60 transition-colors hover:text-white">Pricing</a>
+        <a href="#" class="text-sm text-white/60 transition-colors hover:text-white">Contact</a>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <a href="#" class="hidden sm:block text-sm text-white/60 hover:text-white transition-colors">Log in</a>
+        <a href="/demo" class="shiny-cta text-sm">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-16 content-layer">
+    
+    <!-- Central Hub Visualization -->
+    <div class="relative mt-4 hidden h-[420px] w-full max-w-4xl md:block">
+      
+      <!-- Multi-layer glow effects -->
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-32 w-32 rounded-full bg-teal-500/20 blur-3xl animate-pulse"></div>
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl"></div>
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-purple-500/5 blur-3xl"></div>
+      
+      <!-- Energy rings -->
+      <div class="absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-teal-400/20"></div>
+      <div class="absolute left-1/2 top-1/2 h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-white/10"></div>
+      <div class="absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-white/5"></div>
+      
+      <!-- Central Icon -->
+      <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div class="shiny-icon relative flex h-24 w-24 items-center justify-center glow-teal">
+          <i data-lucide="zap" class="w-10 h-10 text-teal-300"></i>
+        </div>
+      </div>
+      
+      <!-- Orbiting Agents -->
+      <div class="absolute left-1/2 top-1/2">
+        
+        <!-- Maya - Content -->
+        <div class="orbit-item absolute" style="animation-delay: 0s;">
+          <a href="#" class="group flex flex-col items-center gap-2">
+            <div class="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-xl shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:border-teal-400/50 group-hover:shadow-teal-500/20">
+              <i data-lucide="wand-2" class="w-6 h-6 text-white/90 group-hover:text-teal-300"></i>
+            </div>
+            <span class="text-xs font-medium text-white/80 bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">Maya</span>
+          </a>
+        </div>
+        
+        <!-- Engage - Community -->
+        <div class="orbit-item absolute" style="animation-delay: -4.16s;">
+          <a href="#" class="group flex flex-col items-center gap-2">
+            <div class="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-xl shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:border-teal-400/50 group-hover:shadow-teal-500/20">
+              <i data-lucide="heart-handshake" class="w-6 h-6 text-white/90 group-hover:text-teal-300"></i>
+            </div>
+            <span class="text-xs font-medium text-white/80 bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">Engage</span>
+          </a>
+        </div>
+        
+        <!-- Pitch - Deals -->
+        <div class="orbit-item absolute" style="animation-delay: -8.33s;">
+          <a href="#" class="group flex flex-col items-center gap-2">
+            <div class="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-xl shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:border-teal-400/50 group-hover:shadow-teal-500/20">
+              <i data-lucide="briefcase" class="w-6 h-6 text-white/90 group-hover:text-teal-300"></i>
+            </div>
+            <span class="text-xs font-medium text-white/80 bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">Pitch</span>
+          </a>
+        </div>
+        
+        <!-- Analyze - Analytics -->
+        <div class="orbit-item absolute" style="animation-delay: -12.5s;">
+          <a href="#" class="group flex flex-col items-center gap-2">
+            <div class="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-xl shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:border-teal-400/50 group-hover:shadow-teal-500/20">
+              <i data-lucide="line-chart" class="w-6 h-6 text-white/90 group-hover:text-teal-300"></i>
+            </div>
+            <span class="text-xs font-medium text-white/80 bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">Analyze</span>
+          </a>
+        </div>
+        
+        <!-- Support Bot -->
+        <div class="orbit-item absolute" style="animation-delay: -16.66s;">
+          <a href="#" class="group flex flex-col items-center gap-2">
+            <div class="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-xl shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:border-teal-400/50 group-hover:shadow-teal-500/20">
+              <i data-lucide="headphones" class="w-6 h-6 text-white/90 group-hover:text-teal-300"></i>
+            </div>
+            <span class="text-xs font-medium text-white/80 bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">Support</span>
+          </a>
+        </div>
+        
+        <!-- SEO -->
+        <div class="orbit-item absolute" style="animation-delay: -20.83s;">
+          <a href="#" class="group flex flex-col items-center gap-2">
+            <div class="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-b from-white/15 to-white/5 backdrop-blur-xl shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:border-teal-400/50 group-hover:shadow-teal-500/20">
+              <i data-lucide="search" class="w-6 h-6 text-white/90 group-hover:text-teal-300"></i>
+            </div>
+            <span class="text-xs font-medium text-white/80 bg-black/50 px-2 py-0.5 rounded-full backdrop-blur-sm">SEO</span>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Floating connection dots -->
+      <div class="absolute h-2 w-2 rounded-full bg-teal-400/60 shadow-lg shadow-teal-400/50" style="left:35%; top:15%"></div>
+      <div class="absolute h-1.5 w-1.5 rounded-full bg-cyan-400/50" style="left:65%; top:12%"></div>
+      <div class="absolute h-2 w-2 rounded-full bg-purple-400/60 shadow-lg shadow-purple-400/50" style="left:25%; top:55%"></div>
+      <div class="absolute h-1.5 w-1.5 rounded-full bg-pink-400/50" style="left:75%; top:58%"></div>
+      <div class="absolute h-2 w-2 rounded-full bg-teal-400/60 shadow-lg shadow-teal-400/50" style="left:50%; top:85%"></div>
+    </div>
+    
+    <!-- Hero Content -->
+    <div class="relative z-10 flex max-w-4xl flex-col items-center text-center mt-8">
+      
+      <!-- Badge -->
+      <div class="mb-8 flex items-center gap-2 rounded-full border border-teal-500/30 bg-teal-500/10 px-5 py-2 text-sm backdrop-blur-xl">
+        <span class="h-2 w-2 rounded-full bg-teal-400 badge-pulse"></span>
+        <span class="text-teal-100">Early access · <span class="text-white font-medium">12 spots remaining</span></span>
+      </div>
+      
+      <!-- Headline -->
+      <h1 class="text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl leading-tight">
+        AI agents that work
+        <br>
+        <span class="gradient-text">so you don't have to.</span>
+      </h1>
+      
+      <!-- Subtext -->
+      <p class="mt-6 max-w-2xl text-lg text-white/60 sm:text-xl">
+        Four AI agents for content, engagement, brand deals, and growth.
+        <br class="hidden sm:block">
+        Trained on your brand. Running on autopilot.
+      </p>
+      
+      <!-- CTAs -->
+      <div class="mt-10 flex flex-col items-center gap-4 sm:flex-row">
+        <a href="/demo" class="shiny-cta inline-flex items-center gap-2 text-base">
+          Deploy Your First Agent
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+        
+        <a href="#how-it-works" class="btn-glass inline-flex items-center gap-2 rounded-xl px-8 py-4 text-[0.9375rem] font-medium text-white/90">
+          <i data-lucide="play-circle" class="w-5 h-5"></i>
+          Watch It Work
+        </a>
+      </div>
+      
+      <p class="mt-6 text-sm text-white/40">Starting at $59/mo · Cancel anytime · No credit card required</p>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator">
+      <span class="text-xs text-white/40">Scroll to explore</span>
+      <i data-lucide="chevron-down" class="w-5 h-5 text-white/40"></i>
+    </div>
+  </section>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // ============================================
+    // 3D GALAXY WITH THREE.JS
+    // ============================================
+    const canvas = document.getElementById('galaxy-canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // Galaxy parameters
+    const parameters = {
+      count: 8000,
+      size: 0.02,
+      radius: 5,
+      branches: 5,
+      spin: 1,
+      randomness: 0.5,
+      randomnessPower: 3,
+      insideColor: '#14b8a6',
+      outsideColor: '#8b5cf6'
+    };
+    
+    let geometry = null;
+    let material = null;
+    let points = null;
+    
+    const generateGalaxy = () => {
+      if (points !== null) {
+        geometry.dispose();
+        material.dispose();
+        scene.remove(points);
+      }
+      
+      geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(parameters.count * 3);
+      const colors = new Float32Array(parameters.count * 3);
+      const scales = new Float32Array(parameters.count);
+      
+      const colorInside = new THREE.Color(parameters.insideColor);
+      const colorOutside = new THREE.Color(parameters.outsideColor);
+      
+      for (let i = 0; i < parameters.count; i++) {
+        const i3 = i * 3;
+        
+        const radius = Math.random() * parameters.radius;
+        const spinAngle = radius * parameters.spin;
+        const branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2;
+        
+        const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+        const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+        const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+        
+        positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+        positions[i3 + 1] = randomY;
+        positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+        
+        const mixedColor = colorInside.clone();
+        mixedColor.lerp(colorOutside, radius / parameters.radius);
+        
+        colors[i3] = mixedColor.r;
+        colors[i3 + 1] = mixedColor.g;
+        colors[i3 + 2] = mixedColor.b;
+        
+        scales[i] = Math.random();
+      }
+      
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      geometry.setAttribute('aScale', new THREE.BufferAttribute(scales, 1));
+      
+      material = new THREE.PointsMaterial({
+        size: parameters.size,
+        sizeAttenuation: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8
+      });
+      
+      points = new THREE.Points(geometry, material);
+      scene.add(points);
+    };
+    
+    generateGalaxy();
+    
+    camera.position.z = 3;
+    camera.position.y = 1.5;
+    
+    // Mouse interaction
+    let mouseX = 0;
+    let mouseY = 0;
+    
+    window.addEventListener('mousemove', (event) => {
+      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+    });
+    
+    // Animation loop
+    const clock = new THREE.Clock();
+    
+    const animate = () => {
+      const elapsedTime = clock.getElapsedTime();
+      
+      if (points) {
+        points.rotation.y = elapsedTime * 0.05;
+        
+        // Subtle mouse parallax
+        points.rotation.x = mouseY * 0.1;
+        points.rotation.z = mouseX * 0.05;
+      }
+      
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    };
+    
+    animate();
+    
+    // Resize handler
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    });
+    
+    // ============================================
+    // FLOATING STARS
+    // ============================================
+    const starsContainer = document.getElementById('stars-container');
+    const starCount = 150;
+    
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      
+      const size = Math.random() * 3 + 1;
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      const duration = Math.random() * 3 + 2;
+      const opacity = Math.random() * 0.5 + 0.2;
+      const delay = Math.random() * 5;
+      
+      star.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${x}%;
+        top: ${y}%;
+        --duration: ${duration}s;
+        --opacity: ${opacity};
+        animation-delay: ${delay}s;
+      `;
+      
+      starsContainer.appendChild(star);
+    }
+    
+    // ============================================
+    // SHOOTING STARS
+    // ============================================
+    const createShootingStar = () => {
+      const shootingStar = document.createElement('div');
+      shootingStar.className = 'shooting-star';
+      
+      const startX = Math.random() * window.innerWidth;
+      const startY = Math.random() * (window.innerHeight / 2);
+      
+      shootingStar.style.left = `${startX}px`;
+      shootingStar.style.top = `${startY}px`;
+      
+      document.body.appendChild(shootingStar);
+      
+      setTimeout(() => shootingStar.remove(), 3000);
+    };
+    
+    setInterval(createShootingStar, 4000);
+    
+    // ============================================
+    // FLOATING PARTICLES
+    // ============================================
+    const particlesContainer = document.getElementById('particles-container');
+    
+    for (let i = 0; i < 30; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      const x = Math.random() * 100;
+      const duration = Math.random() * 10 + 10;
+      const delay = Math.random() * 15;
+      
+      particle.style.cssText = `
+        left: ${x}%;
+        animation-duration: ${duration}s;
+        animation-delay: ${delay}s;
+      `;
+      
+      particlesContainer.appendChild(particle);
+    }
+    
+    // ============================================
+    // SCROLL REVEAL
+    // ============================================
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+    
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
