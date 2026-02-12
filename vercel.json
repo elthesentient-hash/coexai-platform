@@ -10,6 +10,11 @@
     { "src": "/auth", "dest": "/auth/index.html" },
     { "src": "/dashboard", "dest": "/dashboard/index.html" },
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/landing-page/index-apple.html", "dest": "/landing-page/index-apple.html" },
+    { "src": "/landing-page/hero-datacore.html", "dest": "/landing-page/hero-datacore.html" },
+    { "src": "/landing-page/hero-exact-datacore.html", "dest": "/landing-page/hero-exact-datacore.html" },
+    { "src": "/landing-page/index-datacore-prompt.html", "dest": "/landing-page/index-datacore-prompt.html" },
+    { "src": "/landing-page/(.*)", "dest": "/landing-page/$1" },
     { "src": "/pricing", "dest": "/landing-page/index.html#pricing" },
     { "src": "/", "dest": "/landing-page/index.html" },
     { "src": "/(.*)", "dest": "/landing-page/index.html" }
