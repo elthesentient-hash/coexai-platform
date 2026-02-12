@@ -390,39 +390,42 @@
     /* ===== MOBILE RESPONSIVE ===== */
     @media (max-width: 768px) {
       .agent-hub {
-        width: 340px;
-        height: 340px;
+        width: 320px;
+        height: 320px;
       }
       
       .hub-icon {
-        width: 55px;
-        height: 55px;
-        border-radius: 15px;
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
       }
       
       .hub-icon span {
-        font-size: 13px !important;
+        font-size: 14px !important;
       }
       
-      /* Ring size 180px, agents rotate ON the ring outline */
+      /* Ring 1: 160px - agents rotate ON this line */
       .orbit-ring-1 {
-        width: 180px;
-        height: 180px;
+        width: 160px;
+        height: 160px;
       }
       
+      /* Ring 2: 240px - outer decorative ring */
       .orbit-ring-2 {
-        display: none;
+        width: 240px;
+        height: 240px;
+        display: block;
       }
       
       .agent-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 11px;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
       }
       
       .agent-icon svg {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
       }
       
       .agent-label {
@@ -431,7 +434,8 @@
         margin-top: 4px;
       }
       
-      /* Agents rotate ON the 180px ring (radius = 90px) */
+      /* Agents rotate ON the 160px ring (radius = 80px) */
+      /* Center box is 60px radius, agents at 80px = 20px gap */
       .orbit-analyze { animation: orbit-mobile-1 24s linear infinite; }
       .orbit-support { animation: orbit-mobile-2 24s linear infinite; animation-delay: -4s; }
       .orbit-seo { animation: orbit-mobile-3 24s linear infinite; animation-delay: -8s; }
@@ -440,28 +444,28 @@
       .orbit-pitch { animation: orbit-mobile-6 24s linear infinite; animation-delay: -20s; }
       
       @keyframes orbit-mobile-1 {
-        from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
-        to { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+        from { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+        to { transform: rotate(360deg) translateX(80px) rotate(-360deg); }
       }
       @keyframes orbit-mobile-2 {
-        from { transform: rotate(60deg) translateX(90px) rotate(-60deg); }
-        to { transform: rotate(420deg) translateX(90px) rotate(-420deg); }
+        from { transform: rotate(60deg) translateX(80px) rotate(-60deg); }
+        to { transform: rotate(420deg) translateX(80px) rotate(-420deg); }
       }
       @keyframes orbit-mobile-3 {
-        from { transform: rotate(120deg) translateX(90px) rotate(-120deg); }
-        to { transform: rotate(480deg) translateX(90px) rotate(-480deg); }
+        from { transform: rotate(120deg) translateX(80px) rotate(-120deg); }
+        to { transform: rotate(480deg) translateX(80px) rotate(-480deg); }
       }
       @keyframes orbit-mobile-4 {
-        from { transform: rotate(180deg) translateX(90px) rotate(-180deg); }
-        to { transform: rotate(540deg) translateX(90px) rotate(-540deg); }
+        from { transform: rotate(180deg) translateX(80px) rotate(-180deg); }
+        to { transform: rotate(540deg) translateX(80px) rotate(-540deg); }
       }
       @keyframes orbit-mobile-5 {
-        from { transform: rotate(240deg) translateX(90px) rotate(-240deg); }
-        to { transform: rotate(600deg) translateX(90px) rotate(-600deg); }
+        from { transform: rotate(240deg) translateX(80px) rotate(-240deg); }
+        to { transform: rotate(600deg) translateX(80px) rotate(-600deg); }
       }
       @keyframes orbit-mobile-6 {
-        from { transform: rotate(300deg) translateX(90px) rotate(-300deg); }
-        to { transform: rotate(660deg) translateX(90px) rotate(-660deg); }
+        from { transform: rotate(300deg) translateX(80px) rotate(-300deg); }
+        to { transform: rotate(660deg) translateX(80px) rotate(-660deg); }
       }
     }
     
@@ -472,28 +476,31 @@
       }
       
       .hub-icon {
-        width: 48px;
-        height: 48px;
+        width: 50px;
+        height: 50px;
       }
       
-      /* Ring size 150px, agents rotate ON the ring outline */
+      /* Ring 1: 130px - agents rotate ON this line */
       .orbit-ring-1 {
-        width: 150px;
-        height: 150px;
+        width: 130px;
+        height: 130px;
       }
       
+      /* Ring 2: 200px - outer decorative ring */
       .orbit-ring-2 {
-        display: none;
+        width: 200px;
+        height: 200px;
+        display: block;
       }
       
       .agent-icon {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
       }
       
       .agent-icon svg {
-        width: 15px;
-        height: 15px;
+        width: 14px;
+        height: 14px;
       }
       
       .agent-label {
@@ -502,7 +509,8 @@
         margin-top: 3px;
       }
       
-      /* Agents rotate ON the 150px ring (radius = 75px) */
+      /* Agents rotate ON the 130px ring (radius = 65px) */
+      /* Center box is 50px radius, agents at 65px = 15px gap */
       .orbit-analyze { animation: orbit-phone-1 24s linear infinite; }
       .orbit-support { animation: orbit-phone-2 24s linear infinite; animation-delay: -4s; }
       .orbit-seo { animation: orbit-phone-3 24s linear infinite; animation-delay: -8s; }
@@ -511,28 +519,28 @@
       .orbit-pitch { animation: orbit-phone-6 24s linear infinite; animation-delay: -20s; }
       
       @keyframes orbit-phone-1 {
-        from { transform: rotate(0deg) translateX(75px) rotate(0deg); }
-        to { transform: rotate(360deg) translateX(75px) rotate(-360deg); }
+        from { transform: rotate(0deg) translateX(65px) rotate(0deg); }
+        to { transform: rotate(360deg) translateX(65px) rotate(-360deg); }
       }
       @keyframes orbit-phone-2 {
-        from { transform: rotate(60deg) translateX(75px) rotate(-60deg); }
-        to { transform: rotate(420deg) translateX(75px) rotate(-420deg); }
+        from { transform: rotate(60deg) translateX(65px) rotate(-60deg); }
+        to { transform: rotate(420deg) translateX(65px) rotate(-420deg); }
       }
       @keyframes orbit-phone-3 {
-        from { transform: rotate(120deg) translateX(75px) rotate(-120deg); }
-        to { transform: rotate(480deg) translateX(75px) rotate(-480deg); }
+        from { transform: rotate(120deg) translateX(65px) rotate(-120deg); }
+        to { transform: rotate(480deg) translateX(65px) rotate(-480deg); }
       }
       @keyframes orbit-phone-4 {
-        from { transform: rotate(180deg) translateX(75px) rotate(-180deg); }
-        to { transform: rotate(540deg) translateX(75px) rotate(-540deg); }
+        from { transform: rotate(180deg) translateX(65px) rotate(-180deg); }
+        to { transform: rotate(540deg) translateX(65px) rotate(-540deg); }
       }
       @keyframes orbit-phone-5 {
-        from { transform: rotate(240deg) translateX(75px) rotate(-240deg); }
-        to { transform: rotate(600deg) translateX(75px) rotate(-600deg); }
+        from { transform: rotate(240deg) translateX(65px) rotate(-240deg); }
+        to { transform: rotate(600deg) translateX(65px) rotate(-600deg); }
       }
       @keyframes orbit-phone-6 {
-        from { transform: rotate(300deg) translateX(75px) rotate(-300deg); }
-        to { transform: rotate(660deg) translateX(75px) rotate(-660deg); }
+        from { transform: rotate(300deg) translateX(65px) rotate(-300deg); }
+        to { transform: rotate(660deg) translateX(65px) rotate(-660deg); }
       }
     }
     
