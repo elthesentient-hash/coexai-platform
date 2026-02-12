@@ -31,6 +31,13 @@ tools:
   code_interpreter:
     enabled: true
     sandbox: restricted
+    
+  phone_calls:
+    enabled: true
+    provider: twilio_elevenlabs
+    default_voice: iP95p4xoKVk53GoZ742B  # Chris
+    max_call_duration: 300  # seconds
+    require_confirmation: true
 
 orchestration:
   mode: multi_agent  # single | multi_agent
