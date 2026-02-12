@@ -899,123 +899,68 @@
         <h2 class="text-4xl md:text-5xl font-bold">Meet your<br><span class="gradient-text">AI workforce</span></h2>
       </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Agents scroll horizontally on mobile, 2x2 on desktop -->
+      <div class="flex md:grid md:grid-cols-2 gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
         <!-- Maya -->
-        <div class="glass-card p-8 reveal reveal-delay-1">
-          <div class="flex items-start gap-5">
+        <div class="glass-card p-6 reveal reveal-delay-1 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+          <div class="flex flex-row items-center gap-4">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
               <i data-lucide="sparkles" class="w-7 h-7 text-white"></i>
             </div>
-            <div>
-              <div class="flex items-center gap-3 mb-2">
-                <h3 class="text-xl font-semibold">Maya</h3>
-                <span class="text-xs bg-white/10 px-3 py-1 rounded-full">Content</span>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="text-lg font-semibold">Maya</h3>
+                <span class="text-xs bg-white/10 px-2 py-0.5 rounded-full">Content</span>
               </div>
-              <p class="text-white/60 leading-relaxed mb-4">Your content multiplier. Turns one video into 20+ pieces — shorts, clips, tweets, thumbnails, and more.</p>
-              <ul class="space-y-2">
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Auto-generate viral clips
-                </li>
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Write SEO-optimized descriptions
-                </li>
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Create thumbnails that click
-                </li>
-              </ul>
+              <p class="text-white/60 text-sm leading-relaxed">Content multiplier. Turns one video into 20+ pieces.</p>
             </div>
           </div>
         </div>
         
         <!-- Engage -->
-        <div class="glass-card p-8 reveal reveal-delay-2">
-          <div class="flex items-start gap-5">
+        <div class="glass-card p-6 reveal reveal-delay-2 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+          <div class="flex flex-row items-center gap-4">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
               <i data-lucide="heart-handshake" class="w-7 h-7 text-white"></i>
             </div>
-            <div>
-              <div class="flex items-center gap-3 mb-2">
-                <h3 class="text-xl font-semibold">Engage</h3>
-                <span class="text-xs bg-white/10 px-3 py-1 rounded-full">Community</span>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="text-lg font-semibold">Engage</h3>
+                <span class="text-xs bg-white/10 px-2 py-0.5 rounded-full">Community</span>
               </div>
-              <p class="text-white/60 leading-relaxed mb-4">Your community manager. Replies to comments, DMs, and mentions in your exact voice — 24/7.</p>
-              <ul class="space-y-2">
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Auto-reply to comments
-                </li>
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Handle DMs professionally
-                </li>
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Build fan relationships
-                </li>
-              </ul>
+              <p class="text-white/60 text-sm leading-relaxed">Community manager. Replies in your voice 24/7.</p>
             </div>
           </div>
         </div>
         
         <!-- Pitch -->
-        <div class="glass-card p-8 reveal reveal-delay-3">
-          <div class="flex items-start gap-5">
+        <div class="glass-card p-6 reveal reveal-delay-3 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+          <div class="flex flex-row items-center gap-4">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
               <i data-lucide="briefcase" class="w-7 h-7 text-white"></i>
             </div>
-            <div>
-              <div class="flex items-center gap-3 mb-2">
-                <h3 class="text-xl font-semibold">Pitch</h3>
-                <span class="text-xs bg-white/10 px-3 py-1 rounded-full">Deals</span>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="text-lg font-semibold">Pitch</h3>
+                <span class="text-xs bg-white/10 px-2 py-0.5 rounded-full">Deals</span>
               </div>
-              <p class="text-white/60 leading-relaxed mb-4">Your brand deal hunter. Finds opportunities, writes pitches, and negotiates rates — while you create.</p>
-              <ul class="space-y-2">
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Find relevant brand deals
-                </li>
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Write winning pitches
-                </li>
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Negotiate better rates
-                </li>
-              </ul>
+              <p class="text-white/60 text-sm leading-relaxed">Brand deal hunter. Finds and negotiates deals.</p>
             </div>
           </div>
         </div>
         
         <!-- Analyze -->
-        <div class="glass-card p-8 reveal reveal-delay-4">
-          <div class="flex items-start gap-5">
+        <div class="glass-card p-6 reveal reveal-delay-4 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+          <div class="flex flex-row items-center gap-4">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
               <i data-lucide="bar-chart-3" class="w-7 h-7 text-white"></i>
             </div>
-            <div>
-              <div class="flex items-center gap-3 mb-2">
-                <h3 class="text-xl font-semibold">Analyze</h3>
-                <span class="text-xs bg-white/10 px-3 py-1 rounded-full">Growth</span>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="text-lg font-semibold">Analyze</h3>
+                <span class="text-xs bg-white/10 px-2 py-0.5 rounded-full">Growth</span>
               </div>
-              <p class="text-white/60 leading-relaxed mb-4">Your performance coach. Tracks metrics, spots trends, and tells you exactly what to do next to grow.</p>
-              <ul class="space-y-2">
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Track all platform metrics
-                </li>
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Spot viral content patterns
-                </li>
-                <li class="flex items-center gap-2 text-sm text-white/70">
-                  <i data-lucide="check" class="w-4 h-4 text-white/50"></i>
-                  Get growth recommendations
-                </li>
-              </ul>
+              <p class="text-white/60 text-sm leading-relaxed">Data analyst. Tracks metrics and finds insights.</p>
             </div>
           </div>
         </div>
