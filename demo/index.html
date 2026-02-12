@@ -500,15 +500,15 @@
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         
         const parameters = {
-            count: 2000,
-            size: 0.015,
-            radius: 5,
-            branches: 5,
-            spin: 1,
-            randomness: 0.5,
+            count: 3000,
+            size: 0.018,
+            radius: 6,
+            branches: 6,
+            spin: 1.2,
+            randomness: 0.6,
             randomnessPower: 3,
             insideColor: '#ffffff',
-            outsideColor: '#666666'
+            outsideColor: '#888888'
         };
         
         let geometry = null, material = null, points = null;
@@ -557,12 +557,23 @@
             scene.add(points);
         };
         generateGalaxy();
-        camera.position.z = 3.5;
+        camera.position.z = 4;
+        camera.position.y = 1.2;
+        
+        let mouseX = 0, mouseY = 0;
+        window.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
         
         const clock = new THREE.Clock();
         const animate = () => {
             const elapsedTime = clock.getElapsedTime();
-            if (points) points.rotation.y = elapsedTime * 0.03;
+            if (points) {
+                points.rotation.y = elapsedTime * 0.04;
+                points.rotation.x = mouseY * 0.08;
+                points.rotation.z = mouseX * 0.04;
+            }
             renderer.render(scene, camera);
             requestAnimationFrame(animate);
         };
