@@ -312,6 +312,7 @@
     }
     
     .agent-icon::before {
+      .orbit-maya .agent-icon::before { display: none; }
       content: '';
       position: absolute;
       inset: 0;
@@ -748,7 +749,7 @@
           <span class="agent-label">SEO</span>
         </a>
         
-        <a href="#" class="agent-orbit orbit-maya">
+        <a href="#" class="agent-orbit orbit-maya" id="maya-agent">
           <div class="agent-icon">
             <i data-lucide="wand-2" class="w-6 h-6 text-white/90"></i>
           </div>
