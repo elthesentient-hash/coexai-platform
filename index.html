@@ -305,12 +305,7 @@
       overflow: hidden;
     }
     
-    .agent-icon::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
-    }
+/* Ghost fix: removed gradient pseudo-element */
     
     .agent-orbit:hover .agent-icon {
       transform: scale(1.2);
@@ -739,7 +734,7 @@
           <span class="agent-label">SEO</span>
         </a>
         
-        <a href="#" class="agent-orbit orbit-maya" id="maya-fix">
+        <a href="#" class="agent-orbit orbit-maya">
           <div class="agent-icon">
             <i data-lucide="wand-2" class="w-6 h-6 text-white/90"></i>
           </div>
