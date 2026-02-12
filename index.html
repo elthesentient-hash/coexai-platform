@@ -303,6 +303,25 @@
       transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     
+    /* Hide scrollbar for horizontal scroll sections */
+    .overflow-x-auto::-webkit-scrollbar {
+      display: none;
+    }
+    .overflow-x-auto {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    /* Smooth scroll snap */
+    .snap-x {
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    .snap-center {
+      scroll-snap-align: center;
+    }
+    
 /* Ghost fix: removed gradient pseudo-element */
     
     .agent-orbit:hover .agent-icon {
@@ -900,9 +919,9 @@
       </div>
       
       <!-- Agents scroll horizontally on mobile, 2x2 on desktop -->
-      <div class="flex md:grid md:grid-cols-2 gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+      <div class="flex md:grid md:grid-cols-2 gap-4 overflow-x-auto pb-6 snap-x snap-mandatory px-4 -mx-4">
         <!-- Maya -->
-        <div class="glass-card p-6 reveal reveal-delay-1 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+        <div class="glass-card p-5 reveal reveal-delay-1 flex-shrink-0 w-[80vw] max-w-[320px] md:w-auto snap-center first:ml-4 last:mr-4">
           <div class="flex flex-row items-center gap-4">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
               <i data-lucide="sparkles" class="w-7 h-7 text-white"></i>
@@ -918,7 +937,7 @@
         </div>
         
         <!-- Engage -->
-        <div class="glass-card p-6 reveal reveal-delay-2 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+        <div class="glass-card p-5 reveal reveal-delay-2 flex-shrink-0 w-[80vw] max-w-[320px] md:w-auto snap-center first:ml-4 last:mr-4">
           <div class="flex flex-row items-center gap-4">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
               <i data-lucide="heart-handshake" class="w-7 h-7 text-white"></i>
@@ -934,7 +953,7 @@
         </div>
         
         <!-- Pitch -->
-        <div class="glass-card p-6 reveal reveal-delay-3 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+        <div class="glass-card p-5 reveal reveal-delay-3 flex-shrink-0 w-[80vw] max-w-[320px] md:w-auto snap-center first:ml-4 last:mr-4">
           <div class="flex flex-row items-center gap-4">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
               <i data-lucide="briefcase" class="w-7 h-7 text-white"></i>
@@ -950,7 +969,7 @@
         </div>
         
         <!-- Analyze -->
-        <div class="glass-card p-6 reveal reveal-delay-4 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+        <div class="glass-card p-5 reveal reveal-delay-4 flex-shrink-0 w-[80vw] max-w-[320px] md:w-auto snap-center first:ml-4 last:mr-4">
           <div class="flex flex-row items-center gap-4">
             <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center flex-shrink-0">
               <i data-lucide="bar-chart-3" class="w-7 h-7 text-white"></i>
@@ -977,9 +996,9 @@
         <p class="mt-4 text-white/60">Start free. Upgrade when you're ready.</p>
       </div>
       
-      <div class="flex md:grid md:grid-cols-3 gap-4 overflow-x-auto pb-4 snap-x snap-mandatory">
+      <div class="flex md:grid md:grid-cols-3 gap-4 overflow-x-auto pb-6 snap-x snap-mandatory px-4 -mx-4">
         <!-- Starter -->
-        <div class="pricing-card p-6 reveal reveal-delay-1 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+        <div class="pricing-card p-5 reveal reveal-delay-1 flex-shrink-0 w-[80vw] max-w-[320px] md:w-auto snap-center first:ml-4 last:mr-4">
           <div class="mb-6">
             <h3 class="text-lg font-semibold mb-2">Starter</h3>
             <p class="text-white/50 text-sm">Perfect for testing the waters</p>
@@ -1013,7 +1032,7 @@
         </div>
         
         <!-- Pro (Popular) -->
-        <div class="pricing-card popular p-6 reveal reveal-delay-2 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+        <div class="pricing-card popular p-5 reveal reveal-delay-2 flex-shrink-0 w-[80vw] max-w-[320px] md:w-auto snap-center first:ml-4 last:mr-4">
           <div class="mb-6">
             <h3 class="text-lg font-semibold mb-2">Pro</h3>
             <p class="text-white/50 text-sm">For serious creators</p>
@@ -1051,7 +1070,7 @@
         </div>
         
         <!-- Business -->
-        <div class="pricing-card p-6 reveal reveal-delay-3 flex-shrink-0 w-[85vw] md:w-auto snap-center">
+        <div class="pricing-card p-5 reveal reveal-delay-3 flex-shrink-0 w-[80vw] max-w-[320px] md:w-auto snap-center first:ml-4 last:mr-4">
           <div class="mb-6">
             <h3 class="text-lg font-semibold mb-2">Business</h3>
             <p class="text-white/50 text-sm">For creator teams</p>
