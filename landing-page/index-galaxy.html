@@ -94,35 +94,26 @@
       position: fixed;
       border-radius: 50%;
       filter: blur(100px);
-      opacity: 0.25;
+      opacity: 0.2;
       z-index: 0;
       animation: nebula-float 25s ease-in-out infinite;
     }
     
     .nebula-1 {
-      width: 700px;
-      height: 700px;
-      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 40%, transparent 70%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, transparent 70%);
       top: -10%;
       right: -5%;
     }
     
     .nebula-2 {
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(200,200,200,0.25) 0%, rgba(150,150,150,0.08) 40%, transparent 70%);
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(200,200,200,0.2) 0%, rgba(150,150,150,0.06) 40%, transparent 70%);
       bottom: -10%;
       left: -10%;
       animation-delay: -12s;
-    }
-    
-    .nebula-3 {
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(200,200,200,0.05) 50%, transparent 70%);
-      top: 40%;
-      left: 20%;
-      animation-delay: -6s;
     }
     
     @keyframes nebula-float {
@@ -193,8 +184,8 @@
     /* ===== AGENT HUB STYLES ===== */
     .agent-hub {
       position: relative;
-      width: 500px;
-      height: 500px;
+      width: 520px;
+      height: 520px;
       margin: 0 auto;
     }
     
@@ -208,33 +199,33 @@
     }
     
     .hub-icon {
-      width: 90px;
-      height: 90px;
-      border-radius: 24px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
-      border: 2px solid rgba(255,255,255,0.3);
+      width: 85px;
+      height: 85px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%);
+      border: 2px solid rgba(255,255,255,0.25);
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       box-shadow: 
-        0 0 60px rgba(255,255,255,0.2),
-        0 0 120px rgba(255,255,255,0.1),
-        inset 0 1px 0 rgba(255,255,255,0.2);
+        0 0 50px rgba(255,255,255,0.15),
+        0 0 100px rgba(255,255,255,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.15);
       animation: hub-pulse 3s ease-in-out infinite;
     }
     
     @keyframes hub-pulse {
-      0%, 100% { box-shadow: 0 0 60px rgba(255,255,255,0.2), 0 0 120px rgba(255,255,255,0.1), inset 0 1px 0 rgba(255,255,255,0.2); transform: scale(1); }
-      50% { box-shadow: 0 0 80px rgba(255,255,255,0.35), 0 0 160px rgba(255,255,255,0.15), inset 0 1px 0 rgba(255,255,255,0.3); transform: scale(1.02); }
+      0%, 100% { box-shadow: 0 0 50px rgba(255,255,255,0.15), 0 0 100px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.15); transform: scale(1); }
+      50% { box-shadow: 0 0 70px rgba(255,255,255,0.25), 0 0 140px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.25); transform: scale(1.02); }
     }
     
     .hub-icon::before {
       content: '';
       position: absolute;
       inset: -4px;
-      border-radius: 28px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.4), transparent, rgba(255,255,255,0.2));
+      border-radius: 26px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent, rgba(255,255,255,0.15));
       z-index: -1;
       opacity: 0.5;
     }
@@ -243,8 +234,8 @@
       content: '';
       position: absolute;
       inset: 0;
-      border-radius: 24px;
-      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%);
+      border-radius: 22px;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
     }
     
     /* Orbit Rings */
@@ -254,27 +245,20 @@
       left: 50%;
       transform: translate(-50%, -50%);
       border-radius: 50%;
-      border: 1px dashed rgba(255,255,255,0.15);
+      border: 1px dashed rgba(255,255,255,0.12);
     }
     
     .orbit-ring-1 {
-      width: 220px;
-      height: 220px;
+      width: 200px;
+      height: 200px;
       animation: ring-rotate 30s linear infinite;
     }
     
     .orbit-ring-2 {
-      width: 340px;
-      height: 340px;
-      border-color: rgba(255,255,255,0.1);
+      width: 320px;
+      height: 320px;
+      border-color: rgba(255,255,255,0.08);
       animation: ring-rotate 40s linear infinite reverse;
-    }
-    
-    .orbit-ring-3 {
-      width: 420px;
-      height: 420px;
-      border-color: rgba(255,255,255,0.06);
-      animation: ring-rotate 50s linear infinite;
     }
     
     @keyframes ring-rotate {
@@ -282,26 +266,33 @@
       to { transform: translate(-50%, -50%) rotate(360deg); }
     }
     
-    /* Agent Cards */
-    .agent-card {
+    /* ===== ORBITING AGENTS ===== */
+    .orbit-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+    }
+    
+    .agent-orbit {
       position: absolute;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       z-index: 15;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-origin: center;
     }
     
-    .agent-card:hover {
-      transform: scale(1.15);
+    .agent-orbit:hover {
       z-index: 25;
     }
     
     .agent-icon {
-      width: 70px;
-      height: 70px;
-      border-radius: 20px;
+      width: 65px;
+      height: 65px;
+      border-radius: 18px;
       background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
       border: 1px solid rgba(255,255,255,0.12);
       backdrop-filter: blur(10px);
@@ -311,7 +302,7 @@
       box-shadow: 
         0 8px 32px rgba(0,0,0,0.4),
         0 0 20px rgba(255,255,255,0.05);
-      transition: all 0.3s;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       position: relative;
       overflow: hidden;
     }
@@ -323,56 +314,92 @@
       background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
     }
     
-    .agent-card:hover .agent-icon {
-      border-color: rgba(255,255,255,0.4);
+    .agent-orbit:hover .agent-icon {
+      transform: scale(1.2);
+      border-color: rgba(255,255,255,0.35);
       box-shadow: 
         0 12px 40px rgba(0,0,0,0.5),
         0 0 30px rgba(255,255,255,0.15);
     }
     
     .agent-label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 500;
       color: rgba(255,255,255,0.85);
-      background: rgba(0,0,0,0.6);
-      padding: 4px 12px;
-      border-radius: 20px;
+      background: rgba(0,0,0,0.7);
+      padding: 4px 10px;
+      border-radius: 16px;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,0.1);
       white-space: nowrap;
+      transition: all 0.3s;
     }
     
-    /* Perfect Hexagon Positions */
-    .agent-analyze { top: 8%; left: 50%; transform: translateX(-50%); }
-    .agent-support { top: 22%; right: 8%; }
-    .agent-seo { bottom: 22%; right: 8%; }
-    .agent-maya { bottom: 8%; left: 50%; transform: translateX(-50%); }
-    .agent-engage { bottom: 22%; left: 8%; }
-    .agent-pitch { top: 22%; left: 8%; }
-    
-    .agent-card:hover .agent-label {
+    .agent-orbit:hover .agent-label {
       color: #fff;
       border-color: rgba(255,255,255,0.3);
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.9);
+      transform: scale(1.1);
     }
     
-    /* Floating particles */
-    .particle {
-      position: fixed;
-      width: 2px;
-      height: 2px;
-      background: rgba(255,255,255,0.5);
-      border-radius: 50%;
-      animation: float-up 20s linear infinite;
-      pointer-events: none;
-      z-index: 2;
+    /* Orbit positions - 6 agents at 60° intervals */
+    /* Analyze - Top (0°) */
+    .orbit-analyze {
+      animation: orbit-1 20s linear infinite;
+    }
+    @keyframes orbit-1 {
+      from { transform: rotate(0deg) translateX(160px) rotate(0deg); }
+      to { transform: rotate(360deg) translateX(160px) rotate(-360deg); }
     }
     
-    @keyframes float-up {
-      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-      10% { opacity: 0.8; }
-      90% { opacity: 0.8; }
-      100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+    /* Support - Top Right (60°) */
+    .orbit-support {
+      animation: orbit-2 20s linear infinite;
+      animation-delay: -3.33s;
+    }
+    @keyframes orbit-2 {
+      from { transform: rotate(60deg) translateX(160px) rotate(-60deg); }
+      to { transform: rotate(420deg) translateX(160px) rotate(-420deg); }
+    }
+    
+    /* SEO - Bottom Right (120°) */
+    .orbit-seo {
+      animation: orbit-3 20s linear infinite;
+      animation-delay: -6.66s;
+    }
+    @keyframes orbit-3 {
+      from { transform: rotate(120deg) translateX(160px) rotate(-120deg); }
+      to { transform: rotate(480deg) translateX(160px) rotate(-480deg); }
+    }
+    
+    /* Maya - Bottom (180°) */
+    .orbit-maya {
+      animation: orbit-4 20s linear infinite;
+      animation-delay: -10s;
+    }
+    @keyframes orbit-4 {
+      from { transform: rotate(180deg) translateX(160px) rotate(-180deg); }
+      to { transform: rotate(540deg) translateX(160px) rotate(-540deg); }
+    }
+    
+    /* Engage - Bottom Left (240°) */
+    .orbit-engage {
+      animation: orbit-5 20s linear infinite;
+      animation-delay: -13.33s;
+    }
+    @keyframes orbit-5 {
+      from { transform: rotate(240deg) translateX(160px) rotate(-240deg); }
+      to { transform: rotate(600deg) translateX(160px) rotate(-600deg); }
+    }
+    
+    /* Pitch - Top Left (300°) */
+    .orbit-pitch {
+      animation: orbit-6 20s linear infinite;
+      animation-delay: -16.66s;
+    }
+    @keyframes orbit-6 {
+      from { transform: rotate(300deg) translateX(160px) rotate(-300deg); }
+      to { transform: rotate(660deg) translateX(160px) rotate(-660deg); }
     }
     
     /* Badge */
@@ -413,7 +440,6 @@
   <!-- Nebula Effects -->
   <div class="nebula nebula-1"></div>
   <div class="nebula nebula-2"></div>
-  <div class="nebula nebula-3"></div>
   
   <!-- Floating Stars Container -->
   <div class="stars-container" id="stars-container"></div>
@@ -445,69 +471,71 @@
   <!-- Hero Section -->
   <section class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-20">
     
-    <!-- Central Agent Hub -->
+    <!-- Central Agent Hub - WITH ORBITING AGENTS -->
     <div class="agent-hub mb-8">
       
       <!-- Orbit Rings -->
       <div class="orbit-ring orbit-ring-1"></div>
       <div class="orbit-ring orbit-ring-2"></div>
-      <div class="orbit-ring orbit-ring-3"></div>
       
       <!-- Central Hub -->
       <div class="hub-center">
         <div class="hub-icon">
-          <i data-lucide="zap" class="w-10 h-10 text-white"></i>
+          <i data-lucide="zap" class="w-9 h-9 text-white"></i>
         </div>
       </div>
       
-      <!-- Agent Cards -->
-      <a href="#" class="agent-card agent-analyze">
-        <div class="agent-icon">
-          <i data-lucide="bar-chart-3" class="w-7 h-7 text-white/90"></i>
-        </div>
-        <span class="agent-label">Analyze</span>
-      </a>
-      
-      <a href="#" class="agent-card agent-support">
-        <div class="agent-icon">
-          <i data-lucide="headphones" class="w-7 h-7 text-white/90"></i>
-        </div>
-        <span class="agent-label">Support</span>
-      </a>
-      
-      <a href="#" class="agent-card agent-seo">
-        <div class="agent-icon">
-          <i data-lucide="search" class="w-7 h-7 text-white/90"></i>
-        </div>
-        <span class="agent-label">SEO</span>
-      </a>
-      
-      <a href="#" class="agent-card agent-maya">
-        <div class="agent-icon">
-          <i data-lucide="wand-2" class="w-7 h-7 text-white/90"></i>
-        </div>
-        <span class="agent-label">Maya</span>
-      </a>
-      
-      <a href="#" class="agent-card agent-engage">
-        <div class="agent-icon">
-          <i data-lucide="heart-handshake" class="w-7 h-7 text-white/90"></i>
-        </div>
-        <span class="agent-label">Engage</span>
-      </a>
-      
-      <a href="#" class="agent-card agent-pitch">
-        <div class="agent-icon">
-          <i data-lucide="briefcase" class="w-7 h-7 text-white/90"></i>
-        </div>
-        <span class="agent-label">Pitch</span>
-      </a>
-      
-      <!-- Decorative Dots -->
-      <div class="absolute top-1/4 left-1/4 w-1.5 h-1.5 bg-white/60 rounded-full shadow-lg shadow-white/30"></div>
-      <div class="absolute top-1/3 right-1/4 w-1 h-1 bg-white/40 rounded-full"></div>
-      <div class="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-white/60 rounded-full shadow-lg shadow-white/30"></div>
-      <div class="absolute bottom-1/3 right-1/3 w-1 h-1 bg-white/40 rounded-full"></div>
+      <!-- Orbiting Agents Container -->
+      <div class="orbit-container">
+        
+        <!-- Analyze (Top) -->
+        <a href="#" class="agent-orbit orbit-analyze">
+          <div class="agent-icon">
+            <i data-lucide="bar-chart-3" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">Analyze</span>
+        </a>
+        
+        <!-- Support (Top Right) -->
+        <a href="#" class="agent-orbit orbit-support">
+          <div class="agent-icon">
+            <i data-lucide="headphones" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">Support</span>
+        </a>
+        
+        <!-- SEO (Bottom Right) -->
+        <a href="#" class="agent-orbit orbit-seo">
+          <div class="agent-icon">
+            <i data-lucide="search" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">SEO</span>
+        </a>
+        
+        <!-- Maya (Bottom) -->
+        <a href="#" class="agent-orbit orbit-maya">
+          <div class="agent-icon">
+            <i data-lucide="wand-2" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">Maya</span>
+        </a>
+        
+        <!-- Engage (Bottom Left) -->
+        <a href="#" class="agent-orbit orbit-engage">
+          <div class="agent-icon">
+            <i data-lucide="heart-handshake" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">Engage</span>
+        </a>
+        
+        <!-- Pitch (Top Left) -->
+        <a href="#" class="agent-orbit orbit-pitch">
+          <div class="agent-icon">
+            <i data-lucide="briefcase" class="w-6 h-6 text-white/90"></i>
+          </div>
+          <span class="agent-label">Pitch</span>
+        </a>
+      </div>
     </div>
     
     <!-- Hero Content -->
@@ -560,7 +588,7 @@
     lucide.createIcons();
     
     // ============================================
-    // 3D GALAXY - BLACK & WHITE
+    // 3D GALAXY - REDUCED PARTICLES
     // ============================================
     const canvas = document.getElementById('galaxy-canvas');
     const scene = new THREE.Scene();
@@ -571,8 +599,8 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     
     const parameters = {
-      count: 12000,
-      size: 0.02,
+      count: 3000, // Reduced from 12000
+      size: 0.018,
       radius: 6,
       branches: 6,
       spin: 1.2,
@@ -612,7 +640,6 @@
         positions[i3 + 1] = randomY;
         positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
         
-        // Grayscale gradient from white center to gray edges
         const mixedColor = colorInside.clone();
         mixedColor.lerp(colorOutside, radius / parameters.radius);
         
@@ -631,7 +658,7 @@
         blending: THREE.AdditiveBlending,
         vertexColors: true,
         transparent: true,
-        opacity: 0.85
+        opacity: 0.8
       });
       
       points = new THREE.Points(geometry, material);
@@ -668,20 +695,20 @@
     });
     
     // ============================================
-    // FLOATING STARS
+    // FLOATING STARS - REDUCED
     // ============================================
     const starsContainer = document.getElementById('stars-container');
-    for (let i = 0; i < 250; i++) {
+    for (let i = 0; i < 80; i++) { // Reduced from 250
       const star = document.createElement('div');
       star.className = 'star';
-      const size = Math.random() * 3 + 1;
+      const size = Math.random() * 2.5 + 0.5;
       star.style.cssText = `
         width: ${size}px;
         height: ${size}px;
         left: ${Math.random() * 100}%;
         top: ${Math.random() * 100}%;
         --duration: ${Math.random() * 4 + 2}s;
-        --opacity: ${Math.random() * 0.6 + 0.2};
+        --opacity: ${Math.random() * 0.5 + 0.2};
         animation-delay: ${Math.random() * 5}s;
       `;
       starsContainer.appendChild(star);
@@ -698,7 +725,7 @@
       document.body.appendChild(star);
       setTimeout(() => star.remove(), 2500);
     };
-    setInterval(createShootingStar, 3000 + Math.random() * 3000);
+    setInterval(createShootingStar, 4000 + Math.random() * 4000);
   </script>
 </body>
 </html>
