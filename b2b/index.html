@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoExAI — AI Workforce for Business</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: #000;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    
+    /* 3D Galaxy Canvas */
+    #galaxy-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+    
+    /* Glassmorphism Cards */
+    .glass-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+    }
+    
+    .glass-card:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.12);
+    }
+    
+    /* Gradient Text */
+    .gradient-text {
+      background: linear-gradient(135deg, #fff 0%, #a5a5a5 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Buttons */
+    .btn-primary {
+      background: #fff;
+      color: #000;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(255,255,255,0.2);
+    }
+    
+    .btn-secondary {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.15);
+    }
+    
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Section visibility */
+    .section-content {
+      position: relative;
+      z-index: 10;
+    }
+    
+    /* Orbit Animation */
+    @keyframes orbit {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .orbit-container {
+      animation: orbit 60s linear infinite;
+    }
+    
+    .orbit-container:hover {
+      animation-play-state: paused;
+    }
+    
+    /* Agent Icons */
+    .agent-orbit {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    
+    .agent-orbit:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
+    }
+    
+    .agent-label {
+      position: absolute;
+      bottom: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      color: rgba(255,255,255,0.8);
+    }
+    
+    /* Pricing Cards */
+    .pricing-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 32px;
+      transition: all 0.3s ease;
+    }
+    
+    .pricing-card:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.15);
+    }
+    
+    .pricing-card.popular {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.25);
+      position: relative;
+    }
+    
+    .popular-badge {
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      background: #fff;
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    /* Feature Check */
+    .feature-check {
+      width: 20px;
+      height: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    /* ROI Calculator */
+    .roi-calculator {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px;
+    }
+    
+    /* Comparison Table */
+    .comparison-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 20px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .comparison-header {
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .comparison-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      
+      .agent-orbit {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Galaxy Canvas -->
+  <canvas id="galaxy-canvas"></canvas>
+  
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 text-lg font-semibold">
+        <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+          <i data-lucide="sparkles" class="w-5 h-5 text-black"></i>
+        </div>
+        <span>CoExAI</span>
+      </a>
+      
+      <div class="hidden md:flex items-center gap-8 text-sm text-white/70">
+        <a href="#agents" class="hover:text-white transition-colors">AI Agents</a>
+        <a href="#roi" class="hover:text-white transition-colors">ROI</a>
+        <a href="#comparison" class="hover:text-white transition-colors">Comparison</a>
+        <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <a href="/demo" class="btn-primary text-sm">Deploy AI Workforce</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center justify-center px-6 pt-20">
+    <div class="relative z-10 max-w-5xl mx-auto text-center">
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-sm mb-8">
+        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+        <span class="text-white/80">Trusted by 500+ businesses</span>
+      </div>
+      
+      <!-- Headline -->
+      <h1 class="text-5xl md:text-7xl font-bold leading-tight mb-6">
+        Replace your $377K team
+        <br>
+        <span class="gradient-text">with 6 AI agents for $11K.</span>
+      </h1>
+      
+      <!-- Subheadline -->
+      <p class="text-xl text-white/60 max-w-2xl mx-auto mb-10">
+        Marketing, sales, customer success, and admin—handled by AI agents that work 24/7. 
+        No hiring. No management. Just results.
+      </p>
+      
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+        <a href="/demo" class="btn-primary inline-flex items-center gap-2 text-lg">
+          Deploy Your AI Workforce
+          <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        </a>
+        <a href="#roi" class="btn-secondary inline-flex items-center gap-2 text-lg">
+          <i data-lucide="calculator" class="w-5 h-5"></i>
+          Calculate Your Savings
+        </a>
+      </div>
+      
+      <!-- Orbiting Agents -->
+      <div class="relative w-[400px] h-[400px] mx-auto mt-16">
+        <!-- Center -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-white/10 border border-white/20 flex items-center justify-center z-10">
+          <span class="text-2xl font-bold">CoExAI</span>
+        </div>
+        
+        <!-- Orbit Ring -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-white/10 orbit-container">
+          <!-- Maya - Marketing -->
+          <div class="agent-orbit" style="top: -30px; left: 50%; transform: translateX(-50%);">
+            <i data-lucide="megaphone" class="w-6 h-6 text-white/90"></i>
+            <span class="agent-label">Marketing</span>
+          </div>
+          
+          <!-- Pitch - Sales -->
+          <div class="agent-orbit" style="top: 50%; right: -30px; transform: translateY(-50%);">
+            <i data-lucide="trending-up" class="w-6 h-6 text-white/90"></i>
+            <span class="agent-label">Sales</span>
+          </div>
+          
+          <!-- Engage - Support -->
+          <div class="agent-orbit" style="bottom: -30px; left: 50%; transform: translateX(-50%);">
+            <i data-lucide="headphones" class="w-6 h-6 text-white/90"></i>
+            <span class="agent-label">Support</span>
+          </div>
+          
+          <!-- Analyze - Analytics -->
+          <div class="agent-orbit" style="top: 50%; left: -30px; transform: translateY(-50%);">
+            <i data-lucide="bar-chart-3" class="w-6 h-6 text-white/90"></i>
+            <span class="agent-label">Analytics</span>
+          </div>
+          
+          <!-- Support - Admin -->
+          <div class="agent-orbit" style="top: 20%; right: 10%;">
+            <i data-lucide="briefcase" class="w-6 h-6 text-white/90"></i>
+            <span class="agent-label">Admin</span>
+          </div>
+          
+          <!-- SEO - Growth -->
+          <div class="agent-orbit" style="bottom: 20%; left: 10%;">
+            <i data-lucide="search" class="w-6 h-6 text-white/90"></i>
+            <span class="agent-label">SEO</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-20 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-4xl font-bold mb-2">98%</div>
+          <div class="text-white/60 text-sm">Cost Reduction</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold mb-2">10x</div>
+          <div class="text-white/60 text-sm">More Output</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold mb-2">24/7</div>
+          <div class="text-white/60 text-sm">Availability</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold mb-2">5,255%</div>
+          <div class="text-white/60 text-sm">ROI</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Agents Section -->
+  <section id="agents" class="py-24 px-6 section-content">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <p class="text-sm font-medium text-white/50 uppercase tracking-widest mb-4">Your AI Workforce</p>
+        <h2 class="text-4xl md:text-5xl font-bold mb-4">6 agents. 1 price.<br><span class="gradient-text">Infinite productivity.</span></h2>
+        <p class="text-white/60 max-w-2xl mx-auto">
+          Each agent replaces a full-time role. Together, they handle your entire GTM operation.
+        </p>
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Maya - Marketing -->
+        <div class="glass-card p-6">
+          <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
+            <i data-lucide="megaphone" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Maya</h3>
+          <p class="text-white/50 text-sm mb-3">Marketing Manager</p>
+          <p class="text-white/70 text-sm mb-4">Creates 100+ pieces of content/week. Blog posts, social media, email campaigns—automated.</p>
+          <div class="flex items-center gap-2 text-sm text-white/50">
+            <span class="line-through">$75K/yr</span>
+            <span class="text-green-400">→ $1.8K/yr</span>
+          </div>
+        </div>
+        
+        <!-- Pitch - Sales -->
+        <div class="glass-card p-6">
+          <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
+            <i data-lucide="trending-up" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Pitch</h3>
+          <p class="text-white/50 text-sm mb-3">Sales Development Rep</p>
+          <p class="text-white/70 text-sm mb-4">Sends 1,000+ personalized outreach emails/day. Qualifies leads. Books meetings.</p>
+          <div class="flex items-center gap-2 text-sm text-white/50">
+            <span class="line-through">$55K/yr</span>
+            <span class="text-green-400">→ $1.8K/yr</span>
+          </div>
+        </div>
+        
+        <!-- Engage - Support -->
+        <div class="glass-card p-6">
+          <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
+            <i data-lucide="headphones" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Engage</h3>
+          <p class="text-white/50 text-sm mb-3">Customer Success Manager</p>
+          <p class="text-white/70 text-sm mb-4">Handles 1,000+ tickets/day. Onboards customers. Reduces churn. 24/7 availability.</p>
+          <div class="flex items-center gap-2 text-sm text-white/50">
+            <span class="line-through">$60K/yr</span>
+            <span class="text-green-400">→ $1.8K/yr</span>
+          </div>
+        </div>
+        
+        <!-- Analyze - Analytics -->
+        <div class="glass-card p-6">
+          <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
+            <i data-lucide="bar-chart-3" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Analyze</h3>
+          <p class="text-white/50 text-sm mb-3">Business Analyst</p>
+          <p class="text-white/70 text-sm mb-4">Tracks all metrics. Identifies growth opportunities. Predicts trends. Data-driven decisions.</p>
+          <div class="flex items-center gap-2 text-sm text-white/50">
+            <span class="line-through">$70K/yr</span>
+            <span class="text-green-400">→ $1.8K/yr</span>
+          </div>
+        </div>
+        
+        <!-- Support - Admin -->
+        <div class="glass-card p-6">
+          <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
+            <i data-lucide="briefcase" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">Support</h3>
+          <p class="text-white/50 text-sm mb-3">Admin Assistant</p>
+          <p class="text-white/70 text-sm mb-4">Manages inbox, calendar, invoicing. Tracks payments. Organizes tax docs. Runs operations.</p>
+          <div class="flex items-center gap-2 text-sm text-white/50">
+            <span class="line-through">$52K/yr</span>
+            <span class="text-green-400">→ $1.8K/yr</span>
+          </div>
+        </div>
+        
+        <!-- SEO - Growth -->
+        <div class="glass-card p-6">
+          <div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mb-5">
+            <i data-lucide="search" class="w-7 h-7 text-white"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-2">SEO</h3>
+          <p class="text-white/50 text-sm mb-3">SEO Specialist</p>
+          <p class="text-white/70 text-sm mb-4">Optimizes for search. Researches keywords. Tracks rankings. Drives organic traffic.</p>
+          <div class="flex items-center gap-2 text-sm text-white/50">
+            <span class="line-through">$65K/yr</span>
+            <span class="text-green-400">→ $1.8K/yr</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROI Calculator Section -->
+  <section id="roi" class="py-24 px-6 section-content">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <p class="text-sm font-medium text-white/50 uppercase tracking-widest mb-4">ROI Calculator</p>
+        <h2 class="text-4xl md:text-5xl font-bold mb-4">See your savings</h2>
+        <p class="text-white/60">Compare the cost of a human team vs AI agents</p>
+      </div>
+      
+      <div class="roi-calculator">
+        <div class="grid md:grid-cols-2 gap-12">
+          <!-- Human Team -->
+          <div>
+            <h3 class="text-xl font-semibold mb-6 flex items-center gap-2">
+              <i data-lucide="users" class="w-5 h-5"></i>
+              Human Team (6 roles)
+            </h3>
+            <div class="space-y-4">
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">Marketing Manager</span>
+                <span>$75,000</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">Sales Development Rep</span>
+                <span>$55,000</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">Customer Success Manager</span>
+                <span>$60,000</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">Business Analyst</span>
+                <span>$70,000</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">Admin Assistant</span>
+                <span>$52,000</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">SEO Specialist</span>
+                <span>$65,000</span>
+              </div>
+              <div class="border-t border-white/10 pt-4 mt-4">
+                <div class="flex justify-between font-semibold">
+                  <span>Base Salaries</span>
+                  <span>$377,000</span>
+                </div>
+                <div class="flex justify-between text-sm text-white/60 mt-2">
+                  <span>Benefits (30%)</span>
+                  <span>$113,100</span>
+                </div>
+                <div class="flex justify-between text-sm text-white/60">
+                  <span>Office/Equipment</span>
+                  <span>$30,000</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold mt-4 pt-4 border-t border-white/10">
+                  <span>Total Annual Cost</span>
+                  <span class="text-red-400">$520,100</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- AI Agents -->
+          <div>
+            <h3 class="text-xl font-semibold mb-6 flex items-center gap-2">
+              <i data-lucide="bot" class="w-5 h-5"></i>
+              CoExAI Agents (6 agents)
+            </h3>
+            <div class="space-y-4">
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">Maya (Marketing)</span>
+                <span class="text-green-400">$1,788</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">Pitch (Sales)</span>
+                <span class="text-green-400">$1,788</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">Engage (Support)</span>
+                <span class="text-green-400">$1,788</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">Analyze (Analytics)</span>
+                <span class="text-green-400">$1,788</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">Support (Admin)</span>
+                <span class="text-green-400">$1,788</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-white/60">SEO (Search)</span>
+                <span class="text-green-400">$1,788</span>
+              </div>
+              <div class="border-t border-white/10 pt-4 mt-4">
+                <div class="flex justify-between text-sm text-white/60">
+                  <span>Platform Fee</span>
+                  <span class="text-green-400">Included</span>
+                </div>
+                <div class="flex justify-between text-sm text-white/60">
+                  <span>Training</span>
+                  <span class="text-green-400">Self-learning</span>
+                </div>
+                <div class="flex justify-between text-sm text-white/60">
+                  <span>Management</span>
+                  <span class="text-green-400">Autonomous</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold mt-4 pt-4 border-t border-white/10">
+                  <span>Total Annual Cost</span>
+                  <span class="text-green-400">$10,728</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Total Savings -->
+        <div class="mt-12 pt-8 border-t border-white/10 text-center">
+          <div class="text-6xl font-bold text-green-400 mb-4">$509,372</div>
+          <div class="text-xl text-white/80 mb-2">Annual Savings</div>
+          <div class="text-white/60">That's 98% cost reduction with 10x more output</div>
+          <div class="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-green-400/10 rounded-full text-green-400 text-sm">
+            <i data-lucide="trending-up" class="w-4 h-4"></i>
+            ROI: 5,255%
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison Section -->
+  <section id="comparison" class="py-24 px-6 section-content">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <p class="text-sm font-medium text-white/50 uppercase tracking-widest mb-4">Head-to-Head</p>
+        <h2 class="text-4xl md:text-5xl font-bold mb-4">Human vs AI</h2>
+        <p class="text-white/60">Why businesses are choosing AI agents</p>
+      </div>
+      
+      <div class="glass-card overflow-hidden">
+        <!-- Header -->
+        <div class="comparison-row border-b border-white/10 bg-white/5">
+          <div class="comparison-header">Metric</div>
+          <div class="comparison-header text-center">Human Team</div>
+          <div class="comparison-header text-center">AI Agents</div>
+          <div class="comparison-header text-center">Winner</div>
+        </div>
+        
+        <!-- Rows -->
+        <div class="comparison-row">
+          <div class="font-medium">Annual Cost</div>
+          <div class="text-center text-white/70">$520,100</div>
+          <div class="text-center text-green-400">$10,728</div>
+          <div class="text-center text-green-400 font-semibold">AI (98% savings)</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="font-medium">Weekly Hours</div>
+          <div class="text-center text-white/70">240 hrs</div>
+          <div class="text-center text-green-400">1,008 hrs</div>
+          <div class="text-center text-green-400 font-semibold">AI (4x more)</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="font-medium">Response Time</div>
+          <div class="text-center text-white/70">Hours/days</div>
+          <div class="text-center text-green-400">Seconds</div>
+          <div class="text-center text-green-400 font-semibold">AI</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="font-medium">Availability</div>
+          <div class="text-center text-white/70">40 hrs/week</div>
+          <div class="text-center text-green-400">24/7/365</div>
+          <div class="text-center text-green-400 font-semibold">AI</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="font-medium">Scalability</div>
+          <div class="text-center text-white/70">Hire more people</div>
+          <div class="text-center text-green-400">Instant API limit increase</div>
+          <div class="text-center text-green-400 font-semibold">AI</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="font-medium">Burnout Risk</div>
+          <div class="text-center text-white/70">High</div>
+          <div class="text-center text-green-400">Never</div>
+          <div class="text-center text-green-400 font-semibold">AI</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="font-medium">Training Required</div>
+          <div class="text-center text-white/70">3-6 months</div>
+          <div class="text-center text-green-400">Instant</div>
+          <div class="text-center text-green-400 font-semibold">AI</div>
+        </div>
+        
+        <div class="comparison-row">
+          <div class="font-medium">Consistency</div>
+          <div class="text-center text-white/70">Varies</div>
+          <div class="text-center text-green-400">100% consistent</div>
+          <div class="text-center text-green-400 font-semibold">AI</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="py-24 px-6 section-content">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <p class="text-sm font-medium text-white/50 uppercase tracking-widest mb-4">Pricing</p>
+        <h2 class="text-4xl md:text-5xl font-bold mb-4">Simple, transparent pricing</h2>
+        <p class="text-white/60">One flat fee. No hidden costs. No per-seat pricing.</p>
+      </div>
+      
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Starter -->
+        <div class="pricing-card">
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-2">Starter</h3>
+            <p class="text-white/50 text-sm">For small teams getting started</p>
+          </div>
+          
+          <div class="mb-6">
+            <span class="text-4xl font-bold">$49</span>
+            <span class="text-white/50">/mo</span>
+          </div>
+          
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">2 AI Agents</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">1,000 actions/mo</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">Email support</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">Basic analytics</span>
+            </li>
+          </ul>
+          
+          <a href="/demo" class="btn-secondary w-full text-center block">Get Started</a>
+        </div>
+        
+        <!-- Growth -->
+        <div class="pricing-card popular">
+          <div class="popular-badge">Most Popular</div>
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-2">Growth</h3>
+            <p class="text-white/50 text-sm">For growing businesses</p>
+          </div>
+          
+          <div class="mb-6">
+            <span class="text-4xl font-bold">$149</span>
+            <span class="text-white/50">/mo</span>
+          </div>
+          
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80 font-semibold">6 AI Agents</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">10,000 actions/mo</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">Priority support</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">Advanced analytics</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">API access</span>
+            </li>
+          </ul>
+          
+          <a href="/demo" class="btn-primary w-full text-center block">Deploy Workforce</a>
+        </div>
+        
+        <!-- Enterprise -->
+        <div class="pricing-card">
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold mb-2">Enterprise</h3>
+            <p class="text-white/50 text-sm">For large organizations</p>
+          </div>
+          
+          <div class="mb-6">
+            <span class="text-4xl font-bold">$499</span>
+            <span class="text-white/50">/mo</span>
+          </div>
+          
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">Unlimited agents</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">50,000 actions/mo</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">Dedicated account manager</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">Custom integrations</span>
+            </li>
+            <li class="flex items-center gap-3 text-sm">
+              <div class="feature-check"><i data-lucide="check" class="w-3 h-3"></i></div>
+              <span class="text-white/80">SLA guarantee</span>
+            </li>
+          </ul>
+          
+          <a href="/demo" class="btn-secondary w-full text-center block">Contact Sales</a>
+        </div>
+      </div>
+      
+      <div class="mt-12 text-center">
+        <p class="text-white/50 text-sm mb-4">All plans include:</p>
+        <div class="flex flex-wrap justify-center gap-6 text-sm text-white/70">
+          <span class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-400"></i> No setup fees</span>
+          <span class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-400"></i> Cancel anytime</span>
+          <span class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-400"></i> 14-day free trial</span>
+          <span class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-green-400"></i> SOC 2 compliant</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-24 px-6 section-content">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="glass-card p-12 md:p-16">
+        <h2 class="text-3xl md:text-5xl font-bold mb-6">Ready to save $500K?</h2>
+        
+        <p class="text-lg text-white/60 mb-10 max-w-2xl mx-auto">
+          Join 500+ businesses already using AI agents. Deploy your workforce in minutes, not months.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/demo" class="btn-primary inline-flex items-center justify-center gap-2 text-lg">
+            Deploy Your AI Workforce
+            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+          </a>
+          
+          <a href="#" class="btn-secondary inline-flex items-center justify-center gap-2 text-lg">
+            <i data-lucide="calendar" class="w-5 h-5"></i>
+            Book a Demo
+          </a>
+        </div>
+        
+        <p class="mt-8 text-sm text-white/40">✨ 14-day free trial • No credit card required • Cancel anytime</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-16 px-6 section-content border-t border-white/5">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-12 mb-12">
+        <!-- Brand -->
+        <div class="md:col-span-1">
+          <a href="#" class="flex items-center gap-2 text-lg font-semibold mb-4">
+            <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+              <i data-lucide="sparkles" class="w-5 h-5 text-black"></i>
+            </div>
+            <span>CoExAI</span>
+          </a>
+          <p class="text-white/50 text-sm">The autonomous agent platform for business. Deploy your AI workforce.</p>
+        </div>
+        
+        <!-- Product -->
+        <div>
+          <h4 class="font-semibold mb-4">Product</h4>
+          <ul class="space-y-3 text-sm text-white/50">
+            <li><a href="#agents" class="hover:text-white transition-colors">AI Agents</a></li>
+            <li><a href="#pricing" class="hover:text-white transition-colors">Pricing</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Integrations</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">API</a></li>
+          </ul>
+        </div>
+        
+        <!-- Company -->
+        <div>
+          <h4 class="font-semibold mb-4">Company</h4>
+          <ul class="space-y-3 text-sm text-white/50">
+            <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+          </ul>
+        </div>
+        
+        <!-- Legal -->
+        <div>
+          <h4 class="font-semibold mb-4">Legal</h4>
+          <ul class="space-y-3 text-sm text-white/50">
+            <li><a href="#" class="hover:text-white transition-colors">Privacy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Terms</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Security</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-sm text-white/40">© 2026 CoExAI. All rights reserved.</p>
+        <div class="flex items-center gap-4">
+          <a href="#" class="text-white/40 hover:text-white transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+          <a href="#" class="text-white/40 hover:text-white transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+          <a href="#" class="text-white/40 hover:text-white transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Simple galaxy animation (simplified for B2B page)
+    const canvas = document.getElementById('galaxy-canvas');
+    const ctx = canvas.getContext('2d');
+    
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    
+    // Create stars
+    const stars = [];
+    for (let i = 0; i < 200; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2,
+        opacity: Math.random()
+      });
+    }
+    
+    function animate() {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      stars.forEach(star => {
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
