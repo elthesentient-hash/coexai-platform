@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoExAI Icon System - Black & White</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #000;
+      color: #fff;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 60px;
+      font-size: 1.1rem;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .icon-section {
+      margin-bottom: 60px;
+      border: 1px solid #333;
+      background: #0a0a0a;
+    }
+    
+    .section-header {
+      background: #fff;
+      color: #000;
+      padding: 20px 30px;
+      border-bottom: 1px solid #333;
+    }
+    
+    .section-header h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    
+    .section-header p {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+    
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0;
+    }
+    
+    .icon-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 20px;
+      border-right: 1px solid #222;
+      border-bottom: 1px solid #222;
+      transition: all 0.3s;
+    }
+    
+    .icon-item:hover {
+      background: #111;
+    }
+    
+    .icon-display {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    .icon-display i {
+      width: 32px;
+      height: 32px;
+      stroke-width: 1.5;
+    }
+    
+    .icon-name {
+      font-size: 0.85rem;
+      color: #fff;
+      font-weight: 500;
+      text-align: center;
+    }
+    
+    .icon-code {
+      font-size: 0.7rem;
+      color: #666;
+      margin-top: 5px;
+      font-family: 'Monaco', 'Courier New', monospace;
+    }
+    
+    .usage-note {
+      padding: 20px 30px;
+      background: #111;
+      border-top: 1px solid #333;
+      font-size: 0.9rem;
+      color: #888;
+    }
+    
+    .usage-note strong {
+      color: #fff;
+    }
+    
+    .size-guide {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      padding: 40px;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      margin-bottom: 60px;
+    }
+    
+    .size-example {
+      text-align: center;
+    }
+    
+    .size-example i {
+      stroke-width: 1.5;
+    }
+    
+    .size-label {
+      font-size: 0.75rem;
+      color: #666;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .size-dim {
+      font-size: 0.65rem;
+      color: #444;
+      margin-top: 3px;
+    }
+    
+    .principles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+    
+    .principle {
+      border: 1px solid #333;
+      padding: 25px;
+      background: #0a0a0a;
+    }
+    
+    .principle h3 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+    
+    .principle p {
+      font-size: 0.85rem;
+      color: #888;
+      line-height: 1.5;
+    }
+    
+    .download-section {
+      text-align: center;
+      padding: 60px 40px;
+      border: 2px solid #fff;
+      margin-top: 60px;
+    }
+    
+    .download-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+    
+    .download-section p {
+      color: #666;
+      margin-bottom: 30px;
+    }
+    
+    .btn {
+      display: inline-block;
+      background: #fff;
+      color: #000;
+      padding: 15px 30px;
+      text-decoration: none;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+    
+    .btn:hover {
+      background: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>CoExAI Icon System</h1>
+    <p class="subtitle">Black & White Iconography Guide</p>
+    
+    <!-- Size Guide -->
+    <div class="size-guide">
+      <div class="size-example">
+        <i data-lucide="hexagon" style="width: 16px; height: 16px;"></i>
+        <div class="size-label">X-Small</div>
+        <div class="size-dim">16px</div>
+      </div>
+      <div class="size-example">
+        <i data-lucide="hexagon" style="width: 20px; height: 20px;"></i>
+        <div class="size-label">Small</div>
+        <div class="size-dim">20px</div>
+      </div>
+      <div class="size-example">
+        <i data-lucide="hexagon" style="width: 24px; height: 24px;"></i>
+        <div class="size-label">Default</div>
+        <div class="size-dim">24px</div>
+      </div>
+      <div class="size-example">
+        <i data-lucide="hexagon" style="width: 32px; height: 32px;"></i>
+        <div class="size-label">Medium</div>
+        <div class="size-dim">32px</div>
+      </div>
+      <div class="size-example">
+        <i data-lucide="hexagon" style="width: 48px; height: 48px;"></i>
+        <div class="size-label">Large</div>
+        <div class="size-dim">48px</div>
+      </div>
+      <div class="size-example">
+        <i data-lucide="hexagon" style="width: 64px; height: 64px;"></i>
+        <div class="size-label">X-Large</div>
+        <div class="size-dim">64px</div>
+      </div>
+    </div>
+    
+    <!-- Design Principles -->
+    <div class="principles">
+      <div class="principle">
+        <h3>⚫⚪ Monochrome Only</h3>
+        <p>All icons use pure black (#000) on white or pure white (#FFF) on black. No gradients, no colors.</p>
+      </div>
+      <div class="principle">
+        <h3>📐 Stroke Width: 1.5-2px</h3>
+        <p>Consistent stroke weight across all icons. Use 1.5px for small icons, 2px for larger display icons.</p>
+      </div>
+      <div class="principle">
+        <h3>🎯 Geometric & Clean</h3>
+        <p>Choose icons with straight lines and geometric shapes that match the hexagon/hive theme.</p>
+      </div>
+      <div class="principle">
+        <h3>📏 Consistent Sizing</h3>
+        <p>Use the 6 standard sizes (16, 20, 24, 32, 48, 64px). Never scale arbitrarily.</p>
+      </div>
+    </div>
+
+    <!-- AGENT ICONS -->
+    <div class="icon-section">
+      <div class="section-header">
+        <h2>🤖 Agent Icons</h2>
+        <p>Icons representing the 6 AI agents</p>
+      </div>
+      
+      <div class="icon-grid">
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="megaphone"></i>
+          </div>
+          <div class="icon-name">Maya</div>
+          <div class="icon-code">Marketing</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="trending-up"></i>
+          </div>
+          <div class="icon-name">Pitch</div>
+          <div class="icon-code">Sales</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="headphones"></i>
+          </div>
+          <div class="icon-name">Engage</div>
+          <div class="icon-code">Support</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="bar-chart-3"></i>
+          </div>
+          <div class="icon-name">Analyze</div>
+          <div class="icon-code">Analytics</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="briefcase"></i>
+          </div>
+          <div class="icon-name">Support</div>
+          <div class="icon-code">Admin</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="search"></i>
+          </div>
+          <div class="icon-name">SEO</div>
+          <div class="icon-code">Search</div>
+        </div>
+      </div>
+      
+      <div class="usage-note">
+        <strong>Usage:</strong> Use 48px for agent cards, 32px for navigation, 64px for hero sections.
+      </div>
+    </div>
+
+    <!-- NAVIGATION ICONS -->
+    <div class="icon-section">
+      <div class="section-header">
+        <h2>🧭 Navigation Icons</h2>
+        <p>For menus, headers, and wayfinding</p>
+      </div>
+      
+      <div class="icon-grid">
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="menu"></i>
+          </div>
+          <div class="icon-name">Menu</div>
+          <div class="icon-code">Mobile nav</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="x"></i>
+          </div>
+          <div class="icon-name">Close</div>
+          <div class="icon-code">Dismiss</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="arrow-right"></i>
+          </div>
+          <div class="icon-name">Arrow Right</div>
+          <div class="icon-code">CTA / Next</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="arrow-left"></i>
+          </div>
+          <div class="icon-name">Arrow Left</div>
+          <div class="icon-code">Back</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="chevron-down"></i>
+          </div>
+          <div class="icon-name">Chevron Down</div>
+          <div class="icon-code">Dropdown</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="chevron-up"></i>
+          </div>
+          <div class="icon-name">Chevron Up</div>
+          <div class="icon-code">Collapse</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="home"></i>
+          </div>
+          <div class="icon-name">Home</div>
+          <div class="icon-code">Dashboard</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="layout-dashboard"></i>
+          </div>
+          <div class="icon-name">Dashboard</div>
+          <div class="icon-code">Overview</div>
+        </div>
+      </div>
+      
+      <div class="usage-note">
+        <strong>Usage:</strong> Use 24px for navigation items, 20px for inline links.
+      </div>
+    </div>
+
+    <!-- ACTION ICONS -->
+    <div class="icon-section">
+      <div class="section-header">
+        <h2>⚡ Action Icons</h2>
+        <p>For buttons, CTAs, and interactive elements</p>
+      </div>
+      
+      <div class="icon-grid">
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="plus"></i>
+          </div>
+          <div class="icon-name">Plus</div>
+          <div class="icon-code">Add / Create</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="minus"></i>
+          </div>
+          <div class="icon-name">Minus</div>
+          <div class="icon-code">Remove</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="edit"></i>
+          </div>
+          <div class="icon-name">Edit</div>
+          <div class="icon-code">Modify</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="trash-2"></i>
+          </div>
+          <div class="icon-name">Trash</div>
+          <div class="icon-code">Delete</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="copy"></i>
+          </div>
+          <div class="icon-name">Copy</div>
+          <div class="icon-code">Duplicate</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="download"></i>
+          </div>
+          <div class="icon-name">Download</div>
+          <div class="icon-code">Export</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="upload"></i>
+          </div>
+          <div class="icon-name">Upload</div>
+          <div class="icon-code">Import</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="refresh-cw"></i>
+          </div>
+          <div class="icon-name">Refresh</div>
+          <div class="icon-code">Reload</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="play"></i>
+          </div>
+          <div class="icon-name">Play</div>
+          <div class="icon-code">Start</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="pause"></i>
+          </div>
+          <div class="icon-name">Pause</div>
+          <div class="icon-code">Stop</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="settings"></i>
+          </div>
+          <div class="icon-name">Settings</div>
+          <div class="icon-code">Configure</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="more-vertical"></i>
+          </div>
+          <div class="icon-name">More</div>
+          <div class="icon-code">Options</div>
+        </div>
+      
+      </div>
+      
+      <div class="usage-note">
+        <strong>Usage:</strong> Use 20px inside buttons, 16px for compact actions.
+      </div>
+    </div>
+
+    <!-- STATUS ICONS -->
+    <div class="icon-section">
+      <div class="section-header">
+        <h2>📊 Status Icons</h2>
+        <p>For indicators, alerts, and feedback</p>
+      </div>
+      
+      <div class="icon-grid">
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="check"></i>
+          </div>
+          <div class="icon-name">Check</div>
+          <div class="icon-code">Success</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="check-circle"></i>
+          </div>
+          <div class="icon-name">Check Circle</div>
+          <div class="icon-code">Complete</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="x-circle"></i>
+          </div>
+          <div class="icon-name">X Circle</div>
+          <div class="icon-code">Error</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="alert-circle"></i>
+          </div>
+          <div class="icon-name">Alert</div>
+          <div class="icon-code">Warning</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="info"></i>
+          </div>
+          <div class="icon-name">Info</div>
+          <div class="icon-code">Information</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="help-circle"></i>
+          </div>
+          <div class="icon-name">Help</div>
+          <div class="icon-code">Support</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="loader"></i>
+          </div>
+          <div class="icon-name">Loader</div>
+          <div class="icon-code">Loading</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="clock"></i>
+          </div>
+          <div class="icon-name">Clock</div>
+          <div class="icon-code">Pending</div>
+        </div>
+      </div>
+      
+      <div class="usage-note">
+        <strong>Usage:</strong> Use 20px for form validation, 16px for inline status indicators.
+      </div>
+    </div>
+
+    <!-- FEATURE/BENEFIT ICONS -->
+    <div class="icon-section">
+      <div class="section-header">
+        <h2>✨ Feature & Benefit Icons</h2>
+        <p>For feature cards, benefits sections, and value props</p>
+      </div>
+      
+      <div class="icon-grid">
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="zap"></i>
+          </div>
+          <div class="icon-name">Zap</div>
+          <div class="icon-code">Speed</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="shield"></i>
+          </div>
+          <div class="icon-name">Shield</div>
+          <div class="icon-code">Security</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="lock"></i>
+          </div>
+          <div class="icon-name">Lock</div>
+          <div class="icon-code">Privacy</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="globe"></i>
+          </div>
+          <div class="icon-name">Globe</div>
+          <div class="icon-code">Global</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="layers"></i>
+          </div>
+          <div class="icon-name">Layers</div>
+          <div class="icon-code">Multi-platform</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="sliders"></i>
+          </div>
+          <div class="icon-name">Sliders</div>
+          <div class="icon-code">Control</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="cpu"></i>
+          </div>
+          <div class="icon-name">CPU</div>
+          <div class="icon-code">AI Power</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="sparkles"></i>
+          </div>
+          <div class="icon-name">Sparkles</div>
+          <div class="icon-code">AI Magic</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="bot"></i>
+          </div>
+          <div class="icon-name">Bot</div>
+          <div class="icon-code">Automation</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="workflow"></i>
+          </div>
+          <div class="icon-name">Workflow</div>
+          <div class="icon-code">Process</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="infinity"></i>
+          </div>
+          <div class="icon-name">Infinity</div>
+          <div class="icon-code">Unlimited</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="gauge"></i>
+          </div>
+          <div class="icon-name">Gauge</div>
+          <div class="icon-code">Performance</div>
+        </div>
+      </div>
+      
+      <div class="usage-note">
+        <strong>Usage:</strong> Use 32px for feature cards, 48px for hero section highlights.
+      </div>
+    </div>
+
+    <!-- CONTENT/MEDIA ICONS -->
+    <div class="icon-section">
+      <div class="section-header">
+        <h2>📝 Content & Media Icons</h2>
+        <p>For content-related actions and media types</p>
+      </div>
+      
+      <div class="icon-grid">
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="file-text"></i>
+          </div>
+          <div class="icon-name">Document</div>
+          <div class="icon-code">File</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="image"></i>
+          </div>
+          <div class="icon-name">Image</div>
+          <div class="icon-code">Photo</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="video"></i>
+          </div>
+          <div class="icon-name">Video</div>
+          <div class="icon-code">Media</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="mic"></i>
+          </div>
+          <div class="icon-name">Mic</div>
+          <div class="icon-code">Audio</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="type"></i>
+          </div>
+          <div class="icon-name">Type</div>
+          <div class="icon-code">Text</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="link"></i>
+          </div>
+          <div class="icon-name">Link</div>
+          <div class="icon-code">URL</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="paperclip"></i>
+          </div>
+          <div class="icon-name">Paperclip</div>
+          <div class="icon-code">Attachment</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="folder"></i>
+          </div>
+          <div class="icon-name">Folder</div>
+          <div class="icon-code">Organize</div>
+        </div>
+      </div>
+      
+      <div class="usage-note">
+        <strong>Usage:>/strong> Use 24px for file types, 32px for content section headers.
+      </div>
+    </div>
+
+    <!-- COMMUNICATION ICONS -->
+    <div class="icon-section">
+      <div class="section-header">
+        <h2>💬 Communication Icons</h2>
+        <p>For messaging, notifications, and social features</p>
+      </div>
+      
+      <div class="icon-grid">
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="mail"></i>
+          </div>
+          <div class="icon-name">Mail</div>
+          <div class="icon-code">Email</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="inbox"></i>
+          </div>
+          <div class="icon-name">Inbox</div>
+          <div class="icon-code">Messages</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="bell"></i>
+          </div>
+          <div class="icon-name">Bell</div>
+          <div class="icon-code">Notifications</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="message-square"></i>
+          </div>
+          <div class="icon-name">Message</div>
+          <div class="icon-code">Chat</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="phone"></i>
+          </div>
+          <div class="icon-name">Phone</div>
+          <div class="icon-code">Call</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="calendar"></i>
+          </div>
+          <div class="icon-name">Calendar</div>
+          <div class="icon-code">Schedule</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="share-2"></i>
+          </div>
+          <div class="icon-name">Share</div>
+          <div class="icon-code">Distribute</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="at-sign"></i>
+          </div>
+          <div class="icon-name">@ Symbol</div>
+          <div class="icon-code">Mention</div>
+        </div>
+      </div>
+      
+      <div class="usage-note">
+        <strong>Usage:</strong> Use 24px for nav items, 20px for inline actions.
+      </div>
+    </div>
+
+    <!-- SOCIAL ICONS -->
+    <div class="icon-section">
+      <div class="section-header">
+        <h2>🌐 Social Platform Icons</h2>
+        <p>For platform connections and social links</p>
+      </div>
+      
+      <div class="icon-grid">
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="youtube"></i>
+          </div>
+          <div class="icon-name">YouTube</div>
+          <div class="icon-code">Video</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="twitter"></i>
+          </div>
+          <div class="icon-name">Twitter/X</div>
+          <div class="icon-code">Social</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="instagram"></i>
+          </div>
+          <div class="icon-name">Instagram</div>
+          <div class="icon-code">Photo</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="linkedin"></i>
+          </div>
+          <div class="icon-name">LinkedIn</div>
+          <div class="icon-code">Professional</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="github"></i>
+          </div>
+          <div class="icon-name">GitHub</div>
+          <div class="icon-code">Code</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="facebook"></i>
+          </div>
+          <div class="icon-name">Facebook</div>
+          <div class="icon-code">Social</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="dribbble"></i>
+          </div>
+          <div class="icon-name">Dribbble</div>
+          <div class="icon-code">Design</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="figma"></i>
+          </div>
+          <div class="icon-name">Figma</div>
+          <div class="icon-code">Design</div>
+        </div>
+      </div>
+      
+      <div class="usage-note">
+        <strong>Usage:</strong> Use 24px for connection buttons, 20px for footer links.
+      </div>
+    </div>
+
+    <!-- BUSINESS/ANALYTICS ICONS -->
+    <div class="icon-section">
+      <div class="section-header">
+        <h2>📈 Business & Analytics Icons</h2>
+        <p>For dashboard metrics, reports, and business features</p>
+      </div>
+      
+      <div class="icon-grid">
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="pie-chart"></i>
+          </div>
+          <div class="icon-name">Pie Chart</div>
+          <div class="icon-code">Analytics</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="activity"></i>
+          </div>
+          <div class="icon-name">Activity</div>
+          <div class="icon-code">Metrics</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="credit-card"></i>
+          </div>
+          <div class="icon-name">Credit Card</div>
+          <div class="icon-code">Billing</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="dollar-sign"></i>
+          </div>
+          <div class="icon-name">Dollar</div>
+          <div class="icon-code">Money</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="piggy-bank"></i>
+          </div>
+          <div class="icon-name">Piggy Bank</div>
+          <div class="icon-code">Savings</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="receipt"></i>
+          </div>
+          <div class="icon-name">Receipt</div>
+          <div class="icon-code">Invoice</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="users"></i>
+          </div>
+          <div class="icon-name">Users</div>
+          <div class="icon-code">Team</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="target"></i>
+          </div>
+          <div class="icon-name">Target</div>
+          <div class="icon-code">Goals</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="award"></i>
+          </div>
+          <div class="icon-name">Award</div>
+          <div class="icon-code">Achievement</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="bookmark"></i>
+          </div>
+          <div class="icon-name">Bookmark</div>
+          <div class="icon-code">Save</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="flag"></i>
+          </div>
+          <div class="icon-name">Flag</div>
+          <div class="icon-code">Goal</div>
+        </div>
+        
+        <div class="icon-item">
+          <div class="icon-display">
+            <i data-lucide="star"></i>
+          </div>
+          <div class="icon-name">Star</div>
+          <div class="icon-code">Favorite</div>
+        </div>
+      </div>
+      
+      <div class="usage-note">
+        <strong>Usage:</strong> Use 24px for dashboard cards, 32px for hero statistics.
+      </div>
+    </div>
+
+    <!-- Download Section -->
+    <div class="download-section">
+      <h2>Icon Library</h2>
+      <p>All icons from Lucide - 1000+ open-source icons<br>Perfect match for CoExAI black & white theme</p>
+      
+      <a href="https://lucide.dev/icons/" class="btn" target="_blank">
+        Browse Full Library →
+      </a>
+      
+      <div style="margin-top: 30px; color: #666; font-size: 0.85rem;">
+        <strong>Installation:</strong> npm install lucide
+      </div>
+    </div>
+    
+  </div>
+  
+  <script>
+    lucide.createIcons();
+  </script>
+  
+</body>
+</html>
