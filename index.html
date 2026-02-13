@@ -359,37 +359,37 @@
     }
     
     /* Orbit positions - 6 agents at 60° intervals, larger radius */
-    .orbit-analyze { animation: orbit-1 24s linear infinite; }
+    .orbit-analyze { transform: rotate(0deg) translateX(140px) rotate(0deg); }
     @keyframes orbit-1 {
       from { transform: rotate(0deg) translateX(140px) rotate(0deg); }
       to { transform: rotate(360deg) translateX(140px) rotate(-360deg); }
     }
     
-    .orbit-support { animation: orbit-2 24s linear infinite; animation-delay: -4s; }
+    .orbit-support { transform: rotate(60deg) translateX(140px) rotate(-60deg); }
     @keyframes orbit-2 {
       from { transform: rotate(60deg) translateX(140px) rotate(-60deg); }
       to { transform: rotate(420deg) translateX(140px) rotate(-420deg); }
     }
     
-    .orbit-seo { animation: orbit-3 24s linear infinite; animation-delay: -8s; }
+    .orbit-seo { transform: rotate(120deg) translateX(140px) rotate(-120deg); }
     @keyframes orbit-3 {
       from { transform: rotate(120deg) translateX(140px) rotate(-120deg); }
       to { transform: rotate(480deg) translateX(140px) rotate(-480deg); }
     }
     
-    .orbit-maya { animation: orbit-4 24s linear infinite; animation-delay: -12s; }
+    .orbit-maya { transform: rotate(180deg) translateX(140px) rotate(-180deg); }
     @keyframes orbit-4 {
       from { transform: rotate(180deg) translateX(140px) rotate(-180deg); }
       to { transform: rotate(540deg) translateX(140px) rotate(-540deg); }
     }
     
-    .orbit-engage { animation: orbit-5 24s linear infinite; animation-delay: -16s; }
+    .orbit-engage { transform: rotate(240deg) translateX(140px) rotate(-240deg); }
     @keyframes orbit-5 {
       from { transform: rotate(240deg) translateX(140px) rotate(-240deg); }
       to { transform: rotate(600deg) translateX(140px) rotate(-600deg); }
     }
     
-    .orbit-pitch { animation: orbit-6 24s linear infinite; animation-delay: -20s; }
+    .orbit-pitch { transform: rotate(300deg) translateX(140px) rotate(-300deg); }
     @keyframes orbit-6 {
       from { transform: rotate(300deg) translateX(140px) rotate(-300deg); }
       to { transform: rotate(660deg) translateX(140px) rotate(-660deg); }
