@@ -358,29 +358,63 @@
       transform: scale(1.1);
     }
     
-    /* Orbit positions - 6 agents static at 60° intervals */
+    /* Orbit positions - 6 agents static with self-rotation animation */
     .orbit-analyze { 
       transform: rotate(0deg) translateX(160px) rotate(0deg);
+    }
+    .orbit-analyze .agent-icon {
+      animation: agent-pulse 3s ease-in-out infinite;
     }
     
     .orbit-support { 
       transform: rotate(60deg) translateX(160px) rotate(-60deg);
     }
+    .orbit-support .agent-icon {
+      animation: agent-pulse 3s ease-in-out infinite;
+      animation-delay: 0.5s;
+    }
     
     .orbit-seo { 
       transform: rotate(120deg) translateX(160px) rotate(-120deg);
+    }
+    .orbit-seo .agent-icon {
+      animation: agent-pulse 3s ease-in-out infinite;
+      animation-delay: 1s;
     }
     
     .orbit-maya { 
       transform: rotate(180deg) translateX(160px) rotate(-180deg);
     }
+    .orbit-maya .agent-icon {
+      animation: agent-pulse 3s ease-in-out infinite;
+      animation-delay: 1.5s;
+    }
     
     .orbit-engage { 
       transform: rotate(240deg) translateX(160px) rotate(-240deg);
     }
+    .orbit-engage .agent-icon {
+      animation: agent-pulse 3s ease-in-out infinite;
+      animation-delay: 2s;
+    }
     
     .orbit-pitch { 
       transform: rotate(300deg) translateX(160px) rotate(-300deg);
+    }
+    .orbit-pitch .agent-icon {
+      animation: agent-pulse 3s ease-in-out infinite;
+      animation-delay: 2.5s;
+    }
+    
+    @keyframes agent-pulse {
+      0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(255,255,255,0.05);
+      }
+      50% { 
+        transform: scale(1.05);
+        box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 30px rgba(255,255,255,0.1);
+      }
     }
     
     /* Badge */
