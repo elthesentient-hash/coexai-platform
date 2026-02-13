@@ -505,25 +505,37 @@
         margin-top: 6px;
       }
       
-      /* Same orbit animations as desktop */
-      .orbit-analyze { animation: orbit-1 20s linear infinite; }
-      .orbit-support { animation: orbit-2 20s linear infinite; animation-delay: -4s; }
-      .orbit-seo { animation: orbit-3 20s linear infinite; animation-delay: -8s; }
-      .orbit-maya { animation: orbit-4 20s linear infinite; animation-delay: -12s; }
-      .orbit-engage { animation: orbit-5 20s linear infinite; animation-delay: -16s; }
-      .orbit-pitch { animation: orbit-6 20s linear infinite; animation-delay: -20s; }
+      /* Mobile orbit with smaller radius for identical spacing */
+      .orbit-analyze { animation: orbit-mobile-1 20s linear infinite; }
+      .orbit-support { animation: orbit-mobile-2 20s linear infinite; animation-delay: -4s; }
+      .orbit-seo { animation: orbit-mobile-3 20s linear infinite; animation-delay: -8s; }
+      .orbit-maya { animation: orbit-mobile-4 20s linear infinite; animation-delay: -12s; }
+      .orbit-engage { animation: orbit-mobile-5 20s linear infinite; animation-delay: -16s; }
+      .orbit-pitch { animation: orbit-mobile-6 20s linear infinite; animation-delay: -20s; }
       
-        to { transform: rotate(360deg) translateX(160px) rotate(-360deg); }
+      @keyframes orbit-mobile-1 {
+        from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+        to { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
       }
-        to { transform: rotate(420deg) translateX(160px) rotate(-420deg); }
+      @keyframes orbit-mobile-2 {
+        from { transform: rotate(60deg) translateX(100px) rotate(-60deg); }
+        to { transform: rotate(420deg) translateX(100px) rotate(-420deg); }
       }
-        to { transform: rotate(480deg) translateX(160px) rotate(-480deg); }
+      @keyframes orbit-mobile-3 {
+        from { transform: rotate(120deg) translateX(100px) rotate(-120deg); }
+        to { transform: rotate(480deg) translateX(100px) rotate(-480deg); }
       }
-        to { transform: rotate(540deg) translateX(160px) rotate(-540deg); }
+      @keyframes orbit-mobile-4 {
+        from { transform: rotate(180deg) translateX(100px) rotate(-180deg); }
+        to { transform: rotate(540deg) translateX(100px) rotate(-540deg); }
       }
-        to { transform: rotate(600deg) translateX(160px) rotate(-600deg); }
+      @keyframes orbit-mobile-5 {
+        from { transform: rotate(240deg) translateX(100px) rotate(-240deg); }
+        to { transform: rotate(600deg) translateX(100px) rotate(-600deg); }
       }
-        to { transform: rotate(660deg) translateX(160px) rotate(-660deg); }
+      @keyframes orbit-mobile-6 {
+        from { transform: rotate(300deg) translateX(100px) rotate(-300deg); }
+        to { transform: rotate(660deg) translateX(100px) rotate(-660deg); }
       }
     }
     
@@ -568,30 +580,37 @@
         margin-top: 6px;
       }
       
-      /* Same orbit animations as desktop */
-      .orbit-analyze { animation: orbit-1 20s linear infinite; }
-      .orbit-support { animation: orbit-2 20s linear infinite; animation-delay: -4s; }
-      .orbit-seo { animation: orbit-3 20s linear infinite; animation-delay: -8s; }
-      .orbit-maya { animation: orbit-4 20s linear infinite; animation-delay: -12s; }
-      .orbit-engage { animation: orbit-5 20s linear infinite; animation-delay: -16s; }
-      .orbit-pitch { animation: orbit-6 20s linear infinite; animation-delay: -20s; }
-    }
-      .orbit-maya { animation: orbit-4 20s linear infinite; animation-delay: -12s; }
-      .orbit-engage { animation: orbit-5 20s linear infinite; animation-delay: -16s; }
-      .orbit-pitch { animation: orbit-6 20s linear infinite; animation-delay: -20s; }
+      /* Phone orbit with smaller radius for identical spacing */
+      .orbit-analyze { animation: orbit-phone-1 20s linear infinite; }
+      .orbit-support { animation: orbit-phone-2 20s linear infinite; animation-delay: -4s; }
+      .orbit-seo { animation: orbit-phone-3 20s linear infinite; animation-delay: -8s; }
+      .orbit-maya { animation: orbit-phone-4 20s linear infinite; animation-delay: -12s; }
+      .orbit-engage { animation: orbit-phone-5 20s linear infinite; animation-delay: -16s; }
+      .orbit-pitch { animation: orbit-phone-6 20s linear infinite; animation-delay: -20s; }
       
-        to { transform: rotate(360deg) translateX(160px) rotate(-360deg); }
+      @keyframes orbit-phone-1 {
+        from { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+        to { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
       }
-        to { transform: rotate(420deg) translateX(160px) rotate(-420deg); }
+      @keyframes orbit-phone-2 {
+        from { transform: rotate(60deg) translateX(100px) rotate(-60deg); }
+        to { transform: rotate(420deg) translateX(100px) rotate(-420deg); }
       }
-        to { transform: rotate(480deg) translateX(160px) rotate(-480deg); }
+      @keyframes orbit-phone-3 {
+        from { transform: rotate(120deg) translateX(100px) rotate(-120deg); }
+        to { transform: rotate(480deg) translateX(100px) rotate(-480deg); }
       }
-        to { transform: rotate(540deg) translateX(160px) rotate(-540deg); }
+      @keyframes orbit-phone-4 {
+        from { transform: rotate(180deg) translateX(100px) rotate(-180deg); }
+        to { transform: rotate(540deg) translateX(100px) rotate(-540deg); }
       }
-        to { transform: rotate(600deg) translateX(160px) rotate(-600deg); }
+      @keyframes orbit-phone-5 {
+        from { transform: rotate(240deg) translateX(100px) rotate(-240deg); }
+        to { transform: rotate(600deg) translateX(100px) rotate(-600deg); }
       }
-        to { transform: rotate(660deg) translateX(160px) rotate(-660deg); }
-      }
+      @keyframes orbit-phone-6 {
+        from { transform: rotate(300deg) translateX(100px) rotate(-300deg); }
+        to { transform: rotate(660deg) translateX(100px) rotate(-660deg); }
     }
     
     /* ===== SECTION STYLES ===== */
