@@ -1805,9 +1805,13 @@
     
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     
-    // Waitlist Form Handler
+    // Waitlist Form Handler - Real API
     const waitlistForm = document.getElementById('waitlist-form');
     const waitlistMessage = document.getElementById('waitlist-message');
+    
+    const API_URL = window.location.hostname === 'localhost' 
+      ? 'http://localhost:3001/api' 
+      : 'https://api.coexai.ai/api';
     
     if (waitlistForm) {
       waitlistForm.addEventListener('submit', async (e) => {
@@ -1819,14 +1823,63 @@
         submitBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Joining...';
         submitBtn.disabled = true;
         
-        // Simulate API call
-        await new Promise(r => setTimeout(r, 1500));
+        try {
+          // Call real API
+          const response = await fetch(`${API_URL}/waitlist`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+              email,
+              source: 'landing_page'
+            })
+          });
+          
+          const data = await response.json();
+          
+          if (response.ok) {
+            // Store locally as backup
+            const waitlist = JSON.parse(localStorage.getItem('coexai_waitlist') || '[]');
+            waitlist.push({
+              email,
+              timestamp: new Date().toISOString(),
+              synced: true
+            });
+            localStorage.setItem('coexai_waitlist', JSON.stringify(waitlist));
+            
+            // Show success
+            waitlistForm.style.display = 'none';
+            waitlistMessage.textContent = data.alreadyRegistered 
+              ? "✅ You're already on the list! We'll be in touch soon."
+              : "✅ You're on the list! Check your email for confirmation.";
+            waitlistMessage.className = 'mt-4 text-sm text-green-400';
+            waitlistMessage.classList.remove('hidden');
+          } else {
+            throw new Error(data.error || 'Failed to join waitlist');
+          }
+        } catch (error) {
+          console.error('Waitlist error:', error);
+          
+          // Fallback: store locally
+          const waitlist = JSON.parse(localStorage.getItem('coexai_waitlist') || '[]');
+          waitlist.push({
+            email,
+            timestamp: new Date().toISOString(),
+            synced: false
+          });
+          localStorage.setItem('coexai_waitlist', JSON.stringify(waitlist));
+          
+          waitlistForm.style.display = 'none';
+          waitlistMessage.textContent = "✅ You're on the list! (We'll sync when online)";
+          waitlistMessage.className = 'mt-4 text-sm text-green-400';
+          waitlistMessage.classList.remove('hidden');
+        }
         
-        // Store in localStorage
-        const waitlist = JSON.parse(localStorage.getItem('coexai_waitlist') || '[]');
-        waitlist.push({
-          email,
-          timestamp: new Date().toISOString(),
+        // Refresh icons
+        lucide.createIcons();
+      });
+    }
           source: 'landing_page'
         });
         localStorage.setItem('coexai_waitlist', JSON.stringify(waitlist));
