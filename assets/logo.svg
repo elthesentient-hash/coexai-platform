@@ -1,0 +1,30 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- CoExAI Logo: The Hexagon Hive -->
+  <!-- Hexagon outline -->
+  <polygon 
+    points="60,10 103,35 103,85 60,110 17,85 17,35" 
+    fill="none" 
+    stroke="currentColor" 
+    stroke-width="2"
+  />
+  
+  <!-- 6 corner nodes representing agents -->
+  <circle cx="60" cy="10" r="6" fill="currentColor"/>
+  <circle cx="103" cy="35" r="6" fill="currentColor"/>
+  <circle cx="103" cy="85" r="6" fill="currentColor"/>
+  <circle cx="60" cy="110" r="6" fill="currentColor"/>
+  <circle cx="17" cy="85" r="6" fill="currentColor"/>
+  <circle cx="17" cy="35" r="6" fill="currentColor"/>
+  
+  <!-- Center hub with Co text -->
+  <circle cx="60" cy="60" r="12" fill="currentColor"/>
+  <text 
+    x="60" 
+    y="64" 
+    text-anchor="middle" 
+    fill="black" 
+    font-size="10" 
+    font-weight="bold"
+    font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+  >Co</text>
+</svg>

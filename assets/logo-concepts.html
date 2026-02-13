@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoExAI Logo Concepts</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #000;
+      color: #fff;
+      padding: 40px 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 60px;
+    }
+    
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .logo-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+    }
+    
+    .logo-card.recommended {
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .badge {
+      display: inline-block;
+      background: #fff;
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .logo-container {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .logo-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .logo-description {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    
+    .logo-benefits {
+      text-align: left;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+    }
+    
+    .logo-benefits li {
+      margin-bottom: 8px;
+      list-style: none;
+      padding-left: 20px;
+      position: relative;
+    }
+    
+    .logo-benefits li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #4ade80;
+    }
+    
+    /* Animation for orbits */
+    @keyframes orbit {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
+    }
+    
+    .orbit-ring {
+      animation: orbit 20s linear infinite;
+      transform-origin: center;
+    }
+    
+    .pulse-node {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    .circuit-line {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: draw 2s ease forwards;
+    }
+    
+    @keyframes draw {
+      to { stroke-dashoffset: 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>CoExAI Logo Concepts</h1>
+  <p class="subtitle">5 design directions for the autonomous agent platform</p>
+  
+  <div class="logo-grid">
+    
+    <!-- Concept 1: Hexagon Hive (RECOMMENDED) -->
+    <div class="logo-card recommended">
+      <span class="badge">⭐ RECOMMENDED</span>
+      <div class="logo-container">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <!-- Hexagon outline -->
+          <polygon 
+            points="60,10 103,35 103,85 60,110 17,85 17,35" 
+            fill="none" 
+            stroke="white" 
+            stroke-width="2"
+          />
+          <!-- 6 corner nodes (representing agents) -->
+          <circle cx="60" cy="10" r="6" fill="white" class="pulse-node"/>
+          <circle cx="103" cy="35" r="6" fill="white" class="pulse-node" style="animation-delay: 0.3s"/>
+          <circle cx="103" cy="85" r="6" fill="white" class="pulse-node" style="animation-delay: 0.6s"/>
+          <circle cx="60" cy="110" r="6" fill="white" class="pulse-node" style="animation-delay: 0.9s"/>
+          <circle cx="17" cy="85" r="6" fill="white" class="pulse-node" style="animation-delay: 1.2s"/>
+          <circle cx="17" cy="35" r="6" fill="white" class="pulse-node" style="animation-delay: 1.5s"/>
+          <!-- Center hub -->
+          <circle cx="60" cy="60" r="12" fill="white"/>
+          <text x="60" y="64" text-anchor="middle" fill="black" font-size="10" font-weight="bold">Co</text>
+        </svg>
+      </div>
+      <h3 class="logo-name">The Hexagon Hive</h3>
+      <p class="logo-description">6-sided structure with corner nodes representing agents, central hub for CoExAI</p>
+      <ul class="logo-benefits">
+        <li>6 sides = 6 agents</li>
+        <li>Scalable to any size</li>
+        <li>Geometric & timeless</li>
+        <li>Works on any background</li>
+      </ul>
+    </div>
+    
+    <!-- Concept 2: The Orbit Ring -->
+    <div class="logo-card">
+      <div class="logo-container">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <!-- Orbit paths -->
+          <circle cx="60" cy="60" r="45" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+          <circle cx="60" cy="60" r="35" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <!-- Center hub -->
+          <circle cx="60" cy="60" r="18" fill="white"/>
+          <text x="60" y="64" text-anchor="middle" fill="black" font-size="8" font-weight="bold">CoEx</text>
+          <!-- Orbiting agents -->
+          <g class="orbit-ring">
+            <circle cx="60" cy="15" r="5" fill="white"/>
+            <circle cx="95" cy="32" r="5" fill="white"/>
+            <circle cx="95" cy="88" r="5" fill="white"/>
+            <circle cx="60" cy="105" r="5" fill="white"/>
+            <circle cx="25" cy="88" r="5" fill="white"/>
+            <circle cx="25" cy="32" r="5" fill="white"/>
+          </g>
+        </svg>
+      </div>
+      <h3 class="logo-name">The Orbit Ring</h3>
+      <p class="logo-description">Planetary system with 6 orbiting agents around central CoExAI hub</p>
+      <ul class="logo-benefits">
+        <li>Matches landing page animation</li>
+        <li>Shows collaboration (co-)</li>
+        <li>AI as central intelligence</li>
+        <li>Dynamic & alive</li>
+      </ul>
+    </div>
+    
+    <!-- Concept 3: The Circuit C -->
+    <div class="logo-card">
+      <div class="logo-container">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <!-- Circuit board traces forming C -->
+          <path 
+            d="M 85 25 L 60 25 L 35 25 L 25 35 L 25 60 L 25 85 L 35 95 L 60 95 L 85 95" 
+            fill="none" 
+            stroke="white" 
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="circuit-line"
+          />
+          <!-- Circuit nodes -->
+          <circle cx="85" cy="25" r="5" fill="white"/>
+          <circle cx="35" cy="25" r="5" fill="white"/>
+          <circle cx="25" cy="60" r="5" fill="white"/>
+          <circle cx="35" cy="95" r="5" fill="white"/>
+          <circle cx="85" cy="95" r="5" fill="white"/>
+          <!-- Pulsing connection node -->
+          <circle cx="60" cy="60" r="8" fill="white" class="pulse-node"/>
+          <!-- Connection lines -->
+          <line x1="35" y1="25" x2="60" y2="60" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <line x1="25" y1="60" x2="60" y2="60" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <line x1="35" y1="95" x2="60" y2="60" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <line x1="85" y1="25" x2="60" y2="60" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <line x1="85" y1="95" x2="60" y2="60" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+        </svg>
+      </div>
+      <h3 class="logo-name">The Circuit C</h3>
+      <p class="logo-description">Letter "C" formed by circuit board traces with connected nodes</p>
+      <ul class="logo-benefits">
+        <li>Literal "C" for CoExAI</li>
+        <li>Tech-forward aesthetic</li>
+        <li>Nodes = connected agents</li>
+        <li>Professional & enterprise</li>
+      </ul>
+    </div>
+    
+    <!-- Concept 4: The Workforce Bars -->
+    <div class="logo-card">
+      <div class="logo-container">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <!-- 6 vertical bars of varying heights -->
+          <rect x="15" y="40" width="10" height="40" rx="5" fill="rgba(255,255,255,0.6)"/>
+          <rect x="28" y="25" width="10" height="70" rx="5" fill="white"/>
+          <rect x="41" y="35" width="10" height="50" rx="5" fill="rgba(255,255,255,0.8)"/>
+          <rect x="54" y="20" width="10" height="80" rx="5" fill="white"/>
+          <rect x="67" y="30" width="10" height="60" rx="5" fill="rgba(255,255,255,0.7)"/>
+          <rect x="80" y="45" width="10" height="30" rx="5" fill="rgba(255,255,255,0.5)"/>
+          <!-- Connection lines -->
+          <line x1="20" y1="50" x2="33" y2="45" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <line x1="33" y1="55" x2="46" y2="50" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <line x1="46" y1="52" x2="59" y2="48" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <line x1="59" y1="50" x2="72" y2="52" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+          <line x1="72" y1="48" x2="85" y2="55" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+        </svg>
+      </div>
+      <h3 class="logo-name">The Workforce</h3>
+      <p class="logo-description">6 vertical bars representing team members connected by collaboration lines</p>
+      <ul class="logo-benefits">
+        <li>Abstract & modern</li>
+        <li>Team visualization</li>
+        <li>Not literal (timeless)</li>
+        <li>Equal spacing = harmony</li>
+      </ul>
+    </div>
+    
+    <!-- Concept 5: The Constellation -->
+    <div class="logo-card">
+      <div class="logo-container">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <!-- Faint nebula background -->
+          <circle cx="60" cy="60" r="50" fill="url(#nebula)" opacity="0.3"/>
+          <defs>
+            <radialGradient id="nebula" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="white" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <!-- Constellation lines forming C -->
+          <line x1="30" y1="30" x2="60" y2="25" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          <line x1="60" y1="25" x2="90" y2="40" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          <line x1="90" y1="40" x2="90" y2="80" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          <line x1="90" y1="80" x2="60" y2="95" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          <line x1="60" y1="95" x2="30" y2="90" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          <line x1="30" y1="90" x2="30" y2="30" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          <!-- Stars -->
+          <circle cx="30" cy="30" r="4" fill="white"/>
+          <circle cx="60" cy="25" r="5" fill="white"/>
+          <circle cx="90" cy="40" r="4" fill="white"/>
+          <circle cx="90" cy="80" r="4" fill="white"/>
+          <circle cx="60" cy="95" r="5" fill="white"/>
+          <circle cx="30" cy="90" r="4" fill="white"/>
+          <!-- Central bright star (hub) -->
+          <circle cx="60" cy="60" r="8" fill="white" class="pulse-node"/>
+          <circle cx="60" cy="60" r="12" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+        </svg>
+      </div>
+      <h3 class="logo-name">The Constellation</h3>
+      <p class="logo-description">6 stars connected by lines forming a "C", representing the CoExAI galaxy</p>
+      <ul class="logo-benefits">
+        <li>Ties into galaxy theme</li>
+        <li>Stars = agents</li>
+        <li>Constellations = guidance</li>
+        <li>Dreamy but professional</li>
+      </ul>
+    </div>
+    
+  </div>
+  
+  <!-- Usage Examples -->
+  <div style="max-width: 1400px; margin: 80px auto 0;">
+    <h2 style="text-align: center; margin-bottom: 40px;">Recommended Logo Usage</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px;">
+      
+      <!-- Light Background -->
+      <div style="background: white; border-radius: 16px; padding: 40px; text-align: center;">
+        <p style="color: #666; font-size: 12px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">On Light</p>
+        <svg width="60" height="60" viewBox="0 0 120 120" style="margin: 0 auto;">
+          <polygon points="60,10 103,35 103,85 60,110 17,85 17,35" fill="none" stroke="#000" stroke-width="2"/>
+          <circle cx="60" cy="10" r="6" fill="#000"/>
+          <circle cx="103" cy="35" r="6" fill="#000"/>
+          <circle cx="103" cy="85" r="6" fill="#000"/>
+          <circle cx="60" cy="110" r="6" fill="#000"/>
+          <circle cx="17" cy="85" r="6" fill="#000"/>
+          <circle cx="17" cy="35" r="6" fill="#000"/>
+          <circle cx="60" cy="60" r="12" fill="#000"/>
+          <text x="60" y="64" text-anchor="middle" fill="white" font-size="10" font-weight="bold">Co</text>
+        </svg>
+        <p style="color: #000; margin-top: 15px; font-weight: 600;">CoExAI</p>
+      </div>
+      
+      <!-- Dark Background -->
+      <div style="background: #000; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 40px; text-align: center;">
+        <p style="color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">On Dark</p>
+        <svg width="60" height="60" viewBox="0 0 120 120" style="margin: 0 auto;">
+          <polygon points="60,10 103,35 103,85 60,110 17,85 17,35" fill="none" stroke="white" stroke-width="2"/>
+          <circle cx="60" cy="10" r="6" fill="white"/>
+          <circle cx="103" cy="35" r="6" fill="white"/>
+          <circle cx="103" cy="85" r="6" fill="white"/>
+          <circle cx="60" cy="110" r="6" fill="white"/>
+          <circle cx="17" cy="85" r="6" fill="white"/>
+          <circle cx="17" cy="35" r="6" fill="white"/>
+          <circle cx="60" cy="60" r="12" fill="white"/>
+          <text x="60" y="64" text-anchor="middle" fill="black" font-size="10" font-weight="bold">Co</text>
+        </svg>
+        <p style="color: #fff; margin-top: 15px; font-weight: 600;">CoExAI</p>
+      </div>
+      
+      <!-- Icon Only -->
+      <div style="background: linear-gradient(135deg, #1a1a1a, #000); border-radius: 16px; padding: 40px; text-align: center;">
+        <p style="color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Icon Only</p>
+        <svg width="50" height="50" viewBox="0 0 120 120" style="margin: 0 auto;">
+          <polygon points="60,10 103,35 103,85 60,110 17,85 17,35" fill="none" stroke="white" stroke-width="3"/>
+          <circle cx="60" cy="10" r="6" fill="white"/>
+          <circle cx="103" cy="35" r="6" fill="white"/>
+          <circle cx="103" cy="85" r="6" fill="white"/>
+          <circle cx="60" cy="110" r="6" fill="white"/>
+          <circle cx="17" cy="85" r="6" fill="white"/>
+          <circle cx="17" cy="35" r="6" fill="white"/>
+          <circle cx="60" cy="60" r="12" fill="white"/>
+        </svg>
+        <p style="color: rgba(255,255,255,0.4); margin-top: 15px; font-size: 12px;">Favicon, App Icon</p>
+      </div>
+      
+      <!-- With Wordmark -->
+      <div style="background: linear-gradient(135deg, #0a0a0a, #1a1a1a); border-radius: 16px; padding: 40px; text-align: center;">
+        <p style="color: rgba(255,255,255,0.6); font-size: 12px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px;">Horizontal</p>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+          <svg width="40" height="40" viewBox="0 0 120 120">
+            <polygon points="60,10 103,35 103,85 60,110 17,85 17,35" fill="none" stroke="white" stroke-width="3"/>
+            <circle cx="60" cy="10" r="6" fill="white"/>
+            <circle cx="103" cy="35" r="6" fill="white"/>
+            <circle cx="103" cy="85" r="6" fill="white"/>
+            <circle cx="60" cy="110" r="6" fill="white"/>
+            <circle cx="17" cy="85" r="6" fill="white"/>
+            <circle cx="17" cy="35" r="6" fill="white"/>
+            <circle cx="60" cy="60" r="12" fill="white"/>
+          </svg>
+          <span style="color: white; font-size: 24px; font-weight: 600; letter-spacing: -0.5px;">CoExAI</span>
+        </div>
+        <p style="color: rgba(255,255,255,0.4); margin-top: 15px; font-size: 12px;">Website Header</p>
+      </div>
+      
+    </div>
+  </div>
+  
+  <div style="text-align: center; margin-top: 80px; padding: 40px; border-top: 1px solid rgba(255,255,255,0.1);">
+    <p style="color: rgba(255,255,255,0.4); font-size: 14px;">
+      ⭐ Recommended: <strong>The Hexagon Hive</strong> — Scalable, meaningful, timeless
+    </p>
+  </div>
+  
+</body>
+</html>
