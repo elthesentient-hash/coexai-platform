@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoExAI Logo - Hexagon Hive</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: Inter, -apple-system, sans-serif;
+    }
+    .logo-container {
+      padding: 60px;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .logo-title {
+      color: #fff;
+      margin-top: 30px;
+      font-size: 18px;
+      text-align: center;
+      opacity: 0.8;
+    }
+    .logo-subtitle {
+      color: rgba(255,255,255,0.5);
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .badge {
+      display: inline-block;
+      background: #fff;
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 15px;
+    }
+    /* Animation */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .pulse-node {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    .pulse-node:nth-child(2) { animation-delay: 0.3s; }
+    .pulse-node:nth-child(3) { animation-delay: 0.6s; }
+    .pulse-node:nth-child(4) { animation-delay: 0.9s; }
+    .pulse-node:nth-child(5) { animation-delay: 1.2s; }
+    .pulse-node:nth-child(6) { animation-delay: 1.5s; }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <svg width="200" height="200" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- Hexagon outline -->
+      <polygon 
+        points="60,10 103,35 103,85 60,110 17,85 17,35" 
+        fill="none" 
+        stroke="white" 
+        stroke-width="2"
+      />
+      
+      <!-- 6 corner nodes -->
+      <circle cx="60" cy="10" r="6" fill="white" class="pulse-node"/>
+      <circle cx="103" cy="35" r="6" fill="white" class="pulse-node"/>
+      <circle cx="103" cy="85" r="6" fill="white" class="pulse-node"/>
+      <circle cx="60" cy="110" r="6" fill="white" class="pulse-node"/>
+      <circle cx="17" cy="85" r="6" fill="white" class="pulse-node"/>
+      <circle cx="17" cy="35" r="6" fill="white" class="pulse-node"/>
+      
+      <!-- Center hub -->
+      <circle cx="60" cy="60" r="12" fill="white"/>
+      <text x="60" y="64" text-anchor="middle" fill="black" font-size="10" font-weight="bold" font-family="Inter, sans-serif">Co</text>
+    </svg>
+  </div>
+  
+  <div class="logo-title">CoExAI Logo</div>
+  <div class="logo-subtitle">The Hexagon Hive</div>
+  <span class="badge">⭐ RECOMMENDED</span>
+  
+  <div style="margin-top: 40px; color: rgba(255,255,255,0.4); font-size: 12px; text-align: center;">
+    Right-click logo → Save Image As... (PNG)
+  </div>
+</body>
+</html>

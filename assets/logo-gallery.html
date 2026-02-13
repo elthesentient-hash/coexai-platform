@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoExAI Logo Gallery</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #000;
+      color: #fff;
+      padding: 40px 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 40px;
+    }
+    
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .logo-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .logo-card:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.2);
+    }
+    
+    .logo-card.recommended {
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .badge {
+      display: inline-block;
+      background: #fff;
+      color: #000;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .logo-frame {
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 20px;
+    }
+    
+    iframe {
+      border: none;
+      width: 100%;
+      height: 200px;
+    }
+    
+    .logo-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .logo-description {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+    
+    .view-btn {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+    
+    .view-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+    
+    .instructions {
+      max-width: 800px;
+      margin: 60px auto 0;
+      padding: 30px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .instructions h2 {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+    
+    .instructions ol {
+      color: rgba(255,255,255,0.7);
+      padding-left: 20px;
+    }
+    
+    .instructions li {
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <h1>CoExAI Logo Gallery</h1>
+  <p class="subtitle">Click any logo to view full size and save as PNG</p>
+  
+  <div class="logo-grid">
+    
+    <!-- Logo 1: Hexagon Hive -->
+    <div class="logo-card recommended">
+      <span class="badge">⭐ RECOMMENDED</span>
+      <div class="logo-frame">
+        <iframe src="logo-1-hexagon.html"></iframe>
+      </div>
+      <div class="logo-name">The Hexagon Hive</div>
+      <div class="logo-description">6-sided structure with corner nodes representing agents</div>
+      <a href="logo-1-hexagon.html" class="view-btn" target="_blank">View Full Size →</a>
+    </div>
+    
+    <!-- Logo 2: Orbit Ring -->
+    <div class="logo-card">
+      <div class="logo-frame">
+        <iframe src="logo-2-orbit.html"></iframe>
+      </div>
+      <div class="logo-name">The Orbit Ring</div>
+      <div class="logo-description">Planetary system with 6 orbiting agents</div>
+      <a href="logo-2-orbit.html" class="view-btn" target="_blank">View Full Size →</a>
+    </div>
+    
+    <!-- Logo 3: Circuit C -->
+    <div class="logo-card">
+      <div class="logo-frame">
+        <iframe src="logo-3-circuit.html"></iframe>
+      </div>
+      <div class="logo-name">The Circuit C</div>
+      <div class="logo-description">Letter "C" formed by circuit board traces</div>
+      <a href="logo-3-circuit.html" class="view-btn" target="_blank">View Full Size →</a>
+    </div>
+    
+    <!-- Logo 4: Workforce -->
+    <div class="logo-card">
+      <div class="logo-frame">
+        <iframe src="logo-4-workforce.html"></iframe>
+      </div>
+      <div class="logo-name">The Workforce</div>
+      <div class="logo-description">6 vertical bars representing team members</div>
+      <a href="logo-4-workforce.html" class="view-btn" target="_blank">View Full Size →</a>
+    </div>
+    
+    <!-- Logo 5: Constellation -->
+    <div class="logo-card">
+      <div class="logo-frame">
+        <iframe src="logo-5-constellation.html"></iframe>
+      </div>
+      <div class="logo-name">The Constellation</div>
+      <div class="logo-description">6 stars connected forming a "C" shape</div>
+      <a href="logo-5-constellation.html" class="view-btn" target="_blank">View Full Size →</a>
+    </div>
+    
+  </div>
+  
+  <div class="instructions">
+    <h2>How to Save as PNG:</h2>
+    <ol>
+      <li>Click "View Full Size" on any logo you want to save</li>
+      <li>Right-click on the logo in the new tab</li>
+      <li>Select "Save Image As..." or "Save Screenshot As..."</li>
+      <li>Save as PNG format</li>
+    </ol>
+    <p style="margin-top: 20px; color: rgba(255,255,255,0.5); font-size: 0.9rem;">
+      <strong>Tip:</strong> For best quality, use Chrome or Edge browser and save at 100% zoom.
+    </p>
+  </div>
+  
+</body>
+</html>

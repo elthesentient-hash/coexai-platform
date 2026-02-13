@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoExAI Logo - Orbit Ring</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: Inter, -apple-system, sans-serif;
+    }
+    .logo-container {
+      padding: 60px;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .logo-title {
+      color: #fff;
+      margin-top: 30px;
+      font-size: 18px;
+      text-align: center;
+      opacity: 0.8;
+    }
+    .logo-subtitle {
+      color: rgba(255,255,255,0.5);
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: center;
+    }
+    @keyframes orbit {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .orbit-ring {
+      animation: orbit 20s linear infinite;
+      transform-origin: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container">
+    <svg width="200" height="200" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <!-- Orbit paths -->
+      <circle cx="60" cy="60" r="45" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+      <circle cx="60" cy="60" r="35" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      
+      <!-- Center hub -->
+      <circle cx="60" cy="60" r="18" fill="white"/>
+      <text x="60" y="64" text-anchor="middle" fill="black" font-size="8" font-weight="bold" font-family="Inter, sans-serif">CoEx</text>
+      
+      <!-- Orbiting agents -->
+      <g class="orbit-ring">
+        <circle cx="60" cy="15" r="5" fill="white"/>
+        <circle cx="95" cy="32" r="5" fill="white"/>
+        <circle cx="95" cy="88" r="5" fill="white"/>
+        <circle cx="60" cy="105" r="5" fill="white"/>
+        <circle cx="25" cy="88" r="5" fill="white"/>
+        <circle cx="25" cy="32" r="5" fill="white"/>
+      </g>
+    </svg>
+  </div>
+  
+  <div class="logo-title">CoExAI Logo</div>
+  <div class="logo-subtitle">The Orbit Ring</div>
+  
+  <div style="margin-top: 40px; color: rgba(255,255,255,0.4); font-size: 12px; text-align: center;">
+    Right-click logo → Save Image As... (PNG)
+  </div>
+</body>
+</html>
