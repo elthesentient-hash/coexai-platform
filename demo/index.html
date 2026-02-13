@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoExAI Demo - Try Everything!</title>
+    <title>CoExAI Demo - See AI Agents in Action</title>
+    <meta name="description" content="Experience CoExAI's 6 AI agents. Clone websites from video, generate content, and automate your workflow.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -22,35 +23,19 @@
             pointer-events: none;
         }
         
-        /* Content Layer */
         .content-layer { position: relative; z-index: 10; }
         
-        /* Gradient Text */
         .gradient-text {
             background: linear-gradient(135deg, #fff 0%, #c0c0c0 50%, #fff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
-        /* Demo Banner */
-        .demo-banner {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        /* Navigation */
-        .nav-transparent {
-            background: transparent;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        /* Glass Card */
         .glass-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.08);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
+            border-radius: 16px;
             transition: all 0.3s;
         }
         
@@ -60,47 +45,48 @@
         }
         
         .glass-card.selected {
-            border-color: rgba(255,255,255,0.4);
-            box-shadow: 0 0 40px rgba(255,255,255,0.1);
+            border-color: #fff;
+            box-shadow: 0 0 30px rgba(255,255,255,0.1);
         }
         
-        /* Buttons */
         .btn-primary {
             background: #fff;
             color: #000;
-            padding: 14px 28px;
-            border-radius: 12px;
+            padding: 12px 24px;
+            border-radius: 10px;
             font-weight: 600;
             transition: all 0.3s;
-            box-shadow: 0 0 30px rgba(255,255,255,0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .btn-primary:hover {
             background: #f0f0f0;
-            box-shadow: 0 0 50px rgba(255,255,255,0.3);
-            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+            transform: translateY(-1px);
         }
         
         .btn-secondary {
             background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
             color: #fff;
-            padding: 14px 28px;
-            border-radius: 12px;
+            padding: 12px 24px;
+            border-radius: 10px;
             font-weight: 500;
             transition: all 0.3s;
         }
         
         .btn-secondary:hover {
             background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.2);
         }
         
-        /* Progress Steps */
         .step-circle {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
+            background: rgba(255,255,255,0.1);
             border: 2px solid rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
@@ -121,8 +107,8 @@
         }
         
         .step-line {
+            width: 60px;
             height: 2px;
-            flex: 1;
             background: rgba(255,255,255,0.1);
             margin: 0 8px;
             transition: all 0.3s;
@@ -132,73 +118,75 @@
             background: rgba(255,255,255,0.4);
         }
         
-        /* Platform Cards */
         .platform-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 16px;
             transition: all 0.3s;
+            cursor: pointer;
         }
         
         .platform-card:hover {
-            border-color: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.15);
         }
         
         .platform-card.connected {
-            border-color: rgba(255,255,255,0.3);
-            background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.25);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .animate-pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
         }
         
         [x-cloak] { display: none !important; }
     </style>
 </head>
-<body x-data="demoApp()" class="min-h-screen">
-
-    <!-- Galaxy Background -->
+<body x-data="demoApp()">
+    <!-- Galaxy Canvas -->
     <canvas id="galaxy-canvas"></canvas>
-
+    
     <!-- Demo Banner -->
-    <div class="demo-banner text-center py-3 text-sm font-medium content-layer">
-        <span class="inline-flex items-center gap-2">
-            <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-            LIVE DEMO MODE - Experience the full app without real signup!
-        </span>
+    <div class="demo-banner py-2 px-4 text-center text-sm text-white/70 content-layer">
+        <span class="font-semibold text-white">DEMO MODE</span> — Experience CoExAI without creating an account
     </div>
-
+    
     <!-- Navigation -->
-    <nav class="nav-transparent content-layer">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <nav class="nav-transparent py-4 content-layer">
+        <div class="max-w-6xl mx-auto px-4 flex items-center justify-between">
             <a href="/" class="flex items-center gap-2">
-                <!-- Hexagon Hive Logo -->
                 <svg width="32" height="32" viewBox="0 0 120 120" class="flex-shrink-0">
                     <polygon points="60,5 107.5,32.5 107.5,87.5 60,115 12.5,87.5 12.5,32.5" fill="none" stroke="#fff" stroke-width="6"/>
                     <polygon points="60,25 90,42.5 90,77.5 60,95 30,77.5 30,42.5" fill="none" stroke="#fff" stroke-width="4"/>
                     <circle cx="60" cy="60" r="8" fill="#fff"/>
-                    <line x1="60" y1="60" x2="60" y2="25" stroke="#fff" stroke-width="3"/>
-                    <line x1="60" y1="60" x2="90" y2="42.5" stroke="#fff" stroke-width="3"/>
-                    <line x1="60" y1="60" x2="90" y2="77.5" stroke="#fff" stroke-width="3"/>
-                    <line x1="60" y1="60" x2="60" y2="95" stroke="#fff" stroke-width="3"/>
-                    <line x1="60" y1="60" x2="30" y2="77.5" stroke="#fff" stroke-width="3"/>
-                    <line x1="60" y1="60" x2="30" y2="42.5" stroke="#fff" stroke-width="3"/>
-                    <circle cx="60" cy="5" r="6" fill="#fff"/>
-                    <circle cx="107.5" cy="32.5" r="6" fill="#fff"/>
-                    <circle cx="107.5" cy="87.5" r="6" fill="#fff"/>
-                    <circle cx="60" cy="115" r="6" fill="#fff"/>
-                    <circle cx="12.5" cy="87.5" r="6" fill="#fff"/>
-                    <circle cx="12.5" cy="32.5" r="6" fill="#fff"/>
                 </svg>
                 <span class="font-bold text-xl">CoExAI</span>
                 <span class="ml-2 px-2 py-0.5 rounded-full bg-white/10 text-white/70 text-xs border border-white/10">DEMO</span>
             </a>
             
             <div class="text-sm text-white/50">
-                Step <span x-text="currentStep"></span> of 4
+                Step <span x-text="currentStep" class="font-semibold text-white"></span> of 4
             </div>
         </div>
     </nav>
 
     <div class="max-w-4xl mx-auto px-4 py-8 content-layer">
-
         <!-- Progress -->
         <div class="flex items-center justify-center mb-12">
             <template x-for="i in 4" :key="i">
@@ -224,18 +212,69 @@
             </template>
         </div>
 
-        <!-- Step 1: Choose Plan -->
-        <div x-show="currentStep === 1" x-cloak
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 translate-y-4"
-             x-transition:enter-end="opacity-100 translate-y-0">
+        <!-- STEP 1: Email Capture -->
+        <div x-show="currentStep === 1" x-cloak class="slide-in">
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-bold mb-3">Get Early Access</h1>
+                <p class="text-white/50">Enter your email to start the demo and join our waitlist</p>
+            </div>
             
+            <div class="max-w-md mx-auto">
+                <div class="glass-card p-8">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2">Email Address</label>
+                        <input 
+                            type="email" 
+                            x-model="email"
+                            placeholder="you@example.com"
+                            class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-white/30"
+                            @keydown.enter="if(email) submitEmail()"
+                        >
+                        <p x-show="emailError" x-text="emailError" class="text-red-400 text-sm mt-2"></p>
+                    </div>
+                    
+                    <button 
+                        @click="submitEmail()"
+                        :disabled="!email || submitting"
+                        class="btn-primary w-full justify-center"
+                        :class="{ 'opacity-50 cursor-not-allowed': !email || submitting }"
+                    >
+                        <span x-show="!submitting">Start Demo</span>
+                        <span x-show="submitting">Starting...</span>
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                    
+                    <p class="text-center text-white/40 text-sm mt-4">
+                        No credit card required. Unsubscribe anytime.
+                    </p>
+                </div>
+                
+                <!-- Trust badges -->
+                <div class="flex items-center justify-center gap-6 mt-8 text-white/40 text-sm">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="shield-check" class="w-4 h-4"></i>
+                        <span>Secure</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="clock" class="w-4 h-4"></i>
+                        <span>2 min demo</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="zap" class="w-4 h-4"></i>
+                        <span>Instant</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: Choose Plan -->
+        <div x-show="currentStep === 2" x-cloak class="slide-in">
             <div class="text-center mb-10">
                 <h1 class="text-4xl font-bold mb-3">Choose Your Plan</h1>
-                <p class="text-white/50">Demo mode - no credit card required! <span class="text-white/70">Click any plan to continue</span></p>
+                <p class="text-white/50">Select the plan that fits your needs</p>
             </div>
 
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
                 <template x-for="plan in plans" :key="plan.id">
                     <div 
                         @click="selectPlan(plan)"
@@ -267,37 +306,18 @@
             </div>
         </div>
 
-        <!-- Step 2: Creating Account -->
-        <div x-show="currentStep === 2" x-cloak class="text-center py-16"
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100">
-            
-            <div class="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-6 animate-spin">
-                <i data-lucide="loader-2" class="w-10 h-10"></i>
-            </div>
-            
-            <h2 class="text-2xl font-bold mb-2">Creating Demo Account...</h2>
-            
-            <p class="text-white/50">Simulating: Creating user → Setting up trial → Preparing dashboard</p>
-        </div>
-
-        <!-- Step 3: Connect Platforms -->
-        <div x-show="currentStep === 3" x-cloak
-             x-transition:enter="transition ease-out duration-300"
-             x-transition:enter-start="opacity-0 translate-y-4"
-             x-transition:enter-end="opacity-100 translate-y-0">
-            
+        <!-- STEP 3: Connect Platforms -->
+        <div x-show="currentStep === 3" x-cloak class="slide-in">
             <div class="text-center mb-10">
                 <h1 class="text-4xl font-bold mb-3">Connect Your Platforms</h1>
-                <p class="text-white/50">Click "Connect" to simulate OAuth flow <span class="text-white/70">(Try connecting all 4!)</span></p>
+                <p class="text-white/50">Link your social accounts to activate AI agents</p>
             </div>
 
-            <div class="space-y-3 max-w-2xl mx-auto">
+            <div class="space-y-3 max-w-xl mx-auto">
                 <template x-for="platform in platforms" :key="platform.id">
                     <div 
-                        class="platform-card p-4 flex items-center justify-between"
-                        :class="platform.connected ? 'connected' : ''"
+                        class="platform-card flex items-center justify-between"
+                        :class="{ 'connected': platform.connected }"
                     >
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
@@ -305,29 +325,29 @@
                             </div>
                             
                             <div>
-                                <div class="font-semibold" x-text="platform.name"></div>
-                                <div class="text-sm"
-                                    :class="platform.connected ? 'text-white/70' : 'text-white/40'"
-                                    x-text="platform.connected ? (platform.channelName + ' • ' + platform.followers.toLocaleString() + ' followers') : 'Not connected'"
-                                ></div>
+                                <h4 class="font-semibold" x-text="platform.name"></h4>
+                                <template x-if="!platform.connected">
+                                    <p class="text-sm text-white/40">Click to connect</p>
+                                </template>
+                                <template x-if="platform.connected">
+                                    <p class="text-sm text-green-400">
+                                        <span x-text="platform.followers.toLocaleString()"></span> followers
+                                    </p>
+                                </template>
                             </div>
                         </div>
-
+                        
                         <button 
                             @click="togglePlatform(platform)"
-                            class="px-5 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center gap-2"
-                            :class="platform.connected ? 'bg-white text-black' : 'btn-secondary'"
                             :disabled="platform.loading"
+                            class="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+                            :class="platform.connected ? 
+                                'bg-white/10 text-white border border-white/20' : 
+                                'bg-white text-black hover:bg-white/90'"
                         >
-                            <template x-if="platform.loading">
-                                <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
-                            </template>
-                            
-                            <span x-text="platform.connected ? 'Connected' : 'Connect'"></span>
-                            
-                            <template x-if="platform.connected">
-                                <i data-lucide="check" class="w-4 h-4"></i>
-                            </template>
+                            <span x-show="platform.loading">Connecting...</span>
+                            <span x-show="!platform.loading && !platform.connected">Connect</span>
+                            <span x-show="!platform.loading && platform.connected">Disconnect</span>
                         </button>
                     </div>
                 </template>
@@ -335,41 +355,122 @@
 
             <div class="mt-10 text-center">
                 <button 
-                    @click="goToDashboard"
-                    class="btn-primary inline-flex items-center gap-2 text-lg"
+                    @click="currentStep = 4"
+                    :disabled="!hasConnectedPlatforms"
+                    class="btn-primary text-lg"
+                    :class="{ 'opacity-50 cursor-not-allowed': !hasConnectedPlatforms }"
                 >
-                    Launch Dashboard
+                    Continue to AI Analysis
                     <i data-lucide="arrow-right" class="w-5 h-5"></i>
                 </button>
                 
-                <p class="mt-4 text-sm text-white/40">(You can connect more platforms later)</p>
+                <p x-show="!hasConnectedPlatforms" class="mt-4 text-sm text-white/40">
+                    Connect at least one platform to continue
+                </p>
             </div>
         </div>
 
-        <!-- Demo Info -->
-        <div class="mt-16 glass-card p-6">
-            <div class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                    <i data-lucide="info" class="w-5 h-5"></i>
+        <!-- STEP 4: Maya Analysis (FIXED) -->
+        <div x-show="currentStep === 4" x-cloak class="slide-in">
+            <!-- Loading State -->
+            <div x-show="!analysisComplete" class="text-center py-16">
+                <div class="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-6 animate-pulse">
+                    <i data-lucide="sparkles" class="w-12 h-12"></i>
                 </div>
                 
-                <div>
-                    <h4 class="font-semibold mb-1">About This Demo</h4>
-                    
-                    <p class="text-sm text-white/50 mb-4">
-                        This is a fully functional simulation. Everything you see is generated in real-time 
-                        to demonstrate the user experience. No real accounts, payments, or data are created.
-                    </p>
-                    
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1 rounded-full bg-white/10 text-white/70 text-xs border border-white/10">✓ Simulated Auth</span>
-                        
-                        <span class="px-3 py-1 rounded-full bg-white/10 text-white/70 text-xs border border-white/10">✓ Fake OAuth Flow</span>
-                        
-                        <span class="px-3 py-1 rounded-full bg-white/10 text-white/70 text-xs border border-white/10">✓ Demo Dashboard</span>
-                        
-                        <span class="px-3 py-1 rounded-full bg-white/10 text-white/70 text-xs border border-white/10">✓ Mock AI Responses</span>
+                <h2 class="text-2xl font-bold mb-2">Maya is Analyzing...</h2>
+                <p class="text-white/50 mb-8" x-text="analysisStatus"></p>
+                
+                <!-- Progress Bar -->
+                <div class="max-w-md mx-auto">
+                    <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div 
+                            class="h-full bg-white transition-all duration-500"
+                            :style="'width: ' + analysisProgress + '%'"
+                        ></div>
                     </div>
+                    <p class="text-right text-sm text-white/40 mt-2" x-text="analysisProgress + '%'"></p>
+                </div>
+                
+                <!-- Analysis Steps -->
+                <div class="mt-8 space-y-2 max-w-md mx-auto text-left">
+                    <template x-for="step in analysisSteps" :key="step.id">
+                        <div 
+                            class="flex items-center gap-3 p-3 rounded-lg transition-all"
+                            :class="step.completed ? 'bg-white/10' : 'bg-white/5'"
+                        >
+                            <div 
+                                class="w-6 h-6 rounded-full flex items-center justify-center"
+                                :class="step.completed ? 'bg-green-500' : 'bg-white/20'"
+                            >
+                                <i x-show="step.completed" data-lucide="check" class="w-4 h-4 text-black"></i>
+                                <i x-show="!step.completed" data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+                            </div>
+                            <span x-text="step.name" :class="step.completed ? 'text-white' : 'text-white/50'"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            
+            <!-- Results State -->
+            <div x-show="analysisComplete" class="slide-in">
+                <div class="text-center mb-10">
+                    <div class="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="check-circle" class="w-10 h-10 text-green-400"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-2">Analysis Complete!</h2>
+                    <p class="text-white/50">Maya generated content from your connected platforms</p>
+                </div>
+                
+                <!-- Generated Content -->
+                <div class="space-y-4 max-w-2xl mx-auto mb-10">
+                    <template x-for="content in generatedContent" :key="content.id">
+                        <div class="glass-card p-5">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                                    <i :data-lucide="content.icon" class="w-5 h-5"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-sm font-medium" x-text="content.type"></span>
+                                        <span class="text-xs text-white/40" x-text="content.platform"></span>
+                                    </div>
+                                    <p class="text-white/80 text-sm" x-text="content.text"></p>
+                                    <div class="mt-3 flex items-center gap-4 text-xs text-white/40">
+                                        <span x-text="content.engagement + ' estimated engagement'"></span>
+                                        <span x-text="'Posted ' + content.time"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-4 max-w-xl mx-auto mb-10">
+                    <div class="glass-card p-4 text-center">
+                        <div class="text-2xl font-bold gradient-text" x-text="generatedContent.length"></div>
+                        <div class="text-sm text-white/50">Content Pieces</div>
+                    </div>
+                    <div class="glass-card p-4 text-center">
+                        <div class="text-2xl font-bold gradient-text">~45K</div>
+                        <div class="text-sm text-white/50">Est. Reach</div>
+                    </div>
+                    <div class="glass-card p-4 text-center">
+                        <div class="text-2xl font-bold gradient-text">3.2h</div>
+                        <div class="text-sm text-white/50">Time Saved</div>
+                    </div>
+                </div>
+                
+                <!-- CTA -->
+                <div class="text-center">
+                    <button @click="goToDashboard" class="btn-primary text-lg">
+                        Launch Dashboard
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                    <p class="mt-4 text-sm text-white/40">
+                        Your demo account is ready. Explore the full dashboard.
+                    </p>
                 </div>
             </div>
         </div>
@@ -379,7 +480,23 @@
         function demoApp() {
             return {
                 currentStep: 1,
+                email: '',
+                emailError: '',
+                submitting: false,
                 selectedPlan: null,
+                analysisComplete: false,
+                analysisProgress: 0,
+                analysisStatus: 'Initializing AI agents...',
+                
+                analysisSteps: [
+                    { id: 1, name: 'Scanning connected platforms', completed: false },
+                    { id: 2, name: 'Analyzing top-performing content', completed: false },
+                    { id: 3, name: 'Generating new content ideas', completed: false },
+                    { id: 4, name: 'Optimizing for engagement', completed: false },
+                    { id: 5, name: 'Scheduling posts', completed: false }
+                ],
+                
+                generatedContent: [],
                 
                 plans: [
                     {
@@ -395,20 +512,6 @@
                         price: 149,
                         popular: true,
                         features: ['Maya + Engage', 'Priority support', 'Unlimited videos']
-                    },
-                    {
-                        id: 'pro',
-                        name: 'Pro',
-                        price: 349,
-                        popular: false,
-                        features: ['All 4 AI Agents', '24/7 support', 'Brand deals']
-                    },
-                    {
-                        id: 'business',
-                        name: 'Business',
-                        price: 999,
-                        popular: false,
-                        features: ['All 6 AI Agents', 'White-glove', 'Custom integrations']
                     }
                 ],
 
@@ -419,7 +522,6 @@
                         icon: 'youtube',
                         connected: false,
                         loading: false,
-                        channelName: null,
                         followers: 0
                     },
                     {
@@ -428,7 +530,6 @@
                         icon: 'video',
                         connected: false,
                         loading: false,
-                        channelName: null,
                         followers: 0
                     },
                     {
@@ -437,7 +538,6 @@
                         icon: 'instagram',
                         connected: false,
                         loading: false,
-                        channelName: null,
                         followers: 0
                     },
                     {
@@ -446,57 +546,113 @@
                         icon: 'twitter',
                         connected: false,
                         loading: false,
-                        channelName: null,
                         followers: 0
                     }
                 ],
+                
+                get hasConnectedPlatforms() {
+                    return this.platforms.some(p => p.connected);
+                },
+
+                async submitEmail() {
+                    if (!this.email || !this.email.includes('@')) {
+                        this.emailError = 'Please enter a valid email';
+                        return;
+                    }
+                    
+                    this.submitting = true;
+                    this.emailError = '';
+                    
+                    // Simulate API call
+                    await new Promise(r => setTimeout(r, 1000));
+                    
+                    // Store email
+                    localStorage.setItem('coexai_demo_email', this.email);
+                    
+                    this.submitting = false;
+                    this.currentStep = 2;
+                },
 
                 async selectPlan(plan) {
                     this.selectedPlan = plan;
-                    this.currentStep = 2;
-                    await new Promise(r => setTimeout(r, 1500));
-                    
-                    localStorage.setItem('coexai_demo_session', JSON.stringify({
-                        user: {
-                            id: 'demo-user',
-                            email: 'demo@coexai.com',
-                            full_name: 'Demo Creator',
-                            plan: plan.id
-                        },
-                        plan: plan
-                    }));
-                    
                     this.currentStep = 3;
                 },
 
                 async togglePlatform(platform) {
                     if (platform.connected) {
                         platform.connected = false;
-                        platform.channelName = null;
                         platform.followers = 0;
                         return;
                     }
                     
                     platform.loading = true;
-                    await new Promise(r => setTimeout(r, 1500));
+                    await new Promise(r => setTimeout(r, 1200));
                     
                     const mockData = {
-                        youtube: { name: 'Demo Creator', followers: 450000 },
-                        tiktok: { name: '@democreator', followers: 320000 },
-                        instagram: { name: '@democreator', followers: 280000 },
-                        twitter: { name: '@democreator', followers: 190000 }
+                        youtube: { followers: 450000 },
+                        tiktok: { followers: 320000 },
+                        instagram: { followers: 280000 },
+                        twitter: { followers: 190000 }
                     };
                     
                     platform.connected = true;
-                    platform.channelName = mockData[platform.id].name;
                     platform.followers = mockData[platform.id].followers;
                     platform.loading = false;
+                },
+                
+                async runAnalysis() {
+                    const statuses = [
+                        'Scanning connected platforms...',
+                        'Analyzing content performance...',
+                        'Generating content ideas...',
+                        'Optimizing for engagement...',
+                        'Finalizing schedule...'
+                    ];
                     
-                    const connected = this.platforms
-                        .filter(p => p.connected)
-                        .map(p => ({ id: p.id, name: p.channelName, followers: p.followers }));
+                    for (let i = 0; i < this.analysisSteps.length; i++) {
+                        this.analysisStatus = statuses[i];
+                        this.analysisProgress = (i / this.analysisSteps.length) * 100;
+                        
+                        await new Promise(r => setTimeout(r, 1500));
+                        this.analysisSteps[i].completed = true;
+                    }
                     
-                    localStorage.setItem('coexai_demo_platforms', JSON.stringify(connected));
+                    this.analysisProgress = 100;
+                    this.analysisStatus = 'Analysis complete!';
+                    
+                    // Generate mock content
+                    this.generatedContent = [
+                        {
+                            id: 1,
+                            type: 'Blog Post',
+                            platform: 'Website',
+                            icon: 'file-text',
+                            text: '10 AI Tools That Changed How We Create Content in 2026',
+                            engagement: '2.4K views',
+                            time: 'just now'
+                        },
+                        {
+                            id: 2,
+                            type: 'Twitter Thread',
+                            platform: 'X',
+                            icon: 'twitter',
+                            text: '🧵 I used AI to create 30 days of content in 2 hours. Here\'s exactly how:',
+                            engagement: '850 likes',
+                            time: '5 min ago'
+                        },
+                        {
+                            id: 3,
+                            type: 'Video Script',
+                            platform: 'YouTube',
+                            icon: 'youtube',
+                            text: 'How to 10x Your Content Output with AI Agents (Full Tutorial)',
+                            engagement: '12K views est.',
+                            time: '10 min ago'
+                        }
+                    ];
+                    
+                    await new Promise(r => setTimeout(r, 500));
+                    this.analysisComplete = true;
                 },
 
                 goToDashboard() {
@@ -598,6 +754,16 @@
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Watch for step 4 to trigger analysis
+        document.addEventListener('alpine:init', () => {
+            Alpine.effect(() => {
+                const app = Alpine.$data(document.querySelector('[x-data]'));
+                if (app && app.currentStep === 4 && !app.analysisComplete && app.analysisProgress === 0) {
+                    app.runAnalysis();
+                }
+            });
         });
 
         document.addEventListener('DOMContentLoaded', () => {

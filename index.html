@@ -4,7 +4,31 @@
   <meta name='deploy-time' content='1770884980'>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- SEO Meta Tags -->
   <title>CoExAI — Replace Your $377K Team with 6 AI Agents</title>
+  <meta name="description" content="Deploy 6 AI agents for $11K/year instead of hiring a $377K team. Marketing, sales, support, analytics, admin & SEO — all automated.">
+  <meta name="keywords" content="AI agents, business automation, marketing automation, sales automation, AI workforce">
+  <meta name="author" content="CoExAI">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="CoExAI — Replace Your $377K Team with 6 AI Agents">
+  <meta property="og:description" content="Deploy 6 AI agents for $11K/year. Marketing, sales, support, analytics, admin & SEO — all automated.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://coexai.ai">
+  <meta property="og:image" content="https://coexai.ai/og-image.jpg">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CoExAI — Replace Your $377K Team with 6 AI Agents">
+  <meta name="twitter:description" content="Deploy 6 AI agents for $11K/year. Marketing, sales, support, analytics, admin & SEO — all automated.">
+  <meta name="twitter:image" content="https://coexai.ai/og-image.jpg">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1469,8 +1493,57 @@
     </div>
   </section>
 
+  <!-- Email Capture Section -->
+  <section class="relative py-20 px-6 section-content" id="waitlist">
+    <div class="max-w-2xl mx-auto text-center">
+      <div class="glass-card p-10 md:p-12 reveal">
+        <div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mx-auto mb-6">
+          <i data-lucide="mail" class="w-8 h-8"></i>
+        </div>
+        
+        <h2 class="text-3xl font-bold mb-4">Join the Waitlist</h2>
+        
+        <p class="text-white/60 mb-8">
+          Get early access to CoExAI and be the first to deploy your AI workforce. 
+          Limited spots available for beta users.
+        </p>
+        
+        <form id="waitlist-form" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <input 
+            type="email" 
+            id="waitlist-email"
+            placeholder="Enter your email"
+            class="flex-1 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-white/30"
+            required
+          >
+          <button type="submit" class="btn-primary whitespace-nowrap">
+            Get Early Access
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </form>
+        
+        <p id="waitlist-message" class="mt-4 text-sm hidden"></p>
+        
+        <div class="flex items-center justify-center gap-6 mt-8 text-white/40 text-sm">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4"></i>
+            <span>No spam</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+            <span>Instant access</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="x-circle" class="w-4 h-4"></i>
+            <span>Unsubscribe anytime</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA Section -->
-  <section class="relative py-32 px-6 section-content">
+  <section class="relative py-20 px-6 section-content">
     <div class="max-w-4xl mx-auto text-center">
       <div class="glass-card p-12 md:p-16 reveal">
         <h2 class="text-3xl md:text-5xl font-bold mb-6">Ready to save $500K?</h2>
@@ -1481,17 +1554,30 @@
         
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <a href="/demo" class="btn-primary inline-flex items-center justify-center gap-2 text-lg">
-            Deploy Your AI Workforce
+            Start Free Demo
             <i data-lucide="arrow-right" class="w-5 h-5"></i>
           </a>
           
-          <a href="#" class="btn-secondary inline-flex items-center justify-center gap-2 text-lg">
-            <i data-lucide="calendar" class="w-5 h-5"></i>
-            Book a Demo
+          <a href="#pricing" class="btn-secondary inline-flex items-center justify-center gap-2 text-lg">
+            <i data-lucide="credit-card" class="w-5 h-5"></i>
+            View Pricing
           </a>
         </div>
         
-        <p class="mt-8 text-sm text-white/40">✨ 14-day free trial · No credit card required · Cancel anytime</p>
+        <div class="mt-8 flex items-center justify-center gap-6 text-sm text-white/40">
+          <span class="flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+            14-day free trial
+          </span>
+          <span class="flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+            No credit card
+          </span>
+          <span class="flex items-center gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+            Cancel anytime
+          </span>
+        </div>
       </div>
     </div>
   </section>
@@ -1718,7 +1804,43 @@
     }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
     
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    
+    // Waitlist Form Handler
+    const waitlistForm = document.getElementById('waitlist-form');
+    const waitlistMessage = document.getElementById('waitlist-message');
+    
+    if (waitlistForm) {
+      waitlistForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('waitlist-email').value;
+        const submitBtn = waitlistForm.querySelector('button[type="submit"]');
+        
+        // Show loading state
+        submitBtn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Joining...';
+        submitBtn.disabled = true;
+        
+        // Simulate API call
+        await new Promise(r => setTimeout(r, 1500));
+        
+        // Store in localStorage
+        const waitlist = JSON.parse(localStorage.getItem('coexai_waitlist') || '[]');
+        waitlist.push({
+          email,
+          timestamp: new Date().toISOString(),
+          source: 'landing_page'
+        });
+        localStorage.setItem('coexai_waitlist', JSON.stringify(waitlist));
+        
+        // Show success
+        waitlistForm.style.display = 'none';
+        waitlistMessage.textContent = '✅ You\'re on the list! Check your email for confirmation.';
+        waitlistMessage.className = 'mt-4 text-sm text-green-400';
+        waitlistMessage.classList.remove('hidden');
+        
+        // Refresh icons
+        lucide.createIcons();
+      });
+    }
   </script>
 </body>
 </html>
-// Cache bust: Thu Feb 12 18:04:41 UTC 2026
