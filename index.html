@@ -277,12 +277,16 @@
     
     .agent-orbit {
       position: absolute;
+      top: 50%;
+      left: 50%;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 4px;
       z-index: 15;
-      transform-origin: center;
+      transform-origin: center center;
+      margin-top: -30px;
+      margin-left: -30px;
     }
     
     .agent-orbit:hover {
