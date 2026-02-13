@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoExAI Dashboard</title>
+    <title>CoExAI Dashboard - AI Workforce</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -243,17 +243,17 @@
                 <div class="glass-card p-5">
                     <div class="flex items-start justify-between mb-3">
                         <div>
-                            <div class="text-sm text-white/40 mb-1">Time Saved This Week</div>
-                            <div class="text-2xl font-bold gradient-text">28.5 hrs</div>
+                            <div class="text-sm text-white/40 mb-1">Cost Savings</div>
+                            <div class="text-2xl font-bold gradient-text">$509,372</div>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <i data-lucide="clock" class="w-5 h-5"></i>
+                            <i data-lucide="piggy-bank" class="w-5 h-5"></i>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 text-xs">
                         <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
-                        <span class="font-medium">+12%</span>
-                        <span class="text-white/40">vs last week</span>
+                        <span class="font-medium">98%</span>
+                        <span class="text-white/40">vs human team</span>
                     </div>
                 </div>
 
@@ -261,42 +261,45 @@
                     <div class="flex items-start justify-between mb-3">
                         <div>
                             <div class="text-sm text-white/40 mb-1">Content Created</div>
-                            <div class="text-2xl font-bold">147</div>
+                            <div class="text-2xl font-bold">1,247</div>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                             <i data-lucide="file-text" class="w-5 h-5"></i>
                         </div>
                     </div>
-                    <div class="text-xs text-white/40">By Maya</div>
+                    <div class="text-xs text-white/40">By Maya (Marketing)</div>
                 </div>
 
                 <div class="glass-card p-5">
                     <div class="flex items-start justify-between mb-3">
                         <div>
-                            <div class="text-sm text-white/40 mb-1">Comments Replied</div>
-                            <div class="text-2xl font-bold">1,284</div>
+                            <div class="text-sm text-white/40 mb-1">Sales Outreach</div>
+                            <div class="text-2xl font-bold">1,450</div>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs">
+                        <span class="font-medium">23</span>
+                        <span class="text-white/40">meetings booked</span>
+                    </div>
+                </div>
+
+                <div class="glass-card p-5">
+                    <div class="flex items-start justify-between mb-3">
+                        <div>
+                            <div class="text-sm text-white/40 mb-1">Support Tickets</div>
+                            <div class="text-2xl font-bold gradient-text">1,284</div>
                         </div>
                         <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
                             <i data-lucide="message-circle" class="w-5 h-5"></i>
                         </div>
                     </div>
                     <div class="flex items-center gap-1.5 text-xs">
-                        <span class="font-medium">94%</span>
-                        <span class="text-white/40">response rate</span>
+                        <span class="font-medium">96%</span>
+                        <span class="text-white/40">satisfaction rate</span>
                     </div>
-                </div>
-
-                <div class="glass-card p-5">
-                    <div class="flex items-start justify-between mb-3">
-                        <div>
-                            <div class="text-sm text-white/40 mb-1">Brand Deals Found</div>
-                            <div class="text-2xl font-bold gradient-text">$12.5K</div>
-                        </div>
-                        <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
-                            <i data-lucide="handshake" class="w-5 h-5"></i>
-                        </div>
-                    </div>
-                    <div class="text-xs text-white/40">3 deals this month</div>
                 </div>
             </div>
 
@@ -318,13 +321,24 @@
 
                                     <div>
                                         <div class="font-semibold" x-text="agent.name"></div>
-                                        <div class="text-sm text-white/40" x-text="agent.tagline"></div>
+                                        <div class="text-xs text-white/40" x-text="agent.role"></div>
                                     </div>
                                 </div>
 
                                 <div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/5 border border-white/10">
                                     <div class="status-dot" :class="`status-${agent.status}`"></div>
                                     <span class="text-xs capitalize" x-text="agent.status"></span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4 mb-4 text-xs">
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-white/40">Cost:</span>
+                                    <span class="text-green-400 font-medium" x-text="agent.cost"></span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-white/40">vs</span>
+                                    <span class="text-white/40 line-through" x-text="agent.humanCost"></span>
                                 </div>
                             </div>
 
@@ -390,31 +404,31 @@
 
                     <div class="glass-card p-5 space-y-4">
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-white/40">Content Posted</span>
-                            <span class="font-semibold">47 pieces</span>
+                            <span class="text-sm text-white/40">Content Output</span>
+                            <span class="font-semibold">1,247 pieces</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-white/40">Engagement Rate</span>
-                            <span class="font-semibold">+23%</span>
+                            <span class="text-sm text-white/40">Sales Meetings</span>
+                            <span class="font-semibold">23 booked</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-white/40">New Followers</span>
-                            <span class="font-semibold">+12.4K</span>
+                            <span class="text-sm text-white/40">Support Resolved</span>
+                            <span class="font-semibold">1,284 tickets</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-white/40">Brand Inquiries</span>
-                            <span class="font-semibold">8 deals</span>
+                            <span class="text-sm text-white/40">SEO Rankings</span>
+                            <span class="font-semibold">+67 improved</span>
                         </div>
 
                         <div class="pt-4 border-t border-white/10">
-                            <div class="text-sm text-white/40 mb-2">Plan Usage</div>
+                            <div class="text-sm text-white/40 mb-2">AI Workforce Status</div>
                             <div class="flex items-center gap-2">
                                 <div class="flex-1 progress-bar h-2">
-                                    <div class="progress-fill" style="width: 75%"></div>
+                                    <div class="progress-fill" style="width: 100%"></div>
                                 </div>
-                                <span class="text-xs text-white/40">75%</span>
+                                <span class="text-xs text-white/40">6/6</span>
                             </div>
-                            <div class="text-xs text-white/40 mt-1">Pro Plan - 3 of 4 agents active</div>
+                            <div class="text-xs text-white/40 mt-1">All agents active · $11K/yr</div>
                         </div>
                     </div>
                 </div>
@@ -440,53 +454,97 @@
                     {
                         id: 'maya',
                         name: 'Maya',
-                        tagline: 'Content Multiplier',
-                        icon: 'wand-2',
+                        role: 'Marketing Manager',
+                        tagline: 'Content Marketing',
+                        icon: 'megaphone',
                         status: 'active',
                         lastActive: '2 min ago',
+                        cost: '$1,788/yr',
+                        humanCost: '$75,000/yr',
                         stats: [
-                            { label: 'Videos Processed', value: '12', percentage: 80 },
-                            { label: 'Content Pieces', value: '240', percentage: 65 },
-                            { label: 'Platform Reach', value: '4 platforms', percentage: 100 }
-                        ]
-                    },
-                    {
-                        id: 'engage',
-                        name: 'Engage',
-                        tagline: 'Community Manager',
-                        icon: 'heart-handshake',
-                        status: 'active',
-                        lastActive: 'Just now',
-                        stats: [
-                            { label: 'Comments Replied', value: '1,284', percentage: 94 },
-                            { label: 'DMs Answered', value: '156', percentage: 78 },
-                            { label: 'Response Rate', value: '94%', percentage: 94 }
+                            { label: 'Content Pieces', value: '240', percentage: 80 },
+                            { label: 'Blog Posts', value: '12', percentage: 60 },
+                            { label: 'Social Posts', value: '180', percentage: 90 }
                         ]
                     },
                     {
                         id: 'pitch',
                         name: 'Pitch',
-                        tagline: 'Brand Deal Hunter',
-                        icon: 'handshake',
-                        status: 'paused',
-                        lastActive: '3 days ago',
+                        role: 'Sales Development Rep',
+                        tagline: 'Sales Outreach',
+                        icon: 'trending-up',
+                        status: 'active',
+                        lastActive: '5 min ago',
+                        cost: '$1,788/yr',
+                        humanCost: '$55,000/yr',
                         stats: [
-                            { label: 'Deals Found', value: '3', percentage: 30 },
-                            { label: 'Pitches Sent', value: '12', percentage: 45 },
-                            { label: 'Response Rate', value: '25%', percentage: 25 }
+                            { label: 'Emails Sent', value: '1,450', percentage: 95 },
+                            { label: 'Meetings Booked', value: '23', percentage: 70 },
+                            { label: 'Response Rate', value: '18%', percentage: 75 }
+                        ]
+                    },
+                    {
+                        id: 'engage',
+                        name: 'Engage',
+                        role: 'Customer Success Manager',
+                        tagline: 'Customer Support',
+                        icon: 'headphones',
+                        status: 'active',
+                        lastActive: 'Just now',
+                        cost: '$1,788/yr',
+                        humanCost: '$60,000/yr',
+                        stats: [
+                            { label: 'Tickets Resolved', value: '1,284', percentage: 94 },
+                            { label: 'Response Time', value: '<2 min', percentage: 98 },
+                            { label: 'Satisfaction', value: '96%', percentage: 96 }
                         ]
                     },
                     {
                         id: 'analyze',
                         name: 'Analyze',
-                        tagline: 'Performance Coach',
-                        icon: 'line-chart',
-                        status: 'paused',
-                        lastActive: '1 week ago',
+                        role: 'Business Analyst',
+                        tagline: 'Analytics & Insights',
+                        icon: 'bar-chart-3',
+                        status: 'active',
+                        lastActive: '12 min ago',
+                        cost: '$1,788/yr',
+                        humanCost: '$70,000/yr',
                         stats: [
-                            { label: 'Reports Generated', value: '4', percentage: 20 },
-                            { label: 'Insights', value: '28', percentage: 35 },
-                            { label: 'Competitors Tracked', value: '5', percentage: 50 }
+                            { label: 'Reports Generated', value: '28', percentage: 85 },
+                            { label: 'Insights', value: '156', percentage: 78 },
+                            { label: 'Growth Rate', value: '+34%', percentage: 80 }
+                        ]
+                    },
+                    {
+                        id: 'support',
+                        name: 'Support',
+                        role: 'Admin Assistant',
+                        tagline: 'Admin & Operations',
+                        icon: 'briefcase',
+                        status: 'active',
+                        lastActive: '8 min ago',
+                        cost: '$1,788/yr',
+                        humanCost: '$52,000/yr',
+                        stats: [
+                            { label: 'Invoices Sent', value: '45', percentage: 100 },
+                            { label: 'Emails Managed', value: '892', percentage: 90 },
+                            { label: 'Tasks Completed', value: '234', percentage: 95 }
+                        ]
+                    },
+                    {
+                        id: 'seo',
+                        name: 'SEO',
+                        role: 'SEO Specialist',
+                        tagline: 'Search Optimization',
+                        icon: 'search',
+                        status: 'active',
+                        lastActive: '1 hour ago',
+                        cost: '$1,788/yr',
+                        humanCost: '$65,000/yr',
+                        stats: [
+                            { label: 'Keywords Tracked', value: '450', percentage: 88 },
+                            { label: 'Ranking Improvements', value: '67', percentage: 75 },
+                            { label: 'Organic Traffic', value: '+42%', percentage: 82 }
                         ]
                     }
                 ],
@@ -494,37 +552,37 @@
                 recentActivity: [
                     {
                         id: 1,
-                        icon: 'video',
-                        title: 'Maya processed new video',
-                        description: 'Generated 20 content pieces from "How to Grow on TikTok"',
+                        icon: 'file-text',
+                        title: 'Maya published blog post',
+                        description: '"10 AI Tools That Changed Our Business" - 2,400 words',
                         time: '2 min ago'
                     },
                     {
                         id: 2,
-                        icon: 'message-circle',
-                        title: 'Engage replied to 47 comments',
-                        description: 'On your latest TikTok video',
+                        icon: 'send',
+                        title: 'Pitch sent 50 outreach emails',
+                        description: 'To prospects in SaaS industry',
                         time: '15 min ago'
                     },
                     {
                         id: 3,
-                        icon: 'handshake',
-                        title: 'Brand deal opportunity',
-                        description: 'Nike interested in collaboration ($5K budget)',
+                        icon: 'check-circle',
+                        title: 'Support resolved invoice issue',
+                        description: 'Client payment processed successfully',
                         time: '1 hour ago'
                     },
                     {
                         id: 4,
                         icon: 'trending-up',
-                        title: 'Engagement rate increased',
-                        description: '+23% this week vs last week',
+                        title: 'SEO improved rankings',
+                        description: '12 keywords moved to page 1',
                         time: '3 hours ago'
                     },
                     {
                         id: 5,
                         icon: 'users',
-                        title: 'Gained 1,247 new followers',
-                        description: 'Across all platforms today',
+                        title: 'Engage handled 47 tickets',
+                        description: 'Average response time: 1.2 minutes',
                         time: '5 hours ago'
                     }
                 ],
