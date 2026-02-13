@@ -248,14 +248,14 @@
     }
     
     .orbit-ring-1 {
-      width: 180px;
-      height: 180px;
+      width: 280px;
+      height: 280px;
       animation: ring-rotate 36s linear infinite;
     }
     
     .orbit-ring-2 {
-      width: 180px;
-      height: 180px;
+      width: 280px;
+      height: 280px;
       border: 2px dashed rgba(255,255,255,0.3);
       animation: ring-rotate 48s linear infinite reverse;
     }
@@ -358,59 +358,29 @@
       transform: scale(1.1);
     }
     
-    /* Orbit positions - 6 agents evenly spaced at 60° intervals */
+    /* Orbit positions - 6 agents static at 60° intervals */
     .orbit-analyze { 
-      animation: orbit-1 24s linear infinite;
-      animation-delay: 0s;
-    }
-    @keyframes orbit-1 {
-      from { transform: rotate(0deg) translateX(90px) rotate(0deg); }
-      to { transform: rotate(360deg) translateX(90px) rotate(-360deg); }
+      transform: rotate(0deg) translateX(140px) rotate(0deg);
     }
     
     .orbit-support { 
-      animation: orbit-2 24s linear infinite;
-      animation-delay: -4s;
-    }
-    @keyframes orbit-2 {
-      from { transform: rotate(60deg) translateX(90px) rotate(-60deg); }
-      to { transform: rotate(420deg) translateX(90px) rotate(-420deg); }
+      transform: rotate(60deg) translateX(140px) rotate(-60deg);
     }
     
     .orbit-seo { 
-      animation: orbit-3 24s linear infinite;
-      animation-delay: -8s;
-    }
-    @keyframes orbit-3 {
-      from { transform: rotate(120deg) translateX(90px) rotate(-120deg); }
-      to { transform: rotate(480deg) translateX(90px) rotate(-480deg); }
+      transform: rotate(120deg) translateX(140px) rotate(-120deg);
     }
     
     .orbit-maya { 
-      animation: orbit-4 24s linear infinite;
-      animation-delay: -12s;
-    }
-    @keyframes orbit-4 {
-      from { transform: rotate(180deg) translateX(90px) rotate(-180deg); }
-      to { transform: rotate(540deg) translateX(90px) rotate(-540deg); }
+      transform: rotate(180deg) translateX(140px) rotate(-180deg);
     }
     
     .orbit-engage { 
-      animation: orbit-5 24s linear infinite;
-      animation-delay: -16s;
-    }
-    @keyframes orbit-5 {
-      from { transform: rotate(240deg) translateX(90px) rotate(-240deg); }
-      to { transform: rotate(600deg) translateX(90px) rotate(-600deg); }
+      transform: rotate(240deg) translateX(140px) rotate(-240deg);
     }
     
     .orbit-pitch { 
-      animation: orbit-6 24s linear infinite;
-      animation-delay: -20s;
-    }
-    @keyframes orbit-6 {
-      from { transform: rotate(300deg) translateX(90px) rotate(-300deg); }
-      to { transform: rotate(660deg) translateX(90px) rotate(-660deg); }
+      transform: rotate(300deg) translateX(140px) rotate(-300deg);
     }
     
     /* Badge */
@@ -426,8 +396,8 @@
     /* ===== MOBILE RESPONSIVE ===== */
     @media (max-width: 768px) {
       .agent-hub {
-        width: 180px;
-        height: 180px;
+        width: 280px;
+        height: 280px;
       }
       
       .hub-icon {
@@ -442,14 +412,14 @@
       
       /* Ring 1: 160px - agents rotate ON this line */
       .orbit-ring-1 {
-        width: 180px;
-        height: 180px;
+        width: 280px;
+        height: 280px;
       }
       
       /* Ring 2: 240px - outer decorative ring */
       .orbit-ring-2 {
-        width: 180px;
-        height: 180px;
+        width: 280px;
+        height: 280px;
         display: block;
       }
       
