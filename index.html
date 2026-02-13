@@ -789,6 +789,10 @@
         gap: 16px;
         overflow-x: auto;
         padding-bottom: 16px;
+        padding-left: 16px;
+        padding-right: 16px;
+        margin-left: -16px;
+        margin-right: -16px;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
         scroll-snap-type: x mandatory;
@@ -801,6 +805,30 @@
         width: 85vw;
         max-width: 340px;
         scroll-snap-align: center;
+      }
+      /* Ensure proper spacing on mobile */
+      .wallet-container > *:first-child {
+        margin-left: 16px;
+      }
+      .wallet-container > *:last-child {
+        margin-right: 16px;
+      }
+    }
+    
+    /* Prevent horizontal overflow */
+    body {
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+    
+    /* Mobile section padding adjustments */
+    @media (max-width: 768px) {
+      section {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      .agent-hub {
+        transform: scale(0.9);
       }
     }
   </style>
