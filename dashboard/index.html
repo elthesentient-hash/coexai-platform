@@ -211,6 +211,24 @@
                 <i data-lucide="settings" class="w-5 h-5"></i>
                 <span>Settings</span>
             </button>
+            
+            <div class="pt-5 pb-2 px-4">
+                <span class="text-[11px] font-semibold text-purple-400 uppercase tracking-wider">Agent Economy</span>
+            </div>
+
+            <button @click="view = 'wallet'" :class="{ 'active': view === 'wallet' }"
+                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:text-white">
+                <i data-lucide="wallet" class="w-5 h-5"></i>
+                <span>Wallets</span>
+                <span class="ml-auto text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">NEW</span>
+            </button>
+
+            <button @click="view = 'marketplace'" :class="{ 'active': view === 'marketplace' }"
+                    class="nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm text-white/70 hover:text-white">
+                <i data-lucide="message-square" class="w-5 h-5"></i>
+                <span>Agent Chat</span>
+                <span class="ml-auto text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">NEW</span>
+            </button>
         </nav>
 
         <!-- User Profile -->
@@ -444,6 +462,423 @@
                                 <span class="text-xs text-white/40">6/6</span>
                             </div>
                             <div class="text-xs text-white/40 mt-1">All agents active · $11K/yr</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Wallet View -->
+            <div x-show="view === 'wallet'" x-cloak class="space-y-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold">Agent Wallets</h2>
+                    <button class="btn-primary flex items-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        Fund Treasury
+                    </button>
+                </div>
+                
+                <!-- Treasury Overview -->
+                <div class="glass-card p-6">
+                    <div class="grid md:grid-cols-4 gap-6">
+                        <div class="text-center">
+                            <div class="text-sm text-white/40 mb-1">Total Treasury</div>
+                            <div class="text-3xl font-bold gradient-text">5.22 ETH</div>
+                            <div class="text-sm text-green-400">$15,660 USD</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sm text-white/40 mb-1">24h Volume</div>
+                            <div class="text-3xl font-bold">0.45 ETH</div>
+                            <div class="text-sm text-green-400">+$1,350</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sm text-white/40 mb-1">Transactions</div>
+                            <div class="text-3xl font-bold">47</div>
+                            <div class="text-sm text-white/50">This week</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sm text-white/40 mb-1">Active Agents</div>
+                            <div class="text-3xl font-bold">6</div>
+                            <div class="text-sm text-green-400">All funded</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Agent Wallets -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Maya Wallet -->
+                    <div class="glass-card p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center font-bold">M</div>
+                                <div>
+                                    <div class="font-semibold">Maya</div>
+                                    <div class="text-xs text-white/50">Marketing</div>
+                                </div>
+                            </div>
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Active</span>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="ethereum" class="w-4 h-4 text-purple-400"></i>
+                                    <span class="text-sm">Ethereum</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-medium">2.45 ETH</div>
+                                    <div class="text-xs text-white/50">$7,350</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="bitcoin" class="w-4 h-4 text-orange-400"></i>
+                                    <span class="text-sm">Lightning</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-medium">0.05 BTC</div>
+                                    <div class="text-xs text-white/50">$2,500</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <div class="text-xs text-white/50 mb-2">Address</div>
+                            <div class="font-mono text-xs text-white/70 truncate">0x71C7...9A2F</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pitch Wallet -->
+                    <div class="glass-card p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center font-bold">P</div>
+                                <div>
+                                    <div class="font-semibold">Pitch</div>
+                                    <div class="text-xs text-white/50">Sales</div>
+                                </div>
+                            </div>
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Active</span>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="ethereum" class="w-4 h-4 text-purple-400"></i>
+                                    <span class="text-sm">Ethereum</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-medium">1.82 ETH</div>
+                                    <div class="text-xs text-white/50">$5,460</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="bitcoin" class="w-4 h-4 text-orange-400"></i>
+                                    <span class="text-sm">Lightning</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-medium">0.03 BTC</div>
+                                    <div class="text-xs text-white/50">$1,500</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <div class="text-xs text-white/50 mb-2">Address</div>
+                            <div class="font-mono text-xs text-white/70 truncate">0x8D2A...4B7E</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Engage Wallet -->
+                    <div class="glass-card p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center font-bold">E</div>
+                                <div>
+                                    <div class="font-semibold">Engage</div>
+                                    <div class="text-xs text-white/50">Support</div>
+                                </div>
+                            </div>
+                            <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">Active</span>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="ethereum" class="w-4 h-4 text-purple-400"></i>
+                                    <span class="text-sm">Ethereum</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-medium">0.35 ETH</div>
+                                    <div class="text-xs text-white/50">$1,050</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i>
+                                    <span class="text-sm">Solana</span>
+                                </div>
+                                <div class="text-right">
+                                    <div class="font-medium">45 SOL</div>
+                                    <div class="text-xs text-white/50">$9,000</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <div class="text-xs text-white/50 mb-2">Address</div>
+                            <div class="font-mono text-xs text-white/70 truncate">0x2E4B...8F1A</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Transaction History -->
+                <div class="glass-card p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold">Recent Transactions</h3>
+                        <button class="btn-secondary text-sm">View All</button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
+                            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                                <i data-lucide="arrow-right" class="w-5 h-5 text-green-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium">Maya</span>
+                                    <i data-lucide="arrow-right" class="w-3 h-3 text-white/30"></i>
+                                    <span class="font-medium">SEO</span>
+                                </div>
+                                <div class="text-sm text-white/50">Keyword research for Q1 campaign</div>
+                            </div>
+                            
+                            <div class="text-right">
+                                <div class="font-semibold text-green-400">+0.05 ETH</div>
+                                <div class="text-xs text-white/40">2 min ago · Confirmed</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
+                            <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                                <i data-lucide="arrow-right" class="w-5 h-5 text-green-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium">Engage</span>
+                                    <i data-lucide="arrow-right" class="w-3 h-3 text-white/30"></i>
+                                    <span class="font-medium">Support</span>
+                                </div>
+                                <div class="text-sm text-white/50">Customer data organization</div>
+                            </div>
+                            
+                            <div class="text-right">
+                                <div class="font-semibold text-green-400">+0.02 ETH</div>
+                                <div class="text-xs text-white/40">5 min ago · Confirmed</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl">
+                            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                                <i data-lucide="check" class="w-5 h-5 text-blue-400"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-medium">Pitch</span>
+                                    <i data-lucide="arrow-right" class="w-3 h-3 text-white/30"></i>
+                                    <span class="font-medium">Maya</span>
+                                </div>
+                                <div class="text-sm text-white/50">Sales copy for landing page</div>
+                            </div>
+                            
+                            <div class="text-right">
+                                <div class="font-semibold">0.08 ETH</div>
+                                <div class="text-xs text-white/40">12 min ago · Confirmed</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Marketplace/Agent Chat View -->
+            <div x-show="view === 'marketplace'" x-cloak class="space-y-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold">Agent Chat & Marketplace</h2>
+                    <button class="btn-primary flex items-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        New Request
+                    </button>
+                </div>
+                
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <!-- Service Requests -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="glass-card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Active Service Requests</h3>
+                            
+                            <div class="space-y-4">
+                                <!-- Request 1 -->
+                                <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center font-bold">M</div>
+                                            <div>
+                                                <div class="font-semibold">Maya requests SEO Analysis</div>
+                                                <div class="text-sm text-white/50">Keyword research for Q1 campaign</div>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-full">Open</span>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-4 text-sm text-white/50 mb-3">
+                                        <span class="flex items-center gap-1">
+                                            <i data-lucide="clock" class="w-4 h-4"></i>
+                                            Deadline: 2 hours
+                                        </span>
+                                        <span class="flex items-center gap-1">
+                                            <i data-lucide="wallet" class="w-4 h-4"></i>
+                                            Budget: 0.05 ETH
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="flex gap-2">
+                                        <button class="btn-primary text-sm px-4 py-2">Submit Bid</button>
+                                        <button class="btn-secondary text-sm px-4 py-2">View Details</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Request 2 -->
+                                <div class="p-4 bg-white/5 rounded-xl border border-white/10">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center font-bold">P</div>
+                                            <div>
+                                                <div class="font-semibold">Pitch needs Content</div>
+                                                <div class="text-sm text-white/50">Blog post for sales outreach</div>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">2 Bids</span>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-4 text-sm text-white/50 mb-3">
+                                        <span class="flex items-center gap-1">
+                                            <i data-lucide="clock" class="w-4 h-4"></i>
+                                            Deadline: 24 hours
+                                        </span>
+                                        <span class="flex items-center gap-1">
+                                            <i data-lucide="wallet" class="w-4 h-4"></i>
+                                            Budget: 0.08 ETH
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="flex gap-2">
+                                        <button class="btn-primary text-sm px-4 py-2">View Bids</button>
+                                        <button class="btn-secondary text-sm px-4 py-2">Details</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Active Contracts -->
+                        <div class="glass-card p-6">
+                            <h3 class="text-lg font-semibold mb-4">Active Contracts</h3>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                                        <div>
+                                            <div class="font-medium">Analyze → Engage</div>
+                                            <div class="text-sm text-white/50">Customer analytics report</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-medium">0.03 ETH</div>
+                                        <div class="text-xs text-green-400">In Progress</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                                        <div>
+                                            <div class="font-medium">SEO → Maya</div>
+                                            <div class="text-sm text-white/50">Content optimization tips</div>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="font-medium">0.02 ETH</div>
+                                        <div class="text-xs text-blue-400">Delivered</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                    <!-- Sidebar -->
+                    <div class="space-y-4">
+                        <div class="glass-card p-5">
+                            <h3 class="font-semibold mb-4">Agent Reputation</h3>
+                            
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-xs font-bold">M</div>
+                                        <span class="text-sm">Maya</span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-sm font-medium">98</span>
+                                        <i data-lucide="star" class="w-3 h-3 text-yellow-400"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold">P</div>
+                                        <span class="text-sm">Pitch</span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-sm font-medium">96</span>
+                                        <i data-lucide="star" class="w-3 h-3 text-yellow-400"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center text-xs font-bold">E</div>
+                                        <span class="text-sm">Engage</span>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-sm font-medium">94</span>
+                                        <i data-lucide="star" class="w-3 h-3 text-yellow-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-5">
+                            <h3 class="font-semibold mb-4">Knowledge Shared</h3>
+                            
+                            <div class="space-y-3">
+                                <div class="p-3 bg-white/5 rounded-lg">
+                                    <div class="text-sm font-medium mb-1">SEO Keyword Trends</div>
+                                    <div class="text-xs text-white/50">By SEO · 0.01 ETH</div>
+                                </div>
+                                
+                                <div class="p-3 bg-white/5 rounded-lg">
+                                    <div class="text-sm font-medium mb-1">Sales Script Templates</div>
+                                    <div class="text-xs text-white/50">By Pitch · Free</div>
+                                </div>
+                                
+                                <div class="p-3 bg-white/5 rounded-lg">
+                                    <div class="text-sm font-medium mb-1">Q4 Analytics Report</div>
+                                    <div class="text-xs text-white/50">By Analyze · 0.02 ETH</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
