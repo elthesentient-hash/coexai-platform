@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PLUTUS - Polymarket Trading Bot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    body { background: #0a0a0a; color: #fff; }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #ff006e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .glass-panel {
+      background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px);
+    }
+    
+    .profit { color: #00d084; }
+    .loss { color: #ff4757; }
+    
+    .neon-border {
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.1);
+    }
+    
+    .trading-gradient {
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+    }
+    
+    .pulse-dot {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    
+    .trade-row:hover {
+      background: rgba(255,255,255,0.05);
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Navigation -->
+  <nav class="border-b border-white/10 bg-black/50 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center">
+          <i data-lucide="trending-up" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold">PLUTUS</h1>
+          <p class="text-xs text-white/50">Polymarket Trading Bot</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+          <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span>
+          <span class="text-sm text-white/70">Bot Active</span>
+        </div>
+        <button id="walletBtn" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition text-sm">
+          Connect Wallet
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Dashboard -->
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    <!-- Top Stats Row -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <!-- Total Balance -->
+      <div class="glass-panel rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-white/50 text-sm">Total Balance</span>
+          <i data-lucide="wallet" class="w-5 h-5 text-cyan-400"></i>
+        </div>
+        <div class="text-3xl font-bold">$<span id="totalBalance">0.00</span></div>
+        <div class="text-sm text-white/50 mt-1">USDC + MATIC</div>
+      </div>
+      
+      <!-- Daily PnL -->
+      <div class="glass-panel rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-white/50 text-sm">24h PnL</span>
+          <i data-lucide="activity" class="w-5 h-5 text-purple-400"></i>
+        </div>
+        <div class="text-3xl font-bold profit">+$<span id="dailyPnl">0.00</span></div>
+        <div class="text-sm profit mt-1">+<span id="dailyPnlPercent">0</span>%</div>
+      </div>
+      
+      <!-- Total Profit -->
+      <div class="glass-panel rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-white/50 text-sm">Total Profit</span>
+          <i data-lucide="coins" class="w-5 h-5 text-green-400"></i>
+        </div>
+        <div class="text-3xl font-bold profit">$<span id="totalProfit">0.00</span></div>
+        <div class="text-sm text-white/50 mt-1">All time</div>
+      </div>
+      
+      <!-- Win Rate -->
+      <div class="glass-panel rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-white/50 text-sm">Win Rate</span>
+          <i data-lucide="target" class="w-5 h-5 text-pink-400"></i>
+        </div>
+        <div class="text-3xl font-bold"><span id="winRate">0</span>%</div>
+        <div class="text-sm text-white/50 mt-1"><span id="totalTrades">0</span> trades</div>
+      </div>
+    </div>
+
+    <!-- Middle Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <!-- PnL Chart -->
+      <div class="lg:col-span-2 glass-panel rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold">Profit / Loss</h3>
+          <div class="flex gap-2">
+            <button class="px-3 py-1 rounded-lg bg-white/10 text-xs">1H</button>
+            <button class="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-400 text-xs">24H</button>
+            <button class="px-3 py-1 rounded-lg bg-white/10 text-xs">7D</button>
+          </div>
+        </div>
+        <canvas id="pnlChart" height="200"></canvas>
+      </div>
+      
+      <!-- Active Positions -->
+      <div class="glass-panel rounded-2xl p-6">
+        <h3 class="font-semibold mb-4">Active Positions</h3>
+        <div id="positionsList" class="space-y-3">
+          <div class="text-center text-white/50 py-8">No active positions</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Recent Trades -->
+      <div class="glass-panel rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-semibold">Recent Trades</h3>
+          <button class="text-cyan-400 text-sm hover:underline">View All</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="text-left text-white/50 text-sm">
+                <th class="pb-3">Market</th>
+                <th class="pb-3">Side</th>
+                <th class="pb-3">Amount</th>
+                <th class="pb-3">PnL</th>
+                <th class="pb-3">Time</th>
+              </tr>
+            </thead>
+            <tbody id="tradesList">
+              <!-- Trades inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Bot Controls -->
+      <div class="glass-panel rounded-2xl p-6">
+        <h3 class="font-semibold mb-4">Bot Controls</h3>
+        
+        <div class="space-y-4">
+          <div class="flex items-center justify-between p-4 rounded-xl bg-white/5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                <i data-lucide="zap" class="w-5 h-5 text-cyan-400"></i>
+              </div>
+              <div>
+                <div class="font-medium">Spike Hunting</div>
+                <div class="text-sm text-white/50">Capture price spikes</div>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer">
+              <div class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+            </label>
+          </div>
+          
+          <div class="flex items-center justify-between p-4 rounded-xl bg-white/5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                <i data-lucide="git-compare" class="w-5 h-5 text-purple-400"></i>
+              </div>
+              <div>
+                <div class="font-medium">Micro Arbitrage</div>
+                <div class="text-sm text-white/50">YES+NO &lt; $1 opportunities</div>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" checked class="sr-only peer">
+              <div class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+            </label>
+          </div>
+          
+          <div class="flex items-center justify-between p-4 rounded-xl bg-white/5">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center">
+                <i data-lucide="copy" class="w-5 h-5 text-pink-400"></i>
+              </div>
+              <div>
+                <div class="font-medium">Copy Trading</div>
+                <div class="text-sm text-white/50">Follow whale wallets</div>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" class="sr-only peer">
+              <div class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
+            </label>
+          </div>
+        </div>
+        
+        <div class="mt-6 pt-6 border-t border-white/10">
+          <div class="flex gap-3">
+            <button id="startBtn" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 font-semibold hover:opacity-90 transition">
+              Start Trading
+            </button>
+            <button id="stopBtn" class="flex-1 py-3 rounded-xl bg-white/10 font-semibold hover:bg-white/20 transition hidden">
+              Stop Bot
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    // Mock data for demo
+    const mockData = {
+      balance: 1250.00,
+      dailyPnl: 45.50,
+      dailyPnlPercent: 3.8,
+      totalProfit: 320.75,
+      winRate: 68,
+      totalTrades: 42,
+      trades: [
+        { market: 'BTC-5MIN', side: 'BUY', amount: 50, pnl: 2.25, time: '2 min ago', positive: true },
+        { market: 'ETH-15MIN', side: 'SELL', amount: 30, pnl: -0.80, time: '5 min ago', positive: false },
+        { market: 'BTC-15MIN', side: 'BUY', amount: 75, pnl: 4.50, time: '12 min ago', positive: true },
+        { market: 'ETH-5MIN', side: 'BUY', amount: 40, pnl: 1.20, time: '18 min ago', positive: true },
+        { market: 'BTC-5MIN', side: 'SELL', amount: 60, pnl: -1.50, time: '25 min ago', positive: false },
+      ]
+    };
+    
+    // Update stats
+    document.getElementById('totalBalance').textContent = mockData.balance.toFixed(2);
+    document.getElementById('dailyPnl').textContent = mockData.dailyPnl.toFixed(2);
+    document.getElementById('dailyPnlPercent').textContent = mockData.dailyPnlPercent.toFixed(1);
+    document.getElementById('totalProfit').textContent = mockData.totalProfit.toFixed(2);
+    document.getElementById('winRate').textContent = mockData.winRate;
+    document.getElementById('totalTrades').textContent = mockData.totalTrades;
+    
+    // Render trades
+    const tradesList = document.getElementById('tradesList');
+    mockData.trades.forEach(trade => {
+      const row = document.createElement('tr');
+      row.className = 'trade-row border-b border-white/5';
+      row.innerHTML = `
+        <td class="py-3">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
+              <i data-lucide="bitcoin" class="w-4 h-4 text-orange-400"></i>
+            </div>
+            <span class="font-medium">${trade.market}</span>
+          </div>
+        </td>
+        <td class="py-3">
+          <span class="px-2 py-1 rounded text-xs ${trade.side === 'BUY' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}">
+            ${trade.side}
+          </span>
+        </td>
+        <td class="py-3">$${trade.amount}</td>
+        <td class="py-3 ${trade.positive ? 'profit' : 'loss'}">
+          ${trade.positive ? '+' : ''}$${trade.pnl.toFixed(2)}
+        </td>
+        <td class="py-3 text-white/50 text-sm">${trade.time}</td>
+      `;
+      tradesList.appendChild(row);
+    });
+    lucide.createIcons();
+    
+    // PnL Chart
+    const ctx = document.getElementById('pnlChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', 'Now'],
+        datasets: [{
+          label: 'PnL',
+          data: [0, 12, 8, 25, 20, 38, 45.5],
+          borderColor: '#00d084',
+          backgroundColor: 'rgba(0, 208, 132, 0.1)',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { 
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: 'rgba(255,255,255,0.5)' }
+          },
+          x: { 
+            grid: { display: false },
+            ticks: { color: 'rgba(255,255,255,0.5)' }
+          }
+        }
+      }
+    });
+    
+    // Start/Stop buttons
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    
+    startBtn.addEventListener('click', () => {
+      startBtn.classList.add('hidden');
+      stopBtn.classList.remove('hidden');
+    });
+    
+    stopBtn.addEventListener('click', () => {
+      stopBtn.classList.add('hidden');
+      startBtn.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
