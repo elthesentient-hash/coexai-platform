@@ -68,23 +68,23 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 100;
+      z-index: 9999;
       pointer-events: none;
       overflow: hidden;
     }
     
     .star {
       position: absolute;
-      background: #ffffff;
+      background: #ffffff !important;
       border-radius: 50%;
       animation: twinkle var(--duration) ease-in-out infinite;
       opacity: var(--opacity);
-      box-shadow: 0 0 6px 2px rgba(255,255,255,0.8), 0 0 12px 4px rgba(255,255,255,0.4);
+      box-shadow: 0 0 8px 3px rgba(255,255,255,1), 0 0 16px 6px rgba(255,255,255,0.8) !important;
     }
     
     @keyframes twinkle {
       0%, 100% { opacity: var(--opacity); transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 10px 3px rgba(255,255,255,1), 0 0 20px 6px rgba(255,255,255,0.6); }
+      50% { opacity: 1; transform: scale(1.8); box-shadow: 0 0 12px 4px rgba(255,255,255,1), 0 0 24px 8px rgba(255,255,255,0.9) !important; }
     }
     
     /* Shooting Stars */
@@ -1808,19 +1808,19 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
     
-    // Floating Stars
+    // Floating Stars - More visible
     const starsContainer = document.getElementById('stars-container');
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 200; i++) {
       const star = document.createElement('div');
       star.className = 'star';
-      const size = Math.random() * 3 + 1;
+      const size = Math.random() * 4 + 2;
       star.style.cssText = `
         width: ${size}px;
         height: ${size}px;
         left: ${Math.random() * 100}%;
         top: ${Math.random() * 100}%;
-        --duration: ${Math.random() * 3 + 2}s;
-        --opacity: ${Math.random() * 0.4 + 0.6};
+        --duration: ${Math.random() * 2 + 2}s;
+        --opacity: ${Math.random() * 0.3 + 0.7};
         animation-delay: ${Math.random() * 5}s;
       `;
       starsContainer.appendChild(star);
