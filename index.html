@@ -61,91 +61,15 @@
       pointer-events: none;
     }
     
-    /* Floating Stars Layer */
-    .stars-container {
+    /* 3D Galaxy Canvas */
+    #galaxy-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 9999;
-      pointer-events: none;
-      overflow: hidden;
-    }
-    
-    .star {
-      position: absolute;
-      background: #ffffff !important;
-      border-radius: 50%;
-      animation: twinkle var(--duration) ease-in-out infinite;
-      opacity: var(--opacity);
-      box-shadow: 0 0 8px 3px rgba(255,255,255,1), 0 0 16px 6px rgba(255,255,255,0.8) !important;
-    }
-    
-    @keyframes twinkle {
-      0%, 100% { opacity: var(--opacity); transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.8); box-shadow: 0 0 12px 4px rgba(255,255,255,1), 0 0 24px 8px rgba(255,255,255,0.9) !important; }
-    }
-    
-    /* Shooting Stars */
-    .shooting-star {
-      position: absolute;
-      width: 4px;
-      height: 4px;
-      background: linear-gradient(90deg, white, transparent);
-      border-radius: 50%;
-      animation: shoot 2.5s linear infinite;
-      opacity: 0;
-    }
-    
-    .shooting-star::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      right: 0;
-      width: 150px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
-      transform: translateY(-50%);
-    }
-    
-    @keyframes shoot {
-      0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; }
-      100% { transform: translateX(600px) translateY(600px) rotate(-45deg); opacity: 0; }
-    }
-    
-    /* Nebula Effects - Grayscale */
-    .nebula {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.2;
       z-index: 0;
-      animation: nebula-float 25s ease-in-out infinite;
-    }
-    
-    .nebula-1 {
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, transparent 70%);
-      top: -10%;
-      right: -5%;
-    }
-    
-    .nebula-2 {
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(200,200,200,0.2) 0%, rgba(150,150,150,0.06) 40%, transparent 70%);
-      bottom: -10%;
-      left: -10%;
-      animation-delay: -12s;
-    }
-    
-    @keyframes nebula-float {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      25% { transform: translate(40px, -40px) scale(1.08); }
-      50% { transform: translate(-30px, 30px) scale(0.95); }
-      75% { transform: translate(30px, 20px) scale(1.03); }
+      pointer-events: none;
     }
     
     /* Navigation - Completely Transparent */
@@ -814,13 +738,6 @@
 
   <!-- 3D Galaxy Canvas -->
   <canvas id="galaxy-canvas"></canvas>
-  
-  <!-- Nebula Effects -->
-  <div class="nebula nebula-1"></div>
-  <div class="nebula nebula-2"></div>
-  
-  <!-- Floating Stars Container -->
-  <div class="stars-container" id="stars-container"></div>
 
   <!-- Navigation -->
   <nav class="nav-glass">
@@ -1723,15 +1640,15 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     
     const parameters = {
-      count: 3000,
-      size: 0.018,
-      radius: 6,
-      branches: 6,
-      spin: 1.2,
-      randomness: 0.6,
-      randomnessPower: 3,
+      count: 5000,
+      size: 0.025,
+      radius: 8,
+      branches: 1,
+      spin: 0,
+      randomness: 2.0,
+      randomnessPower: 1,
       insideColor: '#ffffff',
-      outsideColor: '#888888'
+      outsideColor: '#aaaaaa'
     };
     
     let geometry = null, material = null, points = null;
@@ -1807,35 +1724,6 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
-    
-    // Floating Stars - More visible
-    const starsContainer = document.getElementById('stars-container');
-    for (let i = 0; i < 200; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      const size = Math.random() * 4 + 2;
-      star.style.cssText = `
-        width: ${size}px;
-        height: ${size}px;
-        left: ${Math.random() * 100}%;
-        top: ${Math.random() * 100}%;
-        --duration: ${Math.random() * 2 + 2}s;
-        --opacity: ${Math.random() * 0.3 + 0.7};
-        animation-delay: ${Math.random() * 5}s;
-      `;
-      starsContainer.appendChild(star);
-    }
-    
-    // Shooting Stars
-    const createShootingStar = () => {
-      const star = document.createElement('div');
-      star.className = 'shooting-star';
-      star.style.left = `${Math.random() * window.innerWidth}px`;
-      star.style.top = `${Math.random() * window.innerHeight * 0.5}px`;
-      document.body.appendChild(star);
-      setTimeout(() => star.remove(), 2500);
-    };
-    setInterval(createShootingStar, 4000 + Math.random() * 4000);
     
     // Scroll Reveal
     const observer = new IntersectionObserver((entries) => {
