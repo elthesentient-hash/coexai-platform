@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>PLUTUS - Mobile Trading</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { 
+      font-family: 'Inter', sans-serif; 
+      -webkit-tap-highlight-color: transparent;
+    }
+    body { 
+      background: #0a0a0a; 
+      color: #fff; 
+      overscroll-behavior: none;
+    }
+    
+    .safe-top { padding-top: env(safe-area-inset-top); }
+    .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #ff006e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .glass-panel {
+      background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px);
+    }
+    
+    .profit { color: #00d084; }
+    .loss { color: #ff4757; }
+    
+    .pulse-dot {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    
+    .swipe-card {
+      transition: transform 0.3s ease;
+    }
+    
+    .bottom-sheet {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .bottom-sheet.hidden {
+      transform: translateY(100%);
+    }
+    
+    .nav-item.active {
+      color: #00d4ff;
+    }
+    
+    .nav-item.active svg {
+      stroke: #00d4ff;
+    }
+    
+    /* Hide scrollbar */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    /* Touch feedback */
+    .touch-feedback:active {
+      transform: scale(0.98);
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body class="min-h-screen safe-top safe-bottom">
+  
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
+    <div class="flex items-center justify-between px-4 py-3">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center">
+          <i data-lucide="trending-up" class="w-5 h-5"></i>
+        </div>
+        <span class="font-bold text-lg">PLUTUS</span>
+      </div>
+      
+      <div id="headerStatus" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5">
+        <span class="w-2 h-2 rounded-full bg-gray-500"></span>
+        <span class="text-xs text-white/70">Offline</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="pt-16 pb-20">
+    
+    <!-- Wallet Connect Screen -->
+    <div id="connectScreen" class="px-4 py-8">
+      <div class="text-center mb-8">
+        <div class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center mb-4">
+          <i data-lucide="trending-up" class="w-10 h-10"></i>
+        </div>
+        <h1 class="text-2xl font-bold mb-2">Welcome to PLUTUS</h1>
+        <p class="text-white/50">Your mobile Polymarket trading bot</p>
+      </div>
+      
+      <div class="space-y-3">
+        <button onclick="connectMetaMask()" class="w-full glass-panel rounded-xl p-4 flex items-center gap-4 touch-feedback">
+          <div class="w-12 h-12 rounded-xl bg-orange-500 flex items-center justify-center">
+            <span class="font-bold text-lg">M</span>
+          </div>
+          <div class="flex-1 text-left">
+            <div class="font-semibold">MetaMask</div>
+            <div class="text-sm text-white/50">Connect wallet</div>
+          </div>
+          <i data-lucide="chevron-right" class="w-5 h-5 text-white/30"></i>
+        </button>
+        
+        <button onclick="showPrivateKeyInput()" class="w-full glass-panel rounded-xl p-4 flex items-center gap-4 touch-feedback">
+          <div class="w-12 h-12 rounded-xl bg-purple-500 flex items-center justify-center">
+            <span class="font-bold text-lg">P</span>
+          </div>
+          <div class="flex-1 text-left">
+            <div class="font-semibold">Private Key</div>
+            <div class="text-sm text-white/50">Advanced users</div>
+          </div>
+          <i data-lucide="chevron-right" class="w-5 h-5 text-white/30"></i>
+        </button>
+      </div>
+      
+      <!-- Private Key Input -->
+      <div id="privateKeySection" class="hidden mt-4">
+        <input id="privateKeyInput" type="password" placeholder="Enter private key (0x...)" 
+          class="w-full px-4 py-4 rounded-xl bg-white/5 border border-white/10 focus:border-cyan-500 focus:outline-none mb-3">
+        <button onclick="connectPrivateKey()" class="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 font-semibold touch-feedback">
+          Connect
+        </button>
+      </div>
+    </div>
+
+    <!-- Dashboard Screen (Hidden initially) -->
+    <div id="dashboardScreen" class="hidden">
+      
+      <!-- Balance Card -->
+      <div class="px-4 py-4">
+        <div class="glass-panel rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-white/50">Total Balance</span>
+            <button onclick="refreshBalance()" class="p-2 rounded-lg bg-white/5">
+              <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            </button>
+          </div>
+          
+          <div class="text-4xl font-bold mb-2">$<span id="totalBalance">0.00</span></div>
+          
+          <div class="flex items-center gap-2">
+            <span id="dailyPnlBadge" class="px-2 py-1 rounded-lg bg-green-500/20 text-green-400 text-sm font-medium">
+              +$0.00 (0%)
+            </span>
+            <span class="text-white/30 text-sm">24h</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="px-4 pb-4">
+        <div class="grid grid-cols-3 gap-3">
+          <div class="glass-panel rounded-xl p-3 text-center">
+            <div class="text-xs text-white/50 mb-1">Total Profit</div>
+            <div id="totalProfit" class="font-semibold profit">$0</div>
+          </div>
+          
+          <div class="glass-panel rounded-xl p-3 text-center">
+            <div class="text-xs text-white/50 mb-1">Win Rate</div>
+            <div id="winRate" class="font-semibold">0%</div>
+          </div>
+          
+          <div class="glass-panel rounded-xl p-3 text-center">
+            <div class="text-xs text-white/50 mb-1">Trades</div>
+            <div id="tradeCount" class="font-semibold">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bot Control -->
+      <div class="px-4 pb-4">
+        <div class="glass-panel rounded-2xl p-4">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+              <div id="botIndicator" class="w-3 h-3 rounded-full bg-gray-500"></div>
+              <span class="font-semibold">Trading Bot</span>
+            </div>
+            
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="botToggle" class="sr-only peer" onchange="toggleBot()">
+              <div class="w-14 h-7 bg-white/10 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-cyan-500"></div>
+            </label>
+          </div>
+          
+          <!-- Strategy Toggles -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between py-2 border-b border-white/5">
+              <div class="flex items-center gap-2">
+                <i data-lucide="zap" class="w-4 h-4 text-cyan-400"></i>
+                <span class="text-sm">Spike Hunting</span>
+              </div>
+              <input type="checkbox" id="spikeToggle" checked class="w-5 h-5 rounded bg-white/10 border-white/20">
+            </div>
+            
+            <div class="flex items-center justify-between py-2">
+              <div class="flex items-center gap-2">
+                <i data-lucide="git-compare" class="w-4 h-4 text-purple-400"></i>
+                <span class="text-sm">Micro Arbitrage</span>
+              </div>
+              <input type="checkbox" id="arbitrageToggle" checked class="w-5 h-5 rounded bg-white/10 border-white/20">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Trades -->
+      <div class="px-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="font-semibold">Recent Trades</h3>
+          <button onclick="viewAllTrades()" class="text-cyan-400 text-sm">View All</button>
+        </div>
+        
+        <div id="tradesList" class="space-y-2">
+          <div class="text-center text-white/30 py-8">No trades yet</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav id="bottomNav" class="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10 safe-bottom hidden">
+    <div class="flex items-center justify-around py-2">
+      <button onclick="switchTab('dashboard')" class="nav-item active flex flex-col items-center gap-1 py-2 px-4 text-white/50">
+        <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+        <span class="text-xs">Home</span>
+      </button>
+      
+      <button onclick="switchTab('trades')" class="nav-item flex flex-col items-center gap-1 py-2 px-4 text-white/50">
+        <i data-lucide="bar-chart-2" class="w-6 h-6"></i>
+        <span class="text-xs">Trades</span>
+      </button>
+      
+      <button onclick="switchTab('wallet')" class="nav-item flex flex-col items-center gap-1 py-2 px-4 text-white/50">
+        <i data-lucide="wallet" class="w-6 h-6"></i>
+        <span class="text-xs">Wallet</span>
+      </button>
+      
+      <button onclick="switchTab('settings')" class="nav-item flex flex-col items-center gap-1 py-2 px-4 text-white/50">
+        <i data-lucide="settings" class="w-6 h-6"></i>
+        <span class="text-xs">Settings</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Trade Detail Modal -->
+  <div id="tradeModal" class="fixed inset-0 bg-black/80 z-50 hidden">
+    <div class="absolute bottom-0 left-0 right-0 glass-panel rounded-t-3xl p-6">
+      <div class="w-12 h-1 rounded-full bg-white/20 mx-auto mb-6"></div>
+      
+      <h3 class="text-xl font-bold mb-4">Trade Details</h3>
+      
+      <div id="tradeDetailContent" class="space-y-4">
+        <!-- Content loaded dynamically -->
+      </div>
+      
+      <button onclick="closeTradeModal()" class="w-full mt-6 py-4 rounded-xl bg-white/10 font-semibold">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    // State
+    let wallet = null;
+    let ws = null;
+    let isBotRunning = false;
+    
+    const API_URL = 'wss://api-agtbq01qm-coexais-projects.vercel.app';
+    
+    // Show private key input
+    function showPrivateKeyInput() {
+      document.getElementById('privateKeySection').classList.remove('hidden');
+    }
+    
+    // Connect MetaMask
+    async function connectMetaMask() {
+      if (typeof window.ethereum === 'undefined') {
+        alert('Please install MetaMask');
+        return;
+      }
+      
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send('eth_requestAccounts', []);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        
+        wallet = { provider, signer, address };
+        onConnected();
+        
+      } catch (error) {
+        alert('Failed to connect: ' + error.message);
+      }
+    }
+    
+    // Connect with private key
+    async function connectPrivateKey() {
+      const key = document.getElementById('privateKeyInput').value.trim();
+      
+      if (!key || !key.startsWith('0x')) {
+        alert('Invalid private key');
+        return;
+      }
+      
+      try {
+        const provider = new ethers.providers.JsonRpcProvider('https://polygon-rpc.com');
+        const signer = new ethers.Wallet(key, provider);
+        const address = await signer.getAddress();
+        
+        wallet = { provider, signer, address, privateKey: key };
+        onConnected();
+        
+      } catch (error) {
+        alert('Invalid private key');
+      }
+    }
+    
+    // On connected
+    async function onConnected() {
+      document.getElementById('connectScreen').classList.add('hidden');
+      document.getElementById('dashboardScreen').classList.remove('hidden');
+      document.getElementById('bottomNav').classList.remove('hidden');
+      
+      // Update status
+      updateHeaderStatus('connected');
+      
+      // Get balances
+      await updateBalances();
+      
+      // Connect WebSocket
+      connectWebSocket();
+      
+      // Load trades
+      loadTrades();
+    }
+    
+    // Update balances
+    async function updateBalances() {
+      if (!wallet) return;
+      
+      try {
+        const usdcContract = new ethers.Contract(
+          '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+          ['function balanceOf(address) view returns (uint256)'],
+          wallet.provider
+        );
+        
+        const usdcBalance = await usdcContract.balanceOf(wallet.address);
+        const formatted = parseFloat(ethers.utils.formatUnits(usdcBalance, 6)).toFixed(2);
+        
+        document.getElementById('totalBalance').textContent = formatted;
+        
+      } catch (error) {
+        console.error('Balance error:', error);
+      }
+    }
+    
+    function refreshBalance() {
+      updateBalances();
+    }
+    
+    // WebSocket
+    function connectWebSocket() {
+      ws = new WebSocket(API_URL);
+      
+      ws.onopen = () => {
+        updateHeaderStatus('online');
+      };
+      
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        handleMessage(data);
+      };
+      
+      ws.onclose = () => {
+        updateHeaderStatus('offline');
+        setTimeout(connectWebSocket, 5000);
+      };
+    }
+    
+    function handleMessage(data) {
+      switch (data.type) {
+        case 'new_trade':
+          addTrade(data.data);
+          break;
+        case 'stats_update':
+          updateStats(data.data);
+          break;
+        case 'bot_started':
+          isBotRunning = true;
+          updateBotUI();
+          break;
+        case 'bot_stopped':
+          isBotRunning = false;
+          updateBotUI();
+          break;
+      }
+    }
+    
+    function updateStats(data) {
+      if (data.totalProfit !== undefined) {
+        document.getElementById('totalProfit').textContent = '$' + data.totalProfit.toFixed(0);
+      }
+      if (data.winRate !== undefined) {
+        document.getElementById('winRate').textContent = data.winRate + '%';
+      }
+      if (data.totalTrades !== undefined) {
+        document.getElementById('tradeCount').textContent = data.totalTrades;
+      }
+      if (data.dailyPnl !== undefined) {
+        const badge = document.getElementById('dailyPnlBadge');
+        const sign = data.dailyPnl >= 0 ? '+' : '';
+        badge.textContent = `${sign}$${data.dailyPnl.toFixed(2)}`;
+        badge.className = data.dailyPnl >= 0 
+          ? 'px-2 py-1 rounded-lg bg-green-500/20 text-green-400 text-sm font-medium'
+          : 'px-2 py-1 rounded-lg bg-red-500/20 text-red-400 text-sm font-medium';
+      }
+    }
+    
+    function addTrade(trade) {
+      const list = document.getElementById('tradesList');
+      
+      // Remove "no trades" message
+      if (list.children.length === 1 && list.children[0].textContent === 'No trades yet') {
+        list.innerHTML = '';
+      }
+      
+      const div = document.createElement('div');
+      div.className = 'glass-panel rounded-xl p-4 touch-feedback';
+      div.onclick = () => showTradeDetail(trade);
+      div.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg ${trade.side === 'BUY' ? 'bg-green-500/20' : 'bg-red-500/20'} flex items-center justify-center">
+              <span class="text-xs font-bold ${trade.side === 'BUY' ? 'text-green-400' : 'text-red-400'}">${trade.side}</span>
+            </div>
+            <div>
+              <div class="font-medium">${trade.market}</div>
+              <div class="text-sm text-white/50">$${trade.amount}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="font-semibold ${trade.pnl >= 0 ? 'profit' : 'loss'}">
+              ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(2)}
+            </div>
+            <div class="text-xs text-white/30">${new Date(trade.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+          </div>
+        </div>
+      `;
+      
+      list.insertBefore(div, list.firstChild);
+      
+      // Keep only last 10
+      while (list.children.length > 10) {
+        list.removeChild(list.lastChild);
+      }
+    }
+    
+    function showTradeDetail(trade) {
+      const modal = document.getElementById('tradeModal');
+      const content = document.getElementById('tradeDetailContent');
+      
+      content.innerHTML = `
+        <div class="flex justify-between">
+          <span class="text-white/50">Market</span>
+          <span class="font-medium">${trade.market}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-white/50">Side</span>
+          <span class="${trade.side === 'BUY' ? 'text-green-400' : 'text-red-400'}">${trade.side}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-white/50">Amount</span>
+          <span>$${trade.amount}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-white/50">PnL</span>
+          <span class="font-bold ${trade.pnl >= 0 ? 'profit' : 'loss'}">${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-white/50">Time</span>
+          <span>${new Date(trade.timestamp).toLocaleString()}</span>
+        </div>
+      `;
+      
+      modal.classList.remove('hidden');
+    }
+    
+    function closeTradeModal() {
+      document.getElementById('tradeModal').classList.add('hidden');
+    }
+    
+    function loadTrades() {
+      fetch('https://api-agtbq01qm-coexais-projects.vercel.app/api/trades')
+        .then(r => r.json())
+        .then(trades => {
+          trades.slice(-10).reverse().forEach(addTrade);
+        })
+        .catch(console.error);
+    }
+    
+    function viewAllTrades() {
+      alert('Full trade history coming soon');
+    }
+    
+    // Bot controls
+    function toggleBot() {
+      const toggle = document.getElementById('botToggle');
+      
+      if (toggle.checked) {
+        startBot();
+      } else {
+        stopBot();
+      }
+    }
+    
+    function startBot() {
+      if (!wallet) return;
+      
+      isBotRunning = true;
+      updateBotUI();
+      
+      fetch('https://api-agtbq01qm-coexais-projects.vercel.app/api/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          privateKey: wallet.privateKey,
+          strategies: {
+            spikeHunting: document.getElementById('spikeToggle').checked,
+            microArbitrage: document.getElementById('arbitrageToggle').checked
+          }
+        })
+      });
+    }
+    
+    function stopBot() {
+      isBotRunning = false;
+      updateBotUI();
+      
+      fetch('https://api-agtbq01qm-coexais-projects.vercel.app/api/stop', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address: wallet?.address })
+      });
+    }
+    
+    function updateBotUI() {
+      const indicator = document.getElementById('botIndicator');
+      const toggle = document.getElementById('botToggle');
+      
+      toggle.checked = isBotRunning;
+      
+      if (isBotRunning) {
+        indicator.className = 'w-3 h-3 rounded-full bg-green-500 pulse-dot';
+      } else {
+        indicator.className = 'w-3 h-3 rounded-full bg-gray-500';
+      }
+    }
+    
+    function updateHeaderStatus(status) {
+      const el = document.getElementById('headerStatus');
+      const dot = el.querySelector('span:first-child');
+      const text = el.querySelector('span:last-child');
+      
+      if (status === 'online') {
+        dot.className = 'w-2 h-2 rounded-full bg-green-500 pulse-dot';
+        text.textContent = 'Live';
+      } else if (status === 'connected') {
+        dot.className = 'w-2 h-2 rounded-full bg-cyan-500';
+        text.textContent = 'Connected';
+      } else {
+        dot.className = 'w-2 h-2 rounded-full bg-gray-500';
+        text.textContent = 'Offline';
+      }
+    }
+    
+    // Tab switching
+    function switchTab(tab) {
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      event.currentTarget.classList.add('active');
+      
+      // In a full app, this would switch views
+      if (tab !== 'dashboard') {
+        alert(tab + ' view coming soon');
+      }
+    }
+  </script>
+</body>
+</html>
