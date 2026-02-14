@@ -52,6 +52,30 @@
       overflow-x: hidden;
     }
     
+    /* Starfield Background */
+    #starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: #000;
+      overflow: hidden;
+    }
+    
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(255,255,255,0.8);
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+    
     /* 3D Galaxy Canvas */
     #galaxy-canvas {
       position: fixed;
@@ -728,8 +752,8 @@
 </head>
 <body class="min-h-screen bg-black text-white">
 
-  <!-- 3D Galaxy Canvas -->
-  <canvas id="galaxy-canvas"></canvas>
+  <!-- Starfield Background -->
+  <div id="starfield"></div>
 
   <!-- Navigation -->
   <nav class="nav-glass">
@@ -1623,53 +1647,27 @@
   <script>
     lucide.createIcons();
     
-    // Simple Starfield - Guaranteed to work
+    // Generate CSS stars
     document.addEventListener('DOMContentLoaded', function() {
-      const canvas = document.getElementById('galaxy-canvas');
-      if (!canvas) {
-        console.error('Canvas not found');
-        return;
-      }
-      
-      const ctx = canvas.getContext('2d');
-      
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      resize();
-      window.addEventListener('resize', resize);
-      
-      const stars = [];
-      const starCount = 1500;
+      const starfield = document.getElementById('starfield');
+      const starCount = 500;
       
       for (let i = 0; i < starCount; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          size: Math.random() * 1.5 + 0.5,
-          opacity: Math.random() * 0.5 + 0.5
-        });
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 2 + 1;
+        star.style.cssText = `
+          width: ${size}px;
+          height: ${size}px;
+          left: ${Math.random() * 100}%;
+          top: ${Math.random() * 100}%;
+          opacity: ${Math.random() * 0.5 + 0.3};
+          animation: twinkle ${Math.random() * 3 + 2}s ease-in-out infinite;
+          animation-delay: ${Math.random() * 5}s;
+        `;
+        starfield.appendChild(star);
       }
-      
-      function draw() {
-        // Black background
-        ctx.fillStyle = '#000000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Draw stars
-        stars.forEach(star => {
-          ctx.beginPath();
-          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
-          ctx.fill();
-        });
-        
-        requestAnimationFrame(draw);
-      }
-      
-      draw();
-      console.log('Starfield initialized with', starCount, 'stars');
+      console.log('CSS Starfield created with', starCount, 'stars');
     });
     
     // Scroll Reveal
