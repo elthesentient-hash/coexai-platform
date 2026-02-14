@@ -742,6 +742,24 @@ class AgenticCouncilV2 {
   }
 
   /**
+   * Format message for user delivery
+   */
+  formatForUser(content, urgency = 'normal') {
+    const timestamp = new Date().toISOString();
+    const prefix = urgency === 'urgent' ? '🚨 URGENT: ' : 
+                   urgency === 'high' ? '⚠️  HIGH: ' : 'ℹ️  ';
+    
+    return `
+╔═══════════════════════════════════════════════════════════╗
+║  📨 MESSAGE FROM COUNCIL                                  ║
+╠═══════════════════════════════════════════════════════════╣
+║  ${prefix}${content.substring(0, 50).padEnd(50)} ║
+║  Time: ${timestamp.substring(0, 19).padEnd(50)} ║
+╚═══════════════════════════════════════════════════════════╝
+    `;
+  }
+
+  /**
    * Request specific agent help
    */
   async requestHelp(agentName, task) {
