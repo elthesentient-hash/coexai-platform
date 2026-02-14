@@ -310,9 +310,7 @@
     let chart = null;
     let isRunning = false;
     
-    const API_URL = window.location.hostname === 'localhost' 
-      ? 'ws://localhost:3002' 
-      : 'wss://plutus-api-coexai.vercel.app';
+    const API_URL = 'wss://api-agtbq01qm-coexais-projects.vercel.app';
     
     // Connect MetaMask
     async function connectMetaMask() {
@@ -580,7 +578,7 @@
       }
       
       // Send to API
-      fetch('/api/start', {
+      fetch('https://api-agtbq01qm-coexais-projects.vercel.app/api/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -599,7 +597,11 @@
         ws.send(JSON.stringify({ type: 'stop_bot' }));
       }
       
-      fetch('/api/stop', { method: 'POST' });
+      fetch('https://api-agtbq01qm-coexais-projects.vercel.app/api/stop', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address: wallet?.address })
+      });
     }
     
     function updateBotUI() {
@@ -658,7 +660,7 @@
     
     // Refresh trades
     function loadTrades() {
-      fetch('/api/trades')
+      fetch('https://api-agtbq01qm-coexais-projects.vercel.app/api/trades')
         .then(r => r.json())
         .then(trades => {
           trades.forEach(trade => addTrade(trade));
