@@ -37,6 +37,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     * {
       font-family: 'Inter', sans-serif;
@@ -52,32 +53,16 @@
       overflow-x: hidden;
     }
     
-    /* Starfield Background */
-    #starfield {
+    /* 3D Galaxy Canvas */
+    #galaxy-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
-      background: #000;
-      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
     }
-    
-    .star {
-      position: absolute;
-      background: white;
-      border-radius: 50%;
-      box-shadow: 0 0 4px rgba(255,255,255,0.8);
-    }
-    
-    @keyframes twinkle {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
-    }
-    
-    /* 3D Galaxy Canvas */
-    #galaxy-canvas {
       position: fixed;
       top: 0;
       left: 0;
@@ -752,8 +737,8 @@
 </head>
 <body class="min-h-screen bg-black text-white">
 
-  <!-- Starfield Background -->
-  <div id="starfield"></div>
+  <!-- 3D Galaxy Canvas -->
+  <canvas id="galaxy-canvas"></canvas>
 
   <!-- Navigation -->
   <nav class="nav-glass">
@@ -1647,27 +1632,98 @@
   <script>
     lucide.createIcons();
     
-    // Generate CSS stars
-    document.addEventListener('DOMContentLoaded', function() {
-      const starfield = document.getElementById('starfield');
-      const starCount = 500;
-      
-      for (let i = 0; i < starCount; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        const size = Math.random() * 2 + 1;
-        star.style.cssText = `
-          width: ${size}px;
-          height: ${size}px;
-          left: ${Math.random() * 100}%;
-          top: ${Math.random() * 100}%;
-          opacity: ${Math.random() * 0.5 + 0.3};
-          animation: twinkle ${Math.random() * 3 + 2}s ease-in-out infinite;
-          animation-delay: ${Math.random() * 5}s;
-        `;
-        starfield.appendChild(star);
+    // Galaxy Background - Same as demo
+    const canvas = document.getElementById('galaxy-canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    const parameters = {
+      count: 3000,
+      size: 0.018,
+      radius: 6,
+      branches: 6,
+      spin: 1.2,
+      randomness: 0.6,
+      randomnessPower: 3,
+      insideColor: '#ffffff',
+      outsideColor: '#888888'
+    };
+    
+    let geometry = null, material = null, points = null;
+    
+    const generateGalaxy = () => {
+      if (points) {
+        geometry.dispose();
+        material.dispose();
+        scene.remove(points);
       }
-      console.log('CSS Starfield created with', starCount, 'stars');
+      geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(parameters.count * 3);
+      const colors = new Float32Array(parameters.count * 3);
+      const colorInside = new THREE.Color(parameters.insideColor);
+      const colorOutside = new THREE.Color(parameters.outsideColor);
+      
+      for (let i = 0; i < parameters.count; i++) {
+        const i3 = i * 3;
+        const radius = Math.random() * parameters.radius;
+        const spinAngle = radius * parameters.spin;
+        const branchAngle = (i % parameters.branches) / parameters.branches * Math.PI * 2;
+        const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+        const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius * 0.3;
+        const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+        positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+        positions[i3 + 1] = randomY;
+        positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+        const mixedColor = colorInside.clone();
+        mixedColor.lerp(colorOutside, radius / parameters.radius);
+        colors[i3] = mixedColor.r;
+        colors[i3 + 1] = mixedColor.g;
+        colors[i3 + 2] = mixedColor.b;
+      }
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      material = new THREE.PointsMaterial({
+        size: parameters.size,
+        sizeAttenuation: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.7
+      });
+      points = new THREE.Points(geometry, material);
+      scene.add(points);
+    };
+    generateGalaxy();
+    camera.position.z = 4;
+    camera.position.y = 1.2;
+    
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', (event) => {
+      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+    });
+    
+    const clock = new THREE.Clock();
+    const animate = () => {
+      const elapsedTime = clock.getElapsedTime();
+      if (points) {
+        points.rotation.y = elapsedTime * 0.04;
+        points.rotation.x = mouseY * 0.08;
+        points.rotation.z = mouseX * 0.04;
+      }
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    };
+    animate();
+    
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
     });
     
     // Scroll Reveal
