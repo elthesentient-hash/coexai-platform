@@ -68,7 +68,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 1;
+      z-index: 50;
       pointer-events: none;
       overflow: hidden;
     }
@@ -1800,17 +1800,17 @@
     
     // Floating Stars
     const starsContainer = document.getElementById('stars-container');
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 150; i++) {
       const star = document.createElement('div');
       star.className = 'star';
-      const size = Math.random() * 2.5 + 0.5;
+      const size = Math.random() * 3 + 1;
       star.style.cssText = `
         width: ${size}px;
         height: ${size}px;
         left: ${Math.random() * 100}%;
         top: ${Math.random() * 100}%;
-        --duration: ${Math.random() * 4 + 2}s;
-        --opacity: ${Math.random() * 0.5 + 0.2};
+        --duration: ${Math.random() * 3 + 2}s;
+        --opacity: ${Math.random() * 0.4 + 0.6};
         animation-delay: ${Math.random() * 5}s;
       `;
       starsContainer.appendChild(star);
