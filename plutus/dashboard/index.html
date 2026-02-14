@@ -7,6 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdn.ethers.io/lib/ethers-5.7.umd.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { font-family: 'Inter', sans-serif; }
@@ -27,14 +28,6 @@
     .profit { color: #00d084; }
     .loss { color: #ff4757; }
     
-    .neon-border {
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3), inset 0 0 20px rgba(0, 212, 255, 0.1);
-    }
-    
-    .trading-gradient {
-      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
-    }
-    
     .pulse-dot {
       animation: pulse 2s infinite;
     }
@@ -46,6 +39,15 @@
     
     .trade-row:hover {
       background: rgba(255,255,255,0.05);
+    }
+    
+    .loading {
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
@@ -64,32 +66,107 @@
       </div>
       
       <div class="flex items-center gap-4">
-        <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-          <span class="w-2 h-2 rounded-full bg-green-500 pulse-dot"></span>
-          <span class="text-sm text-white/70">Bot Active</span>
+        <div id="botStatus" class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
+          <span class="w-2 h-2 rounded-full bg-gray-500"></span>
+          <span class="text-sm text-white/70">Disconnected</span>
         </div>
-        <button id="walletBtn" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition text-sm">
+        
+        <button id="walletBtn" onclick="connectWallet()" class="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 hover:opacity-90 transition text-sm font-medium">
           Connect Wallet
         </button>
       </div>
     </div>
   </nav>
 
-  <!-- Main Dashboard -->
-  <main class="max-w-7xl mx-auto px-6 py-8">
-    <!-- Top Stats Row -->
+  <!-- Connect Wallet Modal -->
+  <div id="connectModal" class="fixed inset-0 bg-black/80 backdrop-blur-xl z-50 flex items-center justify-center">
+    <div class="max-w-md w-full mx-4">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center mb-4">
+          <i data-lucide="trending-up" class="w-8 h-8 text-white"></i>
+        </div>
+        <h1 class="text-2xl font-bold">PLUTUS</h1>
+        <p class="text-white/50">Connect your wallet to start trading</p>
+      </div>
+      
+      <div class="glass-panel rounded-2xl p-6">
+        <div class="space-y-3">
+          <button onclick="connectMetaMask()" class="w-full flex items-center gap-4 p-4 rounded-xl border border-white/10 hover:border-cyan-500 hover:bg-cyan-500/5 transition">
+            <div class="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center">
+              <span class="font-bold text-white">M</span>
+            </div>
+            <div class="flex-1 text-left">
+              <div class="font-medium">MetaMask</div>
+              <div class="text-sm text-white/50">Most popular</div>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-white/30"></i>
+          </button>
+          
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-white/10"></div>
+            </div>
+            <div class="relative flex justify-center">
+              <span class="px-2 bg-[#0a0a0a] text-white/30 text-sm">or</span>
+            </div>
+          </div>
+          
+          <div class="space-y-2">
+            <label class="text-sm text-white/50">Private Key (Advanced)</label>
+            <input id="privateKeyInput" type="password" placeholder="0x..." 
+              class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-cyan-500 focus:outline-none text-sm">
+            <button onclick="connectPrivateKey()" class="w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 transition text-sm font-medium">
+              Connect with Private Key
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard (Hidden until connected) -->
+  <main id="dashboard" class="max-w-7xl mx-auto px-6 py-8 hidden">
+    
+    <!-- Wallet Info Bar -->
+    <div class="glass-panel rounded-2xl p-4 mb-6 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center">
+          <i data-lucide="wallet" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="text-sm text-white/50">Connected Wallet</div>
+          <div id="walletAddress" class="font-mono text-sm">0x..."""</div>
+        </div>
+      </div>
+      
+      <div class="flex items-center gap-6">
+        <div class="text-right">
+          <div class="text-sm text-white/50">MATIC Balance</div>
+          <div id="maticBalance" class="font-semibold">0.00 MATIC</div>
+        </div>
+        
+        <div class="text-right">
+          <div class="text-sm text-white/50">USDC Balance</div>
+          <div id="usdcBalance" class="font-semibold">$0.00</div>
+        </div>
+        
+        <button onclick="depositFunds()" class="px-4 py-2 rounded-lg bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30 transition text-sm">
+          + Deposit
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-      <!-- Total Balance -->
       <div class="glass-panel rounded-2xl p-6">
         <div class="flex items-center justify-between mb-2">
           <span class="text-white/50 text-sm">Total Balance</span>
           <i data-lucide="wallet" class="w-5 h-5 text-cyan-400"></i>
         </div>
         <div class="text-3xl font-bold">$<span id="totalBalance">0.00</span></div>
-        <div class="text-sm text-white/50 mt-1">USDC + MATIC</div>
+        <div class="text-sm text-white/50 mt-1">Trading capital</div>
       </div>
       
-      <!-- Daily PnL -->
       <div class="glass-panel rounded-2xl p-6">
         <div class="flex items-center justify-between mb-2">
           <span class="text-white/50 text-sm">24h PnL</span>
@@ -99,7 +176,6 @@
         <div class="text-sm profit mt-1">+<span id="dailyPnlPercent">0</span>%</div>
       </div>
       
-      <!-- Total Profit -->
       <div class="glass-panel rounded-2xl p-6">
         <div class="flex items-center justify-between mb-2">
           <span class="text-white/50 text-sm">Total Profit</span>
@@ -109,7 +185,6 @@
         <div class="text-sm text-white/50 mt-1">All time</div>
       </div>
       
-      <!-- Win Rate -->
       <div class="glass-panel rounded-2xl p-6">
         <div class="flex items-center justify-between mb-2">
           <span class="text-white/50 text-sm">Win Rate</span>
@@ -120,22 +195,20 @@
       </div>
     </div>
 
-    <!-- Middle Section -->
+    <!-- Chart and Positions -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-      <!-- PnL Chart -->
       <div class="lg:col-span-2 glass-panel rounded-2xl p-6">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-semibold">Profit / Loss</h3>
           <div class="flex gap-2">
-            <button class="px-3 py-1 rounded-lg bg-white/10 text-xs">1H</button>
-            <button class="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-400 text-xs">24H</button>
-            <button class="px-3 py-1 rounded-lg bg-white/10 text-xs">7D</button>
+            <button onclick="setTimeframe('1h')" class="timeframe-btn px-3 py-1 rounded-lg text-xs bg-white/10">1H</button>
+            <button onclick="setTimeframe('24h')" class="timeframe-btn px-3 py-1 rounded-lg text-xs bg-cyan-500/20 text-cyan-400">24H</button>
+            <button onclick="setTimeframe('7d')" class="timeframe-btn px-3 py-1 rounded-lg text-xs bg-white/10">7D</button>
           </div>
         </div>
         <canvas id="pnlChart" height="200"></canvas>
       </div>
       
-      <!-- Active Positions -->
       <div class="glass-panel rounded-2xl p-6">
         <h3 class="font-semibold mb-4">Active Positions</h3>
         <div id="positionsList" class="space-y-3">
@@ -144,13 +217,12 @@
       </div>
     </div>
 
-    <!-- Bottom Section -->
+    <!-- Trades and Controls -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Recent Trades -->
       <div class="glass-panel rounded-2xl p-6">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-semibold">Recent Trades</h3>
-          <button class="text-cyan-400 text-sm hover:underline">View All</button>
+          <button onclick="refreshTrades()" class="text-cyan-400 text-sm hover:underline">Refresh</button>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full">
@@ -164,13 +236,12 @@
               </tr>
             </thead>
             <tbody id="tradesList">
-              <!-- Trades inserted here -->
+              <!-- Trades loaded dynamically -->
             </tbody>
           </table>
         </div>
       </div>
       
-      <!-- Bot Controls -->
       <div class="glass-panel rounded-2xl p-6">
         <h3 class="font-semibold mb-4">Bot Controls</h3>
         
@@ -186,8 +257,8 @@
               </div>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" checked class="sr-only peer">
-              <div class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
+              <input type="checkbox" id="spikeHunting" checked class="sr-only peer">
+              <div class="w-11 h-6 bg-white/10 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-cyan-500"></div>
             </label>
           </div>
           
@@ -202,37 +273,29 @@
               </div>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" checked class="sr-only peer">
-              <div class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
+              <input type="checkbox" id="microArbitrage" checked class="sr-only peer">
+              <div class="w-11 h-6 bg-white/10 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
             </label>
           </div>
           
-          <div class="flex items-center justify-between p-4 rounded-xl bg-white/5">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center">
-                <i data-lucide="copy" class="w-5 h-5 text-pink-400"></i>
-              </div>
-              <div>
-                <div class="font-medium">Copy Trading</div>
-                <div class="text-sm text-white/50">Follow whale wallets</div>
-              </div>
+          <div class="p-4 rounded-xl bg-white/5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm">Max Position Size</span>
+              <span id="positionSizeValue" class="text-cyan-400">$100</span>
             </div>
-            <label class="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" class="sr-only peer">
-              <div class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500"></div>
-            </label>
+            <input type="range" min="10" max="1000" value="100" 
+              class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer"
+              oninput="updatePositionSize(this.value)">
           </div>
         </div>
         
         <div class="mt-6 pt-6 border-t border-white/10">
-          <div class="flex gap-3">
-            <button id="startBtn" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 font-semibold hover:opacity-90 transition">
-              Start Trading
-            </button>
-            <button id="stopBtn" class="flex-1 py-3 rounded-xl bg-white/10 font-semibold hover:bg-white/20 transition hidden">
-              Stop Bot
-            </button>
-          </div>
+          <button id="startBtn" onclick="startBot()" class="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 font-semibold hover:opacity-90 transition">
+            Start Trading
+          </button>
+          <button id="stopBtn" onclick="stopBot()" class="w-full py-3 rounded-xl bg-red-500/20 text-red-400 font-semibold hover:bg-red-500/30 transition hidden">
+            Stop Bot
+          </button>
         </div>
       </div>
     </div>
@@ -241,34 +304,181 @@
   <script>
     lucide.createIcons();
     
-    // Mock data for demo
-    const mockData = {
-      balance: 1250.00,
-      dailyPnl: 45.50,
-      dailyPnlPercent: 3.8,
-      totalProfit: 320.75,
-      winRate: 68,
-      totalTrades: 42,
-      trades: [
-        { market: 'BTC-5MIN', side: 'BUY', amount: 50, pnl: 2.25, time: '2 min ago', positive: true },
-        { market: 'ETH-15MIN', side: 'SELL', amount: 30, pnl: -0.80, time: '5 min ago', positive: false },
-        { market: 'BTC-15MIN', side: 'BUY', amount: 75, pnl: 4.50, time: '12 min ago', positive: true },
-        { market: 'ETH-5MIN', side: 'BUY', amount: 40, pnl: 1.20, time: '18 min ago', positive: true },
-        { market: 'BTC-5MIN', side: 'SELL', amount: 60, pnl: -1.50, time: '25 min ago', positive: false },
-      ]
-    };
+    // State
+    let wallet = null;
+    let ws = null;
+    let chart = null;
+    let isRunning = false;
+    
+    const API_URL = window.location.hostname === 'localhost' 
+      ? 'ws://localhost:3002' 
+      : 'wss://plutus-api-coexai.vercel.app';
+    
+    // Connect MetaMask
+    async function connectMetaMask() {
+      if (typeof window.ethereum === 'undefined') {
+        alert('Please install MetaMask');
+        return;
+      }
+      
+      try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send('eth_requestAccounts', []);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        
+        wallet = { provider, signer, address };
+        onWalletConnected();
+        
+      } catch (error) {
+        console.error('MetaMask error:', error);
+        alert('Failed to connect: ' + error.message);
+      }
+    }
+    
+    // Connect with private key
+    async function connectPrivateKey() {
+      const key = document.getElementById('privateKeyInput').value.trim();
+      
+      if (!key || !key.startsWith('0x')) {
+        alert('Please enter a valid private key');
+        return;
+      }
+      
+      try {
+        const provider = new ethers.providers.JsonRpcProvider('https://polygon-rpc.com');
+        const signer = new ethers.Wallet(key, provider);
+        const address = await signer.getAddress();
+        
+        wallet = { provider, signer, address, privateKey: key };
+        onWalletConnected();
+        
+      } catch (error) {
+        console.error('Private key error:', error);
+        alert('Invalid private key');
+      }
+    }
+    
+    // Wallet connected handler
+    async function onWalletConnected() {
+      document.getElementById('connectModal').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      
+      // Update UI
+      document.getElementById('walletAddress').textContent = 
+        wallet.address.slice(0, 6) + '...' + wallet.address.slice(-4);
+      document.getElementById('walletBtn').textContent = 'Connected';
+      document.getElementById('walletBtn').classList.add('bg-green-500/20', 'text-green-400');
+      
+      // Get balances
+      await updateBalances();
+      
+      // Connect WebSocket
+      connectWebSocket();
+      
+      // Initialize chart
+      initChart();
+      
+      // Load trades
+      loadTrades();
+    }
+    
+    // Update balances
+    async function updateBalances() {
+      if (!wallet) return;
+      
+      try {
+        // MATIC balance
+        const maticBalance = await wallet.provider.getBalance(wallet.address);
+        document.getElementById('maticBalance').textContent = 
+          parseFloat(ethers.utils.formatEther(maticBalance)).toFixed(4) + ' MATIC';
+        
+        // USDC balance (on Polygon)
+        const usdcContract = new ethers.Contract(
+          '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', // USDC on Polygon
+          ['function balanceOf(address) view returns (uint256)'],
+          wallet.provider
+        );
+        
+        const usdcBalance = await usdcContract.balanceOf(wallet.address);
+        const usdcFormatted = parseFloat(ethers.utils.formatUnits(usdcBalance, 6)).toFixed(2);
+        document.getElementById('usdcBalance').textContent = '$' + usdcFormatted;
+        document.getElementById('totalBalance').textContent = usdcFormatted;
+        
+      } catch (error) {
+        console.error('Balance error:', error);
+      }
+    }
+    
+    // WebSocket connection
+    function connectWebSocket() {
+      ws = new WebSocket(API_URL);
+      
+      ws.onopen = () => {
+        console.log('Connected to trading server');
+        updateBotStatus('connected');
+      };
+      
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        handleWebSocketMessage(data);
+      };
+      
+      ws.onclose = () => {
+        console.log('Disconnected from server');
+        updateBotStatus('disconnected');
+        setTimeout(connectWebSocket, 5000); // Reconnect
+      };
+      
+      ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+      };
+    }
+    
+    // Handle WebSocket messages
+    function handleWebSocketMessage(data) {
+      switch (data.type) {
+        case 'state':
+          updateStats(data.data);
+          break;
+        case 'new_trade':
+          addTrade(data.data);
+          break;
+        case 'stats_update':
+          updateStats(data.data);
+          break;
+        case 'bot_started':
+          isRunning = true;
+          updateBotUI();
+          break;
+        case 'bot_stopped':
+          isRunning = false;
+          updateBotUI();
+          break;
+      }
+    }
     
     // Update stats
-    document.getElementById('totalBalance').textContent = mockData.balance.toFixed(2);
-    document.getElementById('dailyPnl').textContent = mockData.dailyPnl.toFixed(2);
-    document.getElementById('dailyPnlPercent').textContent = mockData.dailyPnlPercent.toFixed(1);
-    document.getElementById('totalProfit').textContent = mockData.totalProfit.toFixed(2);
-    document.getElementById('winRate').textContent = mockData.winRate;
-    document.getElementById('totalTrades').textContent = mockData.totalTrades;
+    function updateStats(data) {
+      if (data.dailyPnl !== undefined) {
+        document.getElementById('dailyPnl').textContent = data.dailyPnl.toFixed(2);
+        const percent = ((data.dailyPnl / parseFloat(document.getElementById('totalBalance').textContent)) * 100).toFixed(1);
+        document.getElementById('dailyPnlPercent').textContent = percent;
+      }
+      if (data.totalProfit !== undefined) {
+        document.getElementById('totalProfit').textContent = data.totalProfit.toFixed(2);
+      }
+      if (data.totalTrades !== undefined) {
+        document.getElementById('totalTrades').textContent = data.totalTrades;
+      }
+      if (data.winRate !== undefined) {
+        document.getElementById('winRate').textContent = data.winRate;
+      }
+    }
     
-    // Render trades
-    const tradesList = document.getElementById('tradesList');
-    mockData.trades.forEach(trade => {
+    // Add trade to list
+    function addTrade(trade) {
+      const tbody = document.getElementById('tradesList');
       const row = document.createElement('tr');
       row.className = 'trade-row border-b border-white/5';
       row.innerHTML = `
@@ -286,59 +496,190 @@
           </span>
         </td>
         <td class="py-3">$${trade.amount}</td>
-        <td class="py-3 ${trade.positive ? 'profit' : 'loss'}">
-          ${trade.positive ? '+' : ''}$${trade.pnl.toFixed(2)}
+        <td class="py-3 ${trade.pnl >= 0 ? 'profit' : 'loss'}">
+          ${trade.pnl >= 0 ? '+' : ''}$${trade.pnl.toFixed(2)}
         </td>
-        <td class="py-3 text-white/50 text-sm">${trade.time}</td>
+        <td class="py-3 text-white/50 text-sm">${new Date(trade.timestamp).toLocaleTimeString()}</td>
       `;
-      tradesList.appendChild(row);
-    });
-    lucide.createIcons();
+      tbody.insertBefore(row, tbody.firstChild);
+      
+      // Keep only last 20 trades
+      while (tbody.children.length > 20) {
+        tbody.removeChild(tbody.lastChild);
+      }
+      
+      lucide.createIcons();
+      
+      // Update chart
+      updateChart(trade.pnl);
+    }
     
-    // PnL Chart
-    const ctx = document.getElementById('pnlChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', 'Now'],
-        datasets: [{
-          label: 'PnL',
-          data: [0, 12, 8, 25, 20, 38, 45.5],
-          borderColor: '#00d084',
-          backgroundColor: 'rgba(0, 208, 132, 0.1)',
-          fill: true,
-          tension: 0.4
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { 
-            grid: { color: 'rgba(255,255,255,0.05)' },
-            ticks: { color: 'rgba(255,255,255,0.5)' }
-          },
-          x: { 
-            grid: { display: false },
-            ticks: { color: 'rgba(255,255,255,0.5)' }
+    // Initialize chart
+    function initChart() {
+      const ctx = document.getElementById('pnlChart').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [{
+            label: 'Cumulative PnL',
+            data: [],
+            borderColor: '#00d084',
+            backgroundColor: 'rgba(0, 208, 132, 0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { 
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: { color: 'rgba(255,255,255,0.5)' }
+            },
+            x: { 
+              grid: { display: false },
+              ticks: { display: false }
+            }
           }
         }
+      });
+    }
+    
+    // Update chart
+    function updateChart(pnl) {
+      if (!chart) return;
+      
+      const now = new Date().toLocaleTimeString();
+      chart.data.labels.push(now);
+      
+      const lastValue = chart.data.datasets[0].data.length > 0 
+        ? chart.data.datasets[0].data[chart.data.datasets[0].data.length - 1] 
+        : 0;
+      chart.data.datasets[0].data.push(lastValue + pnl);
+      
+      // Keep last 50 points
+      if (chart.data.labels.length > 50) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
       }
-    });
+      
+      chart.update();
+    }
     
-    // Start/Stop buttons
-    const startBtn = document.getElementById('startBtn');
-    const stopBtn = document.getElementById('stopBtn');
+    // Bot controls
+    function startBot() {
+      if (!wallet) {
+        alert('Please connect wallet first');
+        return;
+      }
+      
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'start_bot' }));
+      }
+      
+      // Send to API
+      fetch('/api/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          privateKey: wallet.privateKey,
+          strategies: {
+            spikeHunting: document.getElementById('spikeHunting').checked,
+            microArbitrage: document.getElementById('microArbitrage').checked
+          },
+          maxPositionSize: parseInt(document.getElementById('positionSizeValue').textContent.replace('$', ''))
+        })
+      });
+    }
     
-    startBtn.addEventListener('click', () => {
-      startBtn.classList.add('hidden');
-      stopBtn.classList.remove('hidden');
-    });
+    function stopBot() {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'stop_bot' }));
+      }
+      
+      fetch('/api/stop', { method: 'POST' });
+    }
     
-    stopBtn.addEventListener('click', () => {
-      stopBtn.classList.add('hidden');
-      startBtn.classList.remove('hidden');
-    });
+    function updateBotUI() {
+      const startBtn = document.getElementById('startBtn');
+      const stopBtn = document.getElementById('stopBtn');
+      
+      if (isRunning) {
+        startBtn.classList.add('hidden');
+        stopBtn.classList.remove('hidden');
+        updateBotStatus('running');
+      } else {
+        stopBtn.classList.add('hidden');
+        startBtn.classList.remove('hidden');
+        updateBotStatus('connected');
+      }
+    }
+    
+    function updateBotStatus(status) {
+      const statusEl = document.getElementById('botStatus');
+      const dot = statusEl.querySelector('span:first-child');
+      const text = statusEl.querySelector('span:last-child');
+      
+      switch (status) {
+        case 'running':
+          dot.className = 'w-2 h-2 rounded-full bg-green-500 pulse-dot';
+          text.textContent = 'Bot Running';
+          break;
+        case 'connected':
+          dot.className = 'w-2 h-2 rounded-full bg-cyan-500';
+          text.textContent = 'Connected';
+          break;
+        case 'disconnected':
+          dot.className = 'w-2 h-2 rounded-full bg-red-500';
+          text.textContent = 'Disconnected';
+          break;
+        default:
+          dot.className = 'w-2 h-2 rounded-full bg-gray-500';
+          text.textContent = 'Disconnected';
+      }
+    }
+    
+    // Position size slider
+    function updatePositionSize(value) {
+      document.getElementById('positionSizeValue').textContent = '$' + value;
+    }
+    
+    // Timeframe buttons
+    function setTimeframe(tf) {
+      document.querySelectorAll('.timeframe-btn').forEach(btn => {
+        btn.classList.remove('bg-cyan-500/20', 'text-cyan-400');
+        btn.classList.add('bg-white/10');
+      });
+      event.target.classList.remove('bg-white/10');
+      event.target.classList.add('bg-cyan-500/20', 'text-cyan-400');
+    }
+    
+    // Refresh trades
+    function loadTrades() {
+      fetch('/api/trades')
+        .then(r => r.json())
+        .then(trades => {
+          trades.forEach(trade => addTrade(trade));
+        })
+        .catch(console.error);
+    }
+    
+    function refreshTrades() {
+      document.getElementById('tradesList').innerHTML = '';
+      loadTrades();
+    }
+    
+    // Deposit funds
+    function depositFunds() {
+      alert('Send USDC on Polygon to: ' + wallet.address);
+    }
+    
+    // Connect wallet button handler
+    function connectWallet() {
+      document.getElementById('connectModal').classList.remove('hidden');
+    }
   </script>
 </body>
 </html>
