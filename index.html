@@ -34,7 +34,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     * {
       font-family: 'Inter', sans-serif;
@@ -1631,101 +1630,46 @@
   <script>
     lucide.createIcons();
     
-    // 3D Galaxy
+    // Simple Starfield
     const canvas = document.getElementById('galaxy-canvas');
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const ctx = canvas.getContext('2d');
     
-    const parameters = {
-      count: 5000,
-      size: 0.025,
-      radius: 8,
-      branches: 1,
-      spin: 0,
-      randomness: 2.0,
-      randomnessPower: 1,
-      insideColor: '#ffffff',
-      outsideColor: '#aaaaaa'
-    };
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
     
-    let geometry = null, material = null, points = null;
-    
-    const generateGalaxy = () => {
-      if (points) {
-        geometry.dispose();
-        material.dispose();
-        scene.remove(points);
-      }
-      geometry = new THREE.BufferGeometry();
-      const positions = new Float32Array(parameters.count * 3);
-      const colors = new Float32Array(parameters.count * 3);
-      const colorInside = new THREE.Color(parameters.insideColor);
-      const colorOutside = new THREE.Color(parameters.outsideColor);
-      
-      for (let i = 0; i < parameters.count; i++) {
-        const i3 = i * 3;
-        // Pure random scattered positions
-        const x = (Math.random() - 0.5) * parameters.radius * 2;
-        const y = (Math.random() - 0.5) * parameters.radius * 0.6;
-        const z = (Math.random() - 0.5) * parameters.radius * 2;
-        
-        positions[i3] = x;
-        positions[i3 + 1] = y;
-        positions[i3 + 2] = z;
-        
-        // Color based on distance from center
-        const distance = Math.sqrt(x*x + y*y + z*z);
-        const mixedColor = colorInside.clone();
-        mixedColor.lerp(colorOutside, Math.min(distance / parameters.radius, 1));
-        colors[i3] = mixedColor.r;
-        colors[i3 + 1] = mixedColor.g;
-        colors[i3 + 2] = mixedColor.b;
-      }
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      material = new THREE.PointsMaterial({
-        size: parameters.size,
-        sizeAttenuation: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending,
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.9
+    const stars = [];
+    for (let i = 0; i < 1000; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 0.5,
+        opacity: Math.random() * 0.8 + 0.2,
+        speed: Math.random() * 0.02 + 0.01
       });
-      points = new THREE.Points(geometry, material);
-      scene.add(points);
-    };
-    generateGalaxy();
-    camera.position.z = 4;
-    camera.position.y = 1.2;
+    }
     
-    let mouseX = 0, mouseY = 0;
-    window.addEventListener('mousemove', (event) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-    });
-    
-    const clock = new THREE.Clock();
-    const animate = () => {
-      const elapsedTime = clock.getElapsedTime();
-      if (points) {
-        points.rotation.y = elapsedTime * 0.04;
-        points.rotation.x = mouseY * 0.08;
-        points.rotation.z = mouseX * 0.04;
-      }
-      renderer.render(scene, camera);
-      requestAnimationFrame(animate);
-    };
-    animate();
-    
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+        ctx.fill();
+        
+        // Twinkle effect
+        star.opacity += (Math.random() - 0.5) * 0.02;
+        if (star.opacity < 0.2) star.opacity = 0.2;
+        if (star.opacity > 1) star.opacity = 1;
+      });
+      
+      requestAnimationFrame(draw);
+    }
+    draw();
     
     // Scroll Reveal
     const observer = new IntersectionObserver((entries) => {
