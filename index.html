@@ -1620,46 +1620,54 @@
   <script>
     lucide.createIcons();
     
-    // Simple Starfield
-    const canvas = document.getElementById('galaxy-canvas');
-    const ctx = canvas.getContext('2d');
-    
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
-    
-    const stars = [];
-    for (let i = 0; i < 1000; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 2 + 0.5,
-        opacity: Math.random() * 0.8 + 0.2,
-        speed: Math.random() * 0.02 + 0.01
-      });
-    }
-    
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Simple Starfield - Guaranteed to work
+    document.addEventListener('DOMContentLoaded', function() {
+      const canvas = document.getElementById('galaxy-canvas');
+      if (!canvas) {
+        console.error('Canvas not found');
+        return;
+      }
       
-      stars.forEach(star => {
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
-        ctx.fill();
+      const ctx = canvas.getContext('2d');
+      
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+      
+      const stars = [];
+      const starCount = 1500;
+      
+      for (let i = 0; i < starCount; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 1.5 + 0.5,
+          opacity: Math.random() * 0.5 + 0.5
+        });
+      }
+      
+      function draw() {
+        // Black background
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Twinkle effect
-        star.opacity += (Math.random() - 0.5) * 0.02;
-        if (star.opacity < 0.2) star.opacity = 0.2;
-        if (star.opacity > 1) star.opacity = 1;
-      });
+        // Draw stars
+        stars.forEach(star => {
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+          ctx.fill();
+        });
+        
+        requestAnimationFrame(draw);
+      }
       
-      requestAnimationFrame(draw);
-    }
-    draw();
+      draw();
+      console.log('Starfield initialized with', starCount, 'stars');
+    });
     
     // Scroll Reveal
     const observer = new IntersectionObserver((entries) => {
